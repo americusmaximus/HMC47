@@ -25,14 +25,16 @@ SOFTWARE.
 #include <System/Texture.hxx>
 #include <System/ZRenderLoader.hxx>
 
-// 0x0fb81a00
-void ZRenderLoader::Method0x40() { }
+static u32 g_ZRenderLoadedUnknown;                                                  // 0x0fbc5280 // TODO
 
 // 0x0fb81a00
-void ZRenderLoader::Method0x44() { }
+void ZRenderLoader::Method0x40() {}
+
+// 0x0fb81a00
+void ZRenderLoader::Method0x44() {}
 
 // 0x0fb9aa90
-void ZRenderLoader::InitializeRenderer(HWND) { }
+void ZRenderLoader::InitializeRenderer(HWND) {}
 
 // 0x0fba51c0
 // 0x0fbb5c48
@@ -69,25 +71,38 @@ void ZRenderLoader::Method0x48(s32 count) {
     if (this->Count < count) {
         while (this->Count < count) {
             this->Unk0x18 = new RefTab(64, 0);
-            this->Unk0x1C->InsertAtStart(this->Unk0x18);
+            this->Unk0x1C->InsertAtStart(PTR_TO_KEY(this->Unk0x18));
 
-            // TODO NOT IMPLEMENTED
+            if (-1 < this->Count + 1) {
+                this->Unk0x20[this->Count + 1] = nullptr;
+            }
 
             this->Count++;
         }
 
-        DAT_0fbc5280 = 0; // TODO
+        g_ZRenderLoadedUnknown = 0; // TODO
     }
 
     while (count < this->Count) {
         this->Method0x40();
+        this->Unk0x1C->RemoveByKey(PTR_TO_KEY(this->Unk0x18));
 
-        // TODO NOT IMPLEMENTED
+        if (this->Unk0x18 != nullptr) {
+            delete this->Unk0x18;
+        }
+
+        this->Unk0x18 =
+            (RefTab*)KEY_TO_PTR(this->Unk0x1C->GetKeyByIndex(0));
+
+        if (-1 < this->Count && this->Unk0x20[this->Count] != nullptr) {
+            delete this->Unk0x20[this->Count];
+            this->Unk0x20[this->Count] = nullptr;
+        }
 
         this->Count--;
     }
 
-    DAT_0fbc5280 = this->Unk0x20[this->Count];
+    g_ZRenderLoadedUnknown = this->Unk0x20[this->Count];
 }
 
 // 0x0fba5410

@@ -23,37 +23,37 @@ SOFTWARE.
 #include <System/ZDynamicLoader.hxx>
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x4() { }
+void ZDynamicLoader::Method0x4() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Initialize() { }
+void ZDynamicLoader::Initialize() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Release() { }
+void ZDynamicLoader::Release() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x14() { }
+void ZDynamicLoader::Method0x14() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x18() { }
+void ZDynamicLoader::Method0x18() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x1C() { }
+void ZDynamicLoader::Method0x1C() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x20() { }
+void ZDynamicLoader::Method0x20() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x24() { }
+void ZDynamicLoader::Method0x24() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x28() { }
+void ZDynamicLoader::Method0x28() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x10() { }
+void ZDynamicLoader::Method0x10() {}
 
 // 0x0fb81a00
-void ZDynamicLoader::Method0x34() { }
+void ZDynamicLoader::Method0x34() {}
 
 // 0x0fba9f70
 // 0x0fbb5f64

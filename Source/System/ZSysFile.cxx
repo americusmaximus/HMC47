@@ -427,7 +427,7 @@ void ZSysFile::Append(const char* path, const void* ptr, u32 size) {
 }
 
 // 0x0ffc74e0
-void ZSysFile::Method0x4() { }
+void ZSysFile::Method0x4() {}
 
 // 0x0ffc74e0
-void ZSysFile::Method0x8() { }
+void ZSysFile::Method0x8() {}

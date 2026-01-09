@@ -195,7 +195,7 @@ void ZSysCom::Method0x34(const char* format, ...) {
         return;
     }
 
-    while (this->Unk0x11) { }
+    while (this->Unk0x11) {}
 
     this->Unk0x11 = true;
 

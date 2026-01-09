@@ -189,6 +189,8 @@
     <ClCompile Include="ZRenderD3D.cxx" />
     <ClCompile Include="ZRenderLoader.cxx" />
     <ClCompile Include="ZRenderLoaderD3D.cxx" />
+    <ClCompile Include="ZTextureManager.cxx" />
+    <ClCompile Include="ZTextureManagerD3D.cxx" />
     <ClCompile Include="ZVertexBufferManager.cxx" />
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +200,7 @@
     <ClInclude Include="ZRenderD3D.hxx" />
     <ClInclude Include="ZRenderDevice.hxx" />
     <ClInclude Include="ZRenderLoaderD3D.hxx" />
+    <ClInclude Include="ZTextureManagerD3D.hxx" />
     <ClInclude Include="ZVertexBufferManager.hxx" />
   </ItemGroup>
   <ItemGroup>

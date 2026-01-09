@@ -35,13 +35,13 @@ ZConsoleCommandBase::~ZConsoleCommandBase() {
 
 // 0x0fba35f0
 // 0x0fba3610
-ZConsoleCommand::~ZConsoleCommand() { }
+ZConsoleCommand::~ZConsoleCommand() {}
 
 // 0x0fbac830
-void ZConsoleCommandBase::Method0x4() { }
+void ZConsoleCommandBase::Method0x4() {}
 
 // 0x0fbac830
-void ZConsoleCommand::Method0x4() { }
+void ZConsoleCommand::Method0x4() {}
 
 // 0x0fbb0550
 void ZConsoleCommand::SetVisibility(const char* value) {

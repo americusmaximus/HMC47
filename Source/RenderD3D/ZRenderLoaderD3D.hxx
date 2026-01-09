@@ -40,10 +40,7 @@ public:
     virtual void Method0x44();                                                  // 0x44
     virtual void Method0x50();                                                  // 0x50
 
-protected:
-
-    // TODO
-
+public:
     void* Unk0x70;                                                              // 0x70
     void* Unk0x74;                                                              // 0x74
 };
@@ -54,4 +51,4 @@ protected:
 static_assert(sizeof(ZRenderLoaderD3D)  == 0x78,    "ZRenderLoaderD3D size mismatch.");
 #endif
 
-extern ZRenderLoaderD3D* g_Loader;  // 0x0fbbdac0
+extern ZRenderLoaderD3D* g_Loader;

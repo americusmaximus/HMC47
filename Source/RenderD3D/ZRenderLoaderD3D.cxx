@@ -24,6 +24,8 @@ SOFTWARE.
 #include "ZRenderD3D.hxx"
 #include "ZRenderLoaderD3D.hxx"
 
+ZRenderLoaderD3D* g_Loader;                                                         // 0x0fbbdac0
+
 // 0x0fba9980
 void ZRenderLoaderD3D::Method0x28() {
     g_pSysInterface->Method0x24();
@@ -32,14 +34,17 @@ void ZRenderLoaderD3D::Method0x28() {
 // 0x0fb81060
 // 0x0fbb5190
 ZRenderLoaderD3D::ZRenderLoaderD3D() {
-    // TODO NOT IMPLEMENTER
+    this->Textures = new ZTextureManagerD3D();
+
+    this->Method0x44();
+    this->Method0x50();
 }
 
 // 0x0fb810e0
 // 0x0fb81110
 ZRenderLoaderD3D::~ZRenderLoaderD3D() {
-    if (this->Unk0x10 != nullptr) {
-        delete this->Unk0x10;
+    if (this->Textures != nullptr) {
+        delete this->Textures;
     }
 
     delete this->Unk0x70;
@@ -53,7 +58,8 @@ void ZRenderLoaderD3D::Initialize() {
 
 // 0x0fb81190
 void ZRenderLoaderD3D::InitializeRenderer(HWND window) {
-    ZRenderD3D* render = new ZRenderD3D(g_pSysInterface->Module, window, this->Unk0x10);
+    ZRenderD3D* render =
+        new ZRenderD3D(g_pSysInterface->Module, window, (ZTextureManagerD3D*)this->Textures);
 
     render->Unk0xC11 = this->Unk0x70;
     render->Unk0xC15 = this->Unk0x74;

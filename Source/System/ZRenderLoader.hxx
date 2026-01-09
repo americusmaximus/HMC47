@@ -23,6 +23,7 @@ SOFTWARE.
 #pragma once
 
 #include "LinkRefTab.hxx"
+#include "ZTextureManager.hxx"
 #include "ZDynamicLoader.hxx"
 
 #pragma pack(push, 1)
@@ -41,17 +42,17 @@ public:
     virtual void Method0x44();                                                  // 0x44
     virtual void Method0x48(s32 count);                                         // 0x48
 
-protected:
+public:
     u32 Unk0xC;                                                                 // 0xC
-    void* Unk0x10;                                                              // 0x10
+    ZTextureManager* Textures;                                                  // 0x10
     s32 Count;                                                                  // 0x14
     RefTab* Unk0x18;                                                            // 0x18
     LinkRefTab* Unk0x1C;                                                        // 0x1C
-    u32 Unk0x20;                                                                // 0x20
+    u32 Unk0x20[20 /* TODO */];                                                 // 0x20
 };
 
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZRenderLoader)     == 0x24,     "ZRenderLoader size mismatch.");
+static_assert(sizeof(ZRenderLoader)     == 0x70,     "ZRenderLoader size mismatch.");
 #endif

@@ -65,10 +65,10 @@ static ZRenderConfiguration g_ZRenderConfigurations[ZRENDER_CONFIGURATION_COUNT]
 static BYTE GetPaletteEntryColor(u32 index, BYTE bits, BYTE shift);
 
 // 0x0fb81a00
-void ZRender::Method0x158() { }
+void ZRender::Method0x158() {}
 
 // 0x0fb81a00
-void ZRender::Initialize() { }
+void ZRender::Initialize() {}
 
 // 0x0fba5cb0
 void CheckRenderWindowClass(HINSTANCE instance) {

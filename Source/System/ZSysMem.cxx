@@ -30,7 +30,7 @@ ZSysMemBase::ZSysMemBase() {
 
 // 0x0ffb1880
 // 0x0ffb18c0
-ZSysMemBase::~ZSysMemBase() { }
+ZSysMemBase::~ZSysMemBase() {}
 
 // 0x0ffb18d0
 void ZSysMem::Method0x4(u32 p2 /* TODO */, u32 p3 /* TODO */) {
@@ -105,7 +105,7 @@ void ZSysMem::Method0xC() {
 }
 
 // 0x0ffc74e0
-void ZSysMemBase::Method0x1C() { }
+void ZSysMemBase::Method0x1C() {}
 
 // 0x0ffc74e0
-void ZSysMemBase::Method0x20() { }
+void ZSysMemBase::Method0x20() {}

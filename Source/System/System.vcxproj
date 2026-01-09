@@ -188,6 +188,7 @@
     <ClInclude Include="ZRender.hxx" />
     <ClInclude Include="ZRenderConsoleCommand.hxx" />
     <ClInclude Include="ZRenderLoader.hxx" />
+    <ClInclude Include="ZTextureManager.hxx" />
     <ClInclude Include="ZSettings.hxx" />
     <ClInclude Include="ZString.hxx" />
     <ClInclude Include="ZSysCom.hxx" />

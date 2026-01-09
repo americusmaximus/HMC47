@@ -20,34 +20,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#include "ZTextureManagerD3D.hxx"
 
-#include "ZRenderDevice.hxx"
+// 0x0fb971d0
+// 0x0fbb5460
+ZTextureManagerD3D::ZTextureManagerD3D() {}
 
-#include <System/BlockRefTab.hxx>
+// 0x0fb97200
+// 0x0fb97220
+ZTextureManagerD3D::~ZTextureManagerD3D() {}
 
-#pragma pack(push, 1)
+// 0x0fb971e0
+bool ZTextureManagerD3D::SupportsCompression() {
+    return this->Unk0xC != 0; // TODO
+}
 
-// 0x0fbb54d8
-class ZVertexBufferManager {
-public:
-    ZVertexBufferManager(LPGUID id, LPDIRECT3DDEVICE7 device, u32 count, u32 todo1, u32 todo2, u32 todo3);
-
-public:
-    virtual ~ZVertexBufferManager();
-
-protected:
-
-    // TODO
-
-    BlockRefTab* Unk0x58;                                                           // 0x58
-
-    // TODO
-
-};
-
-#pragma pack(pop)
-
-#if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZVertexBufferManager)  == 0x61,    "ZVertexBufferManager size mismatch.");
-#endif
+// 0x0fb971f0
+bool ZTextureManagerD3D::SupportsEMBM() {
+    return this->Unk0x144 != 0; // TODO
+}

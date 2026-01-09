@@ -30,10 +30,10 @@ ZRenderConsoleCommand::ZRenderConsoleCommand(const char* name, ZRenderBase* inst
 
 // 0x0fba36b0
 // 0x0fba36d0
-ZRenderConsoleCommand::~ZRenderConsoleCommand() { }
+ZRenderConsoleCommand::~ZRenderConsoleCommand() {}
 
 // 0x0fbac830
-void ZRenderConsoleCommand::Method0x4() { }
+void ZRenderConsoleCommand::Method0x4() {}
 
 // 0x0fba3630
 void ZRenderConsoleCommand::SetVisibility(const char* value) {

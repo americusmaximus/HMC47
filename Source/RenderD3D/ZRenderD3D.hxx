@@ -22,13 +22,13 @@ SOFTWARE.
 
 #pragma once
 
+#include "ZTextureManagerD3D.hxx"
 #include "ZVertexBufferManager.hxx"
 
 #include <System/ZRender.hxx>
 
-// TODO
 #define ZRENDEROPTION_FULL_SCREEN           0x1
-#define ZRENDEROPTION_STEREO                0x2
+#define ZRENDEROPTION_STEREO_VIEW           0x2
 #define ZRENDEROPTION_DEPTH_BUFFER          0x4
 #define ZRENDEROPTION_PRESERVE_FPU          0x8
 
@@ -78,7 +78,7 @@ struct ZRenderState {
 
 class ZRenderD3D : public ZRender {
 public:
-    ZRenderD3D(HINSTANCE instance, HWND window, void* todo);
+    ZRenderD3D(HINSTANCE instance, HWND window, ZTextureManagerD3D* manager);
 
 public:
     virtual ~ZRenderD3D();                                                          // 0x0
@@ -101,7 +101,7 @@ public:
 
     // TODO
 
-    const char* GetRenderName();                                                    // 0x148
+    virtual const char* GetRenderName();                                            // 0x148
 
     // TODO
 
@@ -136,8 +136,8 @@ public:
     u32 Capabilities;                                                               // 0xC0D
     void* Unk0xC11;                                                                 // 0xC11
     void* Unk0xC15;                                                                 // 0xC15
-    ZVertexBufferManager* VBM;                                                      // 0xC19
-    void* Unk0xC1D;                                                                 // 0xC1D
+    ZVertexBufferManager* VertexBufferManager;                                      // 0xC19
+    ZTextureManagerD3D* TextureManager;                                             // 0xC1D
 
 protected:
     void InitializeRendererValues();
@@ -157,6 +157,6 @@ protected:
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZRenderTextureStage)   == 0x11C,   "ZRenderTextureStage size mismatch.");
+static_assert(sizeof(ZRenderState)          == 0x11C,   "ZRenderState size mismatch.");
 static_assert(sizeof(ZRenderD3D)            == 0xC21,   "ZRenderD3D size mismatch.");
 #endif

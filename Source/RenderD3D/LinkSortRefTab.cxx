@@ -57,7 +57,7 @@ LinkSortRefTab::LinkSortRefTab(u32 count, u32 size) : LinkRefTab(count, size) {
 
 // 0x0fbb01b0
 // 0x0fbb01f0
-LinkSortRefTab::~LinkSortRefTab() { }
+LinkSortRefTab::~LinkSortRefTab() {}
 
 // 0x0fbb0280
 void LinkSortRefTab::RemoveKeyValue(RefKeyValue* kv) {

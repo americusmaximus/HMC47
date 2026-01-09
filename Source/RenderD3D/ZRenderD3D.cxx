@@ -134,9 +134,9 @@ void LogDirectDrawSceneError(HRESULT hr) {
 }
 
 // 0x0fb81920
-ZRenderD3D::ZRenderD3D(HINSTANCE instance, HWND window, void* todo)
+ZRenderD3D::ZRenderD3D(HINSTANCE instance, HWND window, ZTextureManagerD3D* manager)
     : ZRender(instance, window) {
-    this->Unk0xC1D = todo;
+    this->TextureManager = manager;
 
     this->DirectDraw = nullptr;
     this->MainSurface = nullptr;
@@ -156,7 +156,7 @@ ZRenderD3D::ZRenderD3D(HINSTANCE instance, HWND window, void* todo)
     this->Unk0xC11 = 0;
     this->Unk0xC15 = 0;
 
-    this->VBM = nullptr;
+    this->VertexBufferManager = nullptr;
 
     ZeroMemory(&ZRenderUnk0x18Array, 8 * sizeof(ZRenderUnk0x18)); // TODO
 }
@@ -332,13 +332,13 @@ void ZRenderD3D::Initialize() {
             ->LogMessage("%s - %s", ident.szDescription, ident.szDriver);
     }
 
-    this->Unk0xC1D->Method0x3c();
+    this->TextureManager->Method0x3C();
 
-    if (this->Unk0xC1D->Method0x34() == 0 /* TODO */) {
+    if (!this->TextureManager->SupportsCompression()) {
         g_pSysInterface->DisableDXT = true;
     }
 
-    if (this->Unk0xC1D->Method0x38() == 0 /* TODO */) {
+    if (!this->TextureManager->SupportsEMBM()) {
         g_pSysInterface->EnableEMBM = false;
     }
     else if (g_pSysInterface->DebugVideo) {
@@ -450,18 +450,20 @@ void ZRenderD3D::Initialize() {
         this->Unk0xC11 = nullptr;
     }
 
-    this->VBM = nullptr;
+    this->VertexBufferManager = nullptr;
 
     if (tnl == nullptr) {
         // TODO
         uStack_4 = 1;
-        this->VBM = new ZVertexBufferManager(selected->IDD3D, this->Device, 1000, piVar7, g_Loader->Unk0xC, 0);
+        this->VertexBufferManager
+            = new ZVertexBufferManager(selected->IDD3D, this->Device, 1000, piVar7, g_Loader->Unk0xC, 0);
     }
     else {
         // TODO
         uStack_4 = 0;
         if (rgb != nullptr) {
-            this->VBM = new ZVertexBufferManager(selected->IDD3D, this->Device, 1000, piVar7, g_Loader->Unk0xC, 0);
+            this->VertexBufferManager
+                = new ZVertexBufferManager(selected->IDD3D, this->Device, 1000, piVar7, g_Loader->Unk0xC, 0);
         }
     }
 
@@ -570,7 +572,7 @@ void ZRenderD3D::GetCaps(u32* caps) {
         result |= ZRENDERCAPS_ANISOTROPY;
     }
 
-    if (this->Unk0xC1D->Method0x34()) {
+    if (this->TextureManager->SupportsCompression()) {
         if (g_pSysInterface->DebugVideo) {
             g_pSysCom->Log("Z:\\Engine\\Drawing\\_Wintel\\RenderD3D\\Source\\RenderWintelD3DDraw.cpp", 659)
                 ->LogMessage("Supports dxt");
@@ -635,7 +637,7 @@ void ZRenderD3D::SetFeature(u32 feature, u32 value) {
         return;
     }
     case ZRENDERFEATURE_TEXTURECOMPRESSION: {
-        if (!this->Unk0xC1D->Method0x34()) {
+        if (!this->TextureManager->SupportsCompression()) {
             g_pSysCom->Log("Z:\\Engine\\Drawing\\_Wintel\\RenderD3D\\Source\\RenderWintelD3DDraw.cpp", 743)
                 ->LogMessage("WARNING: Texture compression not supported");
             return;
@@ -713,14 +715,14 @@ bool ZRenderD3D::BeginScene() {
 
     g_Device = this->Device;
 
-    this->VBM->FUN_0fb9ace0();
+    this->VertexBufferManager->FUN_0fb9ace0();
 
     return true;
 }
 
 // 0x0fb82de0
 bool ZRenderD3D::EndScene() {
-    this->VBM->FUN_0fb9ad40();
+    this->VertexBufferManager->FUN_0fb9ad40();
 
     HRESULT hr = this->Device->EndScene();
 
@@ -733,7 +735,7 @@ bool ZRenderD3D::EndScene() {
 
 // 0x0fb82e10
 void ZRenderD3D::ApplyCurrentState() {
-    this->VBM->FUN_0fb9adb0();
+    this->VertexBufferManager->FUN_0fb9adb0();
 
     this->Device->SetRenderState(D3DRENDERSTATE_SRCBLEND, g_CurrentRenderState.SrcBlend);
     this->Device->SetRenderState(D3DRENDERSTATE_DESTBLEND, g_CurrentRenderState.DestBlend);
@@ -1288,7 +1290,7 @@ HRESULT ZRenderD3D::InitializeD3D(LPGUID dd, LPCGUID d3d, LPDDSURFACEDESC2 setti
             this->StereoView = FALSE;
             this->FullScreen = options & ZRENDEROPTION_FULL_SCREEN;
 
-            if ((options & ZRENDEROPTION_STEREO)
+            if ((options & ZRENDEROPTION_STEREO_VIEW)
                 && !(options & ZRENDEROPTION_FULL_SCREEN)
                 && (settings->ddsCaps.dwCaps2 & DDSCAPS2_STEREOSURFACELEFT)) {
                 this->StereoView = TRUE;

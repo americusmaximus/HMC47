@@ -20,34 +20,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#include <System/ZTextureManager.hxx>
 
-#include "ZRenderDevice.hxx"
+// 0x0fbb54a0
+ZTextureManager::ZTextureManager() {}
 
-#include <System/BlockRefTab.hxx>
+// 0x0fb9aaa0
+ZTextureManager::~ZTextureManager() {}
 
-#pragma pack(push, 1)
-
-// 0x0fbb54d8
-class ZVertexBufferManager {
-public:
-    ZVertexBufferManager(LPGUID id, LPDIRECT3DDEVICE7 device, u32 count, u32 todo1, u32 todo2, u32 todo3);
-
-public:
-    virtual ~ZVertexBufferManager();
-
-protected:
-
-    // TODO
-
-    BlockRefTab* Unk0x58;                                                           // 0x58
-
-    // TODO
-
-};
-
-#pragma pack(pop)
-
-#if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZVertexBufferManager)  == 0x61,    "ZVertexBufferManager size mismatch.");
-#endif
+// 0x0fb9aa90
+u32 ZTextureManager::Method0x18(u32 todo) {
+    return 0; // TODO
+}

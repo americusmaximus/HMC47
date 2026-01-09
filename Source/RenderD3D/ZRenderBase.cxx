@@ -32,37 +32,37 @@ static f32 g_ZRenderBaseShowDrawModes;                      // 0x0fbc527c
 static f32 g_ZRenderBaseFog = 1.0f;                         // 0x0fbbd170
 
 // 0x0fb819d0
-void ZRenderBase::SetModule(const char*) { }
+void ZRenderBase::SetModule(const char*) {}
 
 // 0x0fb819d0
-void ZRenderBase::Method0x8(u32) { }
+void ZRenderBase::Method0x8(u32) {}
 
 // 0x0fb819d0
-void ZRenderBase::SetConfiguration(ZRenderConfiguration*) { }
+void ZRenderBase::SetConfiguration(ZRenderConfiguration*) {}
 
 // 0x0fb819d0
-void ZRenderBase::ClipCursorToWindow(bool) { }
+void ZRenderBase::ClipCursorToWindow(bool) {}
 
 // 0x0fb819d0
-void ZRenderBase::GetCaps(u32*) { }
+void ZRenderBase::GetCaps(u32*) {}
 
 // 0x0fb819d0
-void ZRenderBase::Method0x60(u32) { }
+void ZRenderBase::Method0x60(u32) {}
 
 // 0x0fb819d0
-void ZRenderBase::Method0x64(u32) { }
+void ZRenderBase::Method0x64(u32) {}
 
 // 0x0fb819d0
-void ZRenderBase::Method0x120(u32) { }
+void ZRenderBase::Method0x120(u32) {}
 
 // 0x0fb819d0
-void ZRenderBase::Method0x124(u32) { }
+void ZRenderBase::Method0x124(u32) {}
 
 // 0x0fb819d0
-void ZRenderBase::Method0x134(u32) { }
+void ZRenderBase::Method0x134(u32) {}
 
 // 0x0fb819d0
-void ZRenderBase::Method0x13C(u32) { }
+void ZRenderBase::Method0x13C(u32) {}
 
 // 0x0fb819e0
 bool ZRenderBase::BeginScene() {
@@ -90,52 +90,52 @@ bool ZRenderBase::Method0xC4() {
 }
 
 // 0x0fb81a00
-void ZRenderBase::Method0x40() { }
+void ZRenderBase::Method0x40() {}
 
 // 0x0fb81a00
-void ZRenderBase::Method0x44() { }
+void ZRenderBase::Method0x44() {}
 
 // 0x0fb81a00
-void ZRenderBase::Method0x48() { }
+void ZRenderBase::Method0x48() {}
 
 // 0x0fb81a00
-void ZRenderBase::Method0x54() { }
+void ZRenderBase::Method0x54() {}
 
 // 0x0fb81a00
-void ZRenderBase::Method0xD4() { }
+void ZRenderBase::Method0xD4() {}
 
 // 0x0fb81a00
-void ZRenderBase::Method0xFC() { }
+void ZRenderBase::Method0xFC() {}
 
 // 0x0fb81a00
-void ZRenderBase::ApplyCurrentState() { }
+void ZRenderBase::ApplyCurrentState() {}
 
 // 0x0fb81a00
-void ZRenderBase::InitializeCurrentState() { }
+void ZRenderBase::InitializeCurrentState() {}
 
 // 0x0fb81a00
-void ZRenderBase::Method0x110() { }
+void ZRenderBase::Method0x110() {}
 
 // 0x0fb81a00
-void ZRenderBase::Method0x114() { }
+void ZRenderBase::Method0x114() {}
 
 // 0x0fb81a00
-void ZRenderBase::Method0x138() { }
+void ZRenderBase::Method0x138() {}
 
 // 0x0fb81a10
-void ZRenderBase::Method0x4C(u32, u32, u32) { }
+void ZRenderBase::Method0x4C(u32, u32, u32) {}
 
 // 0x0fb81a10
-void ZRenderBase::Method0x50(u32, u32, u32) { }
+void ZRenderBase::Method0x50(u32, u32, u32) {}
 
 // 0x0fb81a10
-void ZRenderBase::Method0xC8(u32, u32, u32) { }
+void ZRenderBase::Method0xC8(u32, u32, u32) {}
 
 // 0x0fb81a10
-void ZRenderBase::Method0x11C(u32, u32, u32) { }
+void ZRenderBase::Method0x11C(u32, u32, u32) {}
 
 // 0x0fb81a10
-void ZRenderBase::Method0x140(u32, u32, u32) { }
+void ZRenderBase::Method0x140(u32, u32, u32) {}
 
 // 0x0fb84b30
 f32 ZRenderBase::Method0xB4() {
@@ -178,19 +178,19 @@ void ZRenderBase::Method0xD4() {
 }
 
 // 0x0fbac830
-void ZRenderBase::SetFeature(u32, u32) { }
+void ZRenderBase::SetFeature(u32, u32) {}
 
 // 0x0fbac830
-void ZRenderBase::Method0x1C(u32, u32) { }
+void ZRenderBase::Method0x1C(u32, u32) {}
 
 // 0x0fbac830
-void ZRenderBase::ClearSurface(u32, u32) { }
+void ZRenderBase::ClearSurface(u32, u32) {}
 
 // 0x0fbac830
-void ZRenderBase::Method0x12C(u32, u32) { }
+void ZRenderBase::Method0x12C(u32, u32) {}
 
 // 0x0fbad210
-void ZRenderBase::SetViewport(f32, f32, f32, f32) { }
+void ZRenderBase::SetViewport(f32, f32, f32, f32) {}
 
 // 0x0fba2cc0
 // 0x0fbb5acc
@@ -426,7 +426,7 @@ void ZRenderBase::Method0xA8(f32 todo1, u32 todo2) {
 }
 
 // 0x0fba4ae0
-void ZRenderBase::Method0xF8(u32, u32, u32) { }
+void ZRenderBase::Method0xF8(u32, u32, u32) {}
 
 // 0x0fba4af0
 f32 ZRenderBase::Method0x9C() {
@@ -504,4 +504,4 @@ void ZRenderBase::Method0xEC(const char* value) {
 }
 
 // 0x0fba5b90
-void ZRenderBase::Method0x118() { }
+void ZRenderBase::Method0x118() {}
