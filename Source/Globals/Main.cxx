@@ -1,0 +1,40 @@
+/*
+Copyright (c) 2026 Americus Maximus
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+#include <windows.h>
+
+#include <System/ZSysCom.hxx>
+#include <System/ZSysFile.hxx>
+#include <System/ZSysInterface.hxx>
+#include <System/ZSysMem.hxx>
+
+class ZSysInput;
+
+__declspec(dllexport) ZSysCom*        g_pSysCom;
+__declspec(dllexport) ZSysFile*       g_pSysFile;
+__declspec(dllexport) ZSysInput*      g_pSysInput;
+__declspec(dllexport) ZSysInterface*  g_pSysInterface;
+__declspec(dllexport) ZSysMem*        g_pSysMem;
+
+BOOL APIENTRY DllMain(HMODULE, DWORD, LPVOID) {
+    return TRUE;
+}

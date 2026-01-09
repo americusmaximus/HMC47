@@ -1,0 +1,83 @@
+/*
+Copyright (c) 2026 Americus Maximus
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+#include "Globals.hxx"
+#include "ZRenderD3D.hxx"
+#include "ZRenderLoaderD3D.hxx"
+
+// 0x0fba9980
+void ZRenderLoaderD3D::Method0x28() {
+    g_pSysInterface->Method0x24();
+}
+
+// 0x0fb81060
+// 0x0fbb5190
+ZRenderLoaderD3D::ZRenderLoaderD3D() {
+    // TODO NOT IMPLEMENTER
+}
+
+// 0x0fb810e0
+// 0x0fb81110
+ZRenderLoaderD3D::~ZRenderLoaderD3D() {
+    if (this->Unk0x10 != nullptr) {
+        delete this->Unk0x10;
+    }
+
+    delete this->Unk0x70;
+    delete this->Unk0x74;
+}
+
+// 0x0fb81180
+void ZRenderLoaderD3D::Initialize() {
+    this->Method0x48(1); // TODO
+}
+
+// 0x0fb81190
+void ZRenderLoaderD3D::InitializeRenderer(HWND window) {
+    ZRenderD3D* render = new ZRenderD3D(g_pSysInterface->Module, window, this->Unk0x10);
+
+    render->Unk0xC11 = this->Unk0x70;
+    render->Unk0xC15 = this->Unk0x74;
+
+    render->Method0x1C8(window);
+}
+
+// 0x0fb81240
+void ZRenderLoaderD3D::Method0x40() {
+    // TODO NOT IMPLEMENTED
+}
+
+// 0x0fb812f0
+// 0x0fba9990
+void ZRenderLoaderD3D::Method0x3C(u32* todo) {
+    ZRenderLoader::Method0x3C(todo);
+}
+
+// 0x0fb90a60
+void ZRenderLoaderD3D::Method0x40() {
+    // TODO NOT IMPLEMENTED
+}
+
+// 0x0fb96db0
+void ZRenderLoaderD3D::Method0x50() {
+    // TODO NOT IMPLEMENTED
+}

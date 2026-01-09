@@ -1,0 +1,44 @@
+/*
+Copyright (c) 2026 Americus Maximus
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+#include "ZMasterControl.hxx"
+
+// 0x0ffc6060
+ZMasterControl::ZMasterControl() {
+    this->Unk0x4 = 0; // TODO
+    // TODO this->Unk0x8 = new FUN_0ffbfe80(8, 0);
+    // TODO this->Unk0xC = new FUN_0ffbed50(8, 2);
+}
+
+// 0x0ffc6150
+// 0x0ffc6190
+ZMasterControl::~ZMasterControl() {
+    this->Method0x20();
+
+    if (this->Unk0x8 != nullptr) {
+        delete this->Unk0x8;
+    }
+
+    if (this->Unk0xC != nullptr) {
+        delete this->Unk0xC;
+    }
+}
