@@ -71,7 +71,7 @@ void ZRenderLoader::Method0x48(s32 count) {
     if (this->Count < count) {
         while (this->Count < count) {
             this->Unk0x18 = new RefTab(64, 0);
-            this->Unk0x1C->InsertAtStart(PTR_TO_KEY(this->Unk0x18));
+            this->Unk0x1C->InsertAtStart(REFTAB_PTR_TO_KEY(this->Unk0x18));
 
             if (-1 < this->Count + 1) {
                 this->Unk0x20[this->Count + 1] = nullptr;
@@ -85,14 +85,14 @@ void ZRenderLoader::Method0x48(s32 count) {
 
     while (count < this->Count) {
         this->Method0x40();
-        this->Unk0x1C->RemoveByKey(PTR_TO_KEY(this->Unk0x18));
+        this->Unk0x1C->RemoveByKey(REFTAB_PTR_TO_KEY(this->Unk0x18));
 
         if (this->Unk0x18 != nullptr) {
             delete this->Unk0x18;
         }
 
         this->Unk0x18 =
-            (RefTab*)KEY_TO_PTR(this->Unk0x1C->GetKeyByIndex(0));
+            (RefTab*)REFTAB_KEY_TO_PTR(this->Unk0x1C->GetKeyByIndex(0));
 
         if (-1 < this->Count && this->Unk0x20[this->Count] != nullptr) {
             delete this->Unk0x20[this->Count];

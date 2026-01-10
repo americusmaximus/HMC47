@@ -151,7 +151,7 @@ void* LinkRefTab::InsertBefore(RefKeyValue* point, u32 key) {
         this->Links->GetStart(&link);
         const u32 result = this->Links->GetNextKey(&link);
 
-        kv = (RefKeyValue*)KEY_TO_PTR(result);
+        kv = (RefKeyValue*)REFTAB_KEY_TO_PTR(result);
 
         if (link.Next != nullptr) {
             this->Links->Remove(&link);
@@ -217,7 +217,7 @@ void* LinkRefTab::Insert(u32 key) {
         this->Links->GetStart(&link);
         const u32 result = this->Links->GetNextKey(&link);
 
-        kv = (RefKeyValue*)KEY_TO_PTR(result);
+        kv = (RefKeyValue*)REFTAB_KEY_TO_PTR(result);
 
         if (link.Next != nullptr) {
             this->Links->Remove(&link);
@@ -266,7 +266,7 @@ void* LinkRefTab::InsertAtStart(u32 key) {
         this->Links->GetStart(&link);
         const u32 result = this->Links->GetNextKey(&link);
 
-        kv = (RefKeyValue*)KEY_TO_PTR(result);
+        kv = (RefKeyValue*)REFTAB_KEY_TO_PTR(result);
 
         if (link.Next != nullptr) {
             this->Links->Remove(&link);
@@ -372,7 +372,7 @@ void LinkRefTab::RemoveKeyValue(RefKeyValue* kv) {
         this->Links = new RefTab(8, 8, 1);
     }
 
-    this->Links->Insert(PTR_TO_KEY(ref));
+    this->Links->Insert(REFTAB_PTR_TO_KEY(ref));
 
     if (ref->Previous == nullptr) {
         this->Next = ref->Next;
@@ -406,7 +406,7 @@ void LinkRefTab::Remove(RefLink* link) {
         this->Links = new RefTab(8, 8, 1);
     }
 
-    this->Links->Insert(PTR_TO_KEY(ref));
+    this->Links->Insert(REFTAB_PTR_TO_KEY(ref));
 
     if (link->Direction < REFTAB_TRAVERSE_FORWARD) {
         link->Next = ref->Next;

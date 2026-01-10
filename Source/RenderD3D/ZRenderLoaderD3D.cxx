@@ -34,7 +34,7 @@ void ZRenderLoaderD3D::Method0x28() {
 // 0x0fb81060
 // 0x0fbb5190
 ZRenderLoaderD3D::ZRenderLoaderD3D() {
-    this->Textures = new ZTextureManagerD3D();
+    this->Manager = new ZTextureManagerD3D();
 
     this->Method0x44();
     this->Method0x50();
@@ -43,8 +43,8 @@ ZRenderLoaderD3D::ZRenderLoaderD3D() {
 // 0x0fb810e0
 // 0x0fb81110
 ZRenderLoaderD3D::~ZRenderLoaderD3D() {
-    if (this->Textures != nullptr) {
-        delete this->Textures;
+    if (this->Manager != nullptr) {
+        delete this->Manager;
     }
 
     delete this->Unk0x70;
@@ -59,7 +59,7 @@ void ZRenderLoaderD3D::Initialize() {
 // 0x0fb81190
 void ZRenderLoaderD3D::InitializeRenderer(HWND window) {
     ZRenderD3D* render =
-        new ZRenderD3D(g_pSysInterface->Module, window, (ZTextureManagerD3D*)this->Textures);
+        new ZRenderD3D(g_pSysInterface->Module, window, (ZTextureManagerD3D*)this->Manager);
 
     render->Unk0xC11 = this->Unk0x70;
     render->Unk0xC15 = this->Unk0x74;
@@ -69,7 +69,20 @@ void ZRenderLoaderD3D::InitializeRenderer(HWND window) {
 
 // 0x0fb81240
 void ZRenderLoaderD3D::Method0x40() {
-    // TODO NOT IMPLEMENTED
+    RefLink link;
+
+    if (this->Unk0x18 != nullptr) {
+        this->Unk0x18->GetEnd(&link);
+
+        u32 result = this->Unk0x18->GetPreviousKey(&link);
+
+        while (link.Next != nullptr) {
+            // TODO result->Release();
+            result = this->Unk0x18->GetPreviousKey(&link);
+        }
+    }
+
+    this->Unk0x18->Clear();
 }
 
 // 0x0fb812f0

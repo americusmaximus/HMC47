@@ -44,7 +44,7 @@ public:
 
 public:
     u32 Unk0xC;                                                                 // 0xC
-    ZTextureManager* Textures;                                                  // 0x10
+    ZTextureManager* Manager;                                                   // 0x10
     s32 Count;                                                                  // 0x14
     RefTab* Unk0x18;                                                            // 0x18
     LinkRefTab* Unk0x1C;                                                        // 0x1C

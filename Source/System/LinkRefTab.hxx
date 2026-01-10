@@ -38,9 +38,6 @@ Where:
 
 */
 
-#define KEY_TO_PTR(X)           ((void*)X)
-#define PTR_TO_KEY(X)           ((u32)X)    /* X64 */
-
 #pragma pack(push, 1)
 
 class LinkRefTab : public RefTab {
