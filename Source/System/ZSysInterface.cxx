@@ -149,7 +149,7 @@ void ZSysInterface::Initialize() {
     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 643)
         ->LogMessage("---------------------------------------------------------------");
 
-    this->Method0x5C(nullptr);
+    this->SetWindowTitle(nullptr);
     this->Unk0x3BCA = false;
 
     this->Unk0x3B4A = "pic0001.tga";
@@ -172,6 +172,11 @@ void ZSysInterface::Method0x20(bool todo) {
     }
 }
 
+// 0x0ffacd70
+bool ZSysInterface::IsKeyPressed(s32 key) {
+    return GetAsyncKeyState(key) & 0x8000;
+}
+
 // 0x0ffad1f0
 bool ZSysInterface::Method0x88(u32 code) {
     if (!this->IsEngineRunning) {
@@ -179,7 +184,7 @@ bool ZSysInterface::Method0x88(u32 code) {
             return false;
         }
 
-        this->Method0x5C(nullptr);
+        this->SetWindowTitle(nullptr);
         this->Unk0x3BCA = false;
 
         g_pSysFile->Method0x4();
@@ -250,14 +255,14 @@ void ZSysInterface::Method0xC4() {
     this->LoadDynamicObject(&this->RenderLoader, this->DrawDll);
 
     if (this->RenderLoader != nullptr) {
-        this->RenderLoader->Method0x38();
+        this->RenderLoader->InitializeRenderer(this->MainWindow);
     }
     else {
         MessageBoxA(NULL,
             "This render is not supported. Using old render.", "Fatal error", MB_TOPMOST | MB_ICONHAND);
     }
 
-    FUN_0ffad7b4();
+    this->FUN_0ffad7b4();
 }
 
 // 0x0ffada10
@@ -445,6 +450,12 @@ void ZSysInterface::Method0x10() {
     }
 }
 
+// 0x0ffb0c50
+void ZSysInterface::SetWindowTitle(const char* title) {
+    this->WindowTitle = title;
+    SetWindowTextA(this->MainWindow, this->WindowTitle);
+}
+
 // 0x0ffb0e20
 static LRESULT WINAPI MainWindowHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (g_pSysCom == nullptr) {
@@ -508,7 +519,7 @@ static LRESULT WINAPI MainWindowHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 
     if (!g_pSysInterface->Unk0x38F1) {
         if (g_pSysInterface->Render != nullptr) {
-            return g_pSysInterface->Render->Method0x164(uMsg, wParam, lParam);
+            return g_pSysInterface->Render->HandleRenderWindowMessages(uMsg, wParam, lParam);
         }
     }
 

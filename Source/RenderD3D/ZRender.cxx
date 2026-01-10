@@ -47,6 +47,7 @@ static BYTE PaletteColors1Bit[2] = { 0x0, 0xFF };                               
 static u32 PaletteIndexes8Bit[ZRENDER_8BIT_INDEX_COUNT] = {
         0x3, 0x18, 0x1B, 0x40, 0x43, 0x58, 0xAD, 0xB5, 0xEC, 0xF7, 0xA4, 0x5B };            // 0x0fbbd0dc
 static PALETTEENTRY PaletteColors8Bit[19] = {
+    // TODO CONVERT TO BYTE BYTE BYTE BYTE
         0x80,       0x8000,     0x8080,     0x800000,   0x800080,   0x808000,
         0xC0C0C0,   0xC0DCC0,   0xF0CAA6,   0xF0FBFF,   0xA4A0A0,   0x808080,
         0xFF,       0xFF00,     0xFFFF,     0xFF0000,   0xFF00FF,   0xFFFF00, 0xFFFFFF };   // 0x0fbbd110
@@ -176,7 +177,7 @@ void ZRender::Method0x1B0() {
 // 0x0fba6410
 void ZRender::Method0x30(u32 todo1, bool todo2) {
     if (this->LockCount == 0) {
-        this->Method0x10C();
+        this->InitializeCurrentState();
     }
     else {
         this->Method0x1B0();
@@ -501,8 +502,8 @@ void ZRender::HandleMouseMove(WPARAM wParam, s32 x, s32 y) {
     this->PreviousMouseX = this->MouseX;
     this->PreviousMouseY = this->MouseY;
 
-    const f32 todo_a = (f32)this->Method0xA0(); // TODO
-    const f32 todo_b = (f32)this->Method0xA4(); // TODO
+    const f32 w = (f32)this->GetWindowWidth();
+    const f32 h = (f32)this->GetWindowHeight();
 
     POINT point;
     point.x = x;
@@ -515,8 +516,8 @@ void ZRender::HandleMouseMove(WPARAM wParam, s32 x, s32 y) {
 
     if (g_pSysInterface->Unk0x38F1) {
         if (!this->Unk0x5B) {
-            this->Unk0x3E = x / todo_a - 0.5f;
-            this->Unk0x42 = y / todo_b - 0.5f;
+            this->Unk0x3E = x / w - 0.5f;
+            this->Unk0x42 = y / h - 0.5f;
 
             if (!this->Unk0x56) {
                 return;
@@ -557,8 +558,8 @@ void ZRender::HandleMouseMove(WPARAM wParam, s32 x, s32 y) {
             set = true;
         }
 
-        this->Unk0x3E = (f32)(mx - pmx) / todo_a + this->Unk0x3E;
-        this->Unk0x42 = (f32)(my - pmy) / todo_b + this->Unk0x42;
+        this->Unk0x3E = (f32)(mx - pmx) / w + this->Unk0x3E;
+        this->Unk0x42 = (f32)(my - pmy) / h + this->Unk0x42;
 
         if (set) {
             SetCursorPos(this->MouseX, this->MouseY);
@@ -580,8 +581,8 @@ void ZRender::HandleMouseMove(WPARAM wParam, s32 x, s32 y) {
         GetClientRect(this->Window, &rect);
         ClientToScreen(this->Window, (LPPOINT)&rect);
 
-        const s32 dx = x - (s32)(todo_a * 0.5f);
-        const s32 dy = y - (s32)(todo_b * 0.5f);
+        const s32 dx = x - (s32)(w * 0.5f);
+        const s32 dy = y - (s32)(h * 0.5f);
 
         if (dx == 0 && dy == 0) {
             return;
@@ -592,16 +593,16 @@ void ZRender::HandleMouseMove(WPARAM wParam, s32 x, s32 y) {
             g_pSysInterface->Unk0xA99 += dy;
         }
 
-        SetCursorPos(rect.left + (s32)(todo_a * 0.5f), rect.top + (s32)(todo_b * 0.5f));
+        SetCursorPos(rect.left + (s32)(w * 0.5f), rect.top + (s32)(h * 0.5f));
 
-        this->Unk0x3E += (f32)dx / todo_a;
-        this->Unk0x42 += (f32)dy / todo_b;
+        this->Unk0x3E += (f32)dx / w;
+        this->Unk0x42 += (f32)dy / h;
 
-        if (0.5f < todo_a) {
+        if (0.5f < w) {
             this->Unk0x3E = 0.5f;
         }
 
-        if (0.5f < todo_b) {
+        if (0.5f < h) {
             this->Unk0x42 = 0.5f;
         }
 
@@ -1014,6 +1015,115 @@ void ZRender::CreateRenderPalette(HDC hdc) {
         this->ActivePalette = SelectPalette(hdc, this->Palette, 0);
         RealizePalette(hdc);
     }
+}
+
+// 0x0fba9320
+void ZRender::DisplayRenderWindow(const char* title) {
+    s32 width = GetSystemMetrics(SM_CXFULLSCREEN);
+    s32 height = GetSystemMetrics(SM_CYFULLSCREEN);
+    const s32 vwidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+    const s32 vheight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+
+    if (width < vwidth) {
+        width = vwidth;
+    }
+
+    if (height < vheight) {
+        height = vheight;
+    }
+
+    const bool full = g_pSysInterface->FullScreen;
+
+    if (!full) {
+        u32 w = g_pSysInterface->WindowWidth;
+        u32 h = g_pSysInterface->WindowHeight;
+
+        if (w >= 1600) {
+            w = 1600;
+            h = 1200;
+        }
+        else if (w >= 1280) {
+            w = 1280;
+            h = 1024;
+        }
+        else if (w >= 1024) {
+            w = 1024;
+            h = 768;
+        }
+        else if (w >= 800) {
+            w = 800;
+            h = 600;
+        }
+        else if (w >= 640) {
+            w = 640;
+            h = 480;
+        }
+        else {
+            w = 512;
+            h = 384;
+        }
+
+        g_pSysInterface->WindowWidth = w;
+        g_pSysInterface->WindowHeight = h;
+    }
+
+    g_pSysInterface->PreviousWindowWidth = g_pSysInterface->WindowWidth;
+    g_pSysInterface->PreviousWindowHeight = g_pSysInterface->WindowHeight;
+
+    RECT rect;
+    rect.top = height / 2 - g_pSysInterface->WindowHeight / 2;
+    rect.right = g_pSysInterface->WindowWidth / 2 + width / 2;
+    rect.bottom = g_pSysInterface->WindowHeight / 2 + height / 2;
+
+    const DWORD estyle = full ? WS_EX_TOPMOST : WS_EX_CLIENTEDGE;
+
+    if (full) {
+        rect.left = 0;
+        rect.top = 0;
+        rect.right = g_pSysInterface->WindowWidth;
+        rect.bottom = g_pSysInterface->WindowHeight;
+    }
+    else {
+        rect.left = width / 2 - g_pSysInterface->WindowWidth / 2;
+
+        if (g_pSysInterface->WindowX != -1) {
+            rect.left = g_pSysInterface->WindowX;
+            rect.top = g_pSysInterface->WindowY;
+            rect.right = g_pSysInterface->WindowX + g_pSysInterface->WindowWidth;
+            rect.bottom = g_pSysInterface->WindowY + g_pSysInterface->WindowHeight;
+        }
+    }
+
+    AdjustWindowRectEx(&rect, WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 0, estyle);
+    SetWindowLongA(this->Window, GWL_STYLE, WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
+    SetWindowLongA(this->Window, GWL_EXSTYLE, estyle);
+    MoveWindow(this->Window, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, TRUE);
+    GetClientRect(this->Window, &rect);
+
+    if (g_pSysInterface->DebugVideo) {
+        g_pSysCom->Log("Z:\\Engine\\Drawing\\_Wintel\\Source\\RenderWintel.cpp", 2167)
+            ->LogMessage("WindowRect = %d,%d,%d,%d", rect.left, rect.top, rect.right, rect.bottom);
+    }
+
+    if (full) {
+        width = g_pSysInterface->WindowWidth;
+        height = g_pSysInterface->WindowHeight;
+    }
+    else {
+        width = rect.right - rect.left;
+        height = rect.bottom - rect.top;
+    }
+
+    this->SetWindowSize(width, height);
+
+    GetWindowRect(this->Window, &rect);
+    SetCursorPos((rect.right + rect.left) / 2, (rect.bottom + rect.top) / 2);
+
+    this->ClipCursorToWindow(true);
+
+    SetWindowTextA(this->Window, title);
+    ShowWindow(this->Window, SW_SHOW);
+    SetForegroundWindow(this->Window);
 }
 
 // 0x0fba96a0

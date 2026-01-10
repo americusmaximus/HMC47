@@ -212,7 +212,7 @@ ZRenderBase::ZRenderBase(HINSTANCE instance, HWND window) {
     this->Unk0x60 = 10;
     this->Unk0x64 = 10;
     this->Unk0x5C = 0;
-    this->Unk0x7C = 60;
+    this->DisplayFrequency = 60;
     this->Unk0x81 = false;
     this->Unk0x82 = true;
     this->Unk0x5B = false;
@@ -410,19 +410,19 @@ u32 ZRenderBase::GetShowCursorVisibility() {
 }
 
 // 0x0fba4aa0
-s32 ZRenderBase::Method0xA0() {
-    return this->Unk0x83;
+s32 ZRenderBase::GetWindowWidth() {
+    return this->W;
 }
 
 // 0x0fba4ab0
-s32 ZRenderBase::Method0xA4() {
-    return this->Unk0x87;
+s32 ZRenderBase::GetWindowHeight() {
+    return this->H;
 }
 
 // 0x0fba4ac0
-void ZRenderBase::Method0xA8(f32 todo1, u32 todo2) {
-    this->Unk0x83 = todo1;
-    this->Unk0x87 = todo2;
+void ZRenderBase::SetWindowSize(s32 width, s32 height) {
+    this->W = width;
+    this->H = height;
 }
 
 // 0x0fba4ae0
@@ -470,7 +470,7 @@ void ZRenderBase::Method0xBC(f32 value) {
 
 // 0x0fba5090
 s32 ZRenderBase::Method0xAC() {
-    return (s32)(this->Method0xA0() / this->Unk0x123);
+    return (s32)(this->GetWindowWidth() / this->Unk0x123);
 }
 
 // 0x0fba50c0
@@ -485,13 +485,13 @@ const char* ZRenderBase::GetRenderName() {
 
 // 0x0fba50d0
 s32 ZRenderBase::Method0xB0() {
-    return (s32)(this->Method0xA4() / this->Unk0x127);
+    return (s32)(this->GetWindowHeight() / this->Unk0x127);
 }
 
 // 0x0fba5100
 void ZRenderBase::Method0x130(f64* value) {
-    value[0] = (s32)(this->Method0xA0() * value[0]) / this->Method0xA0();
-    value[1] = (s32)(this->Method0xA4() * value[1]) / this->Method0xA4();
+    value[0] = (s32)(this->GetWindowWidth() * value[0]) / this->GetWindowWidth();
+    value[1] = (s32)(this->GetWindowHeight() * value[1]) / this->GetWindowHeight();
 }
 
 // 0x0fba5190

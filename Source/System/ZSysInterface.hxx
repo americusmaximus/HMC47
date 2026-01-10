@@ -80,12 +80,12 @@ public:
     virtual void Method0x3C() = 0;                                              // 0x3C
     virtual void Method0x40() = 0;                                              // 0x40
     virtual void Method0x44() = 0;                                              // 0x44
-    virtual void Method0x48() = 0;                                              // 0x48
+    virtual bool IsKeyPressed(s32) = 0;                                         // 0x48
     virtual void Method0x4C() = 0;                                              // 0x4C
     virtual void Method0x50() = 0;                                              // 0x50
     virtual void Method0x54() = 0;                                              // 0x54
     virtual void Method0x58() = 0;                                              // 0x58
-    virtual void Method0x5C(const char*) = 0;                                   // 0x5C
+    virtual void SetWindowTitle(const char*) = 0;                               // 0x5C
     virtual void Method0x60() = 0;                                              // 0x60
     virtual void Method0x64() = 0;                                              // 0x64
     virtual void Method0x68() = 0;                                              // 0x68
@@ -160,12 +160,12 @@ public:
     bool EnableTripleBuffering;                                                 // 0x16
     bool DebugVideo;                                                            // 0x17
     bool Unk0x18;                                                               // 0x18
-    u32 WindowWidth;                                                            // 0x19
-    u32 WindowHeight;                                                           // 0x1D
-    u32 PreviousWindowWidth;                                                    // 0x21
-    u32 PreviousWindowHeight;                                                   // 0x25
-    u32 ColorDepth;                                                             // 0x29
-    u32 PreviousColorDepth;                                                     // 0x2D
+    s32 WindowWidth;                                                            // 0x19
+    s32 WindowHeight;                                                           // 0x1D
+    s32 PreviousWindowWidth;                                                    // 0x21
+    s32 PreviousWindowHeight;                                                   // 0x25
+    s32 ColorDepth;                                                             // 0x29
+    s32 PreviousColorDepth;                                                     // 0x2D
     u32 RefreshRate;                                                            // 0x31
     u32 Unk0x35;                                                                // 0x35
     s32 WindowX;                                                                // 0x39
@@ -301,12 +301,12 @@ public:
     virtual void Method0x3C();                                                          // 0x3C
     virtual void Method0x40();                                                          // 0x40
     virtual void Method0x44();                                                          // 0x44
-    virtual void Method0x48();                                                          // 0x48
+    virtual bool IsKeyPressed(s32 key);                                                 // 0x48
     virtual void Method0x4C();                                                          // 0x4C
     virtual void Method0x50();                                                          // 0x50
     virtual void Method0x54();                                                          // 0x54
     virtual void Method0x58();                                                          // 0x58
-    virtual void Method0x5C(const char* params);                                        // 0x5C
+    virtual void SetWindowTitle(const char* title);                                     // 0x5C
     virtual void Method0x60();                                                          // 0x60
     virtual void Method0x64();                                                          // 0x64
     virtual void Method0x68();                                                          // 0x68
@@ -352,7 +352,7 @@ public:
     ZString LogPath;                                                            // 0x3A45
     bool UseTryCatchMainLoop;                                                   // 0x3AC5
     u32 Unk0x3AC6;                                                              // 0x3AC6
-    ZString Unk0x3ACA;                                                          // 0x3ACA
+    ZString WindowTitle;                                                        // 0x3ACA
     ZString Unk0x3B4A;                                                          // 0x3B4A
     bool Unk0x3BCA;                                                             // 0x3BCA
     u64 Unk0x3BCD;                                                              // 0x3BCD

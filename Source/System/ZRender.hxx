@@ -92,9 +92,9 @@ public:
     virtual bool EndScene();                                                        // 0x94
     virtual void Method0x98();                                                      // 0x98
     virtual f32 Method0x9C();                                                       // 0x9C
-    virtual s32 Method0xA0();                                                       // 0xA0
-    virtual s32 Method0xA4();                                                       // 0xA4
-    virtual void Method0xA8(f32 todo1, u32 todo2);                                  // 0xA8
+    virtual s32 GetWindowWidth();                                                   // 0xA0
+    virtual s32 GetWindowHeight();                                                  // 0xA4
+    virtual void SetWindowSize(s32 width, s32 height);                              // 0xA8
     virtual s32 Method0xAC();                                                       // 0xAC
     virtual s32 Method0xB0();                                                       // 0xB0
     virtual f32 Method0xB4();                                                       // 0xB4
@@ -172,12 +172,12 @@ public:
     // TODO
 
     u32 Unk0x78;                                                                    // 0x78
-    u32 Unk0x7C;                                                                    // 0x7C
+    u32 DisplayFrequency;                                                           // 0x7C
     bool Unk0x80;                                                                   // 0x80
     bool Unk0x81;                                                                   // 0x81
     bool Unk0x82;                                                                   // 0x82
-    s32 Unk0x83;                                                                    // 0x83
-    s32 Unk0x87;                                                                    // 0x87
+    s32 W;                                                                          // 0x83
+    s32 H;                                                                          // 0x87
     LinkSortRefTab* Unk0x8B;                                                        // 0x8B
     u32 Unk0x8F;                                                                    // 0x8F
     u32 Unk0x93;                                                                    // 0x93
@@ -255,6 +255,9 @@ public:
     virtual void CreateRenderPalette(HDC hdc);                                              // 0x1BC
     virtual void GetRenderWindowDimensions(LPRECT rect);                                    // 0x1C0
     virtual void Initialize();                                                              // 0x1C4
+
+protected:
+    void DisplayRenderWindow(const char* title);
 
 protected:
     bool Unk0x12B;                                                                          // 0x12B

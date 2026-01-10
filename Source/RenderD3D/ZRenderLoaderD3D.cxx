@@ -92,7 +92,7 @@ void ZRenderLoaderD3D::Method0x3C(u32* todo) {
 }
 
 // 0x0fb90a60
-void ZRenderLoaderD3D::Method0x40() {
+void ZRenderLoaderD3D::Method0x44() {
     // TODO NOT IMPLEMENTED
 }
 

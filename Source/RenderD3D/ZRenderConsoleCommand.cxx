@@ -37,7 +37,7 @@ void ZRenderConsoleCommand::Method0x4() {}
 
 // 0x0fba3630
 void ZRenderConsoleCommand::SetVisibility(const char* value) {
-    if (strcmpi(this->Name, "r_font_size") == 0) {
+    if (_strcmpi(this->Name, "r_font_size") == 0) {
         if (value != nullptr) {
             this->Instance->Method0xBC(this->Instance->FUN_0fbb210c());
 

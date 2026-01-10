@@ -216,7 +216,7 @@ void ZRenderD3D::Initialize() {
             rgb = current;
         }
 
-        if (strcmpi(current->Name, "Reference Rasterizer") == 0 && reference == nullptr) {
+        if (_strcmpi(current->Name, "Reference Rasterizer") == 0 && reference == nullptr) {
             reference = current;
         }
     }
@@ -850,6 +850,33 @@ void ZRenderD3D::Method0x64(u32 todo) {
     // TODO NOT IMPLEMENTED
 }
 
+// 0x0fb83c50
+void ZRenderD3D::Method0x1C8(HWND window) {
+    if (!g_pSysInterface->Unk0x38F1) {
+        this->Window = window;
+        this->DisplayRenderWindow("Direct3D");
+        this->Initialize();
+    }
+    else {
+        RECT rect;
+        GetClientRect(window, &rect);
+
+        this->CreateRenderWindow(nullptr, "Direct3D",
+            WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 0, &rect, window);
+
+        this->ShowRenderWindow(SW_SHOW);
+    }
+
+    DEVMODEA mode;
+    ZeroMemory(&mode, sizeof(DEVMODEA));
+
+    mode.dmSize = sizeof(DEVMODEA);
+
+    EnumDisplaySettingsA(nullptr, ENUM_CURRENT_SETTINGS, &mode);
+
+    this->DisplayFrequency = mode.dmDisplayFrequency;
+}
+
 // 0x0fb840e0
 void ZRenderD3D::Method0xE4() {
     D3DMATRIX matrix;
@@ -971,17 +998,18 @@ void ZRenderD3D::Method0xE4() {
         g_Device->SetTexture(0, DAT_0fbbef0c);
     }
 
-    const f32 fVar3 = 32.0f / this->Method0xA0(); // TODO
-    const f32 iVar2 = this->Method0xA4(); // TODO
-    const f32 fVar1 = (32.0f / iVar2) * 0.5f; // TODO
+    // TODO TYDY
 
-    matrix._32 = this->Unk0x3E + this->Unk0x3E - fVar3 * 0.5f;
-    matrix._33 = -2.0f * this->Unk0x42 - fVar1;
+    const f32 a = 32.0f / this->GetWindowWidth();
+    const f32 b = (32.0f / this->GetWindowHeight()) * 0.5f;
+
+    matrix._32 = this->Unk0x3E + this->Unk0x3E - a * 0.5f;
+    matrix._33 = -2.0f * this->Unk0x42 - b;
     matrix._34 = 0.0f;
 
-    matrix._41 = fVar3 * 0.5f;
-    matrix._42 = -fVar1;
-    matrix._43 = matrix._32 + fVar3;
+    matrix._41 = a * 0.5f;
+    matrix._42 = -b;
+    matrix._43 = matrix._32 + a;
     matrix._44 = matrix._33;
 
     g_Device->DrawPrimitive(D3DPT_TRIANGLEFAN, D3DFVF_TEX1 | D3DFVF_XYZ, &matrix._32, 4, 0);
