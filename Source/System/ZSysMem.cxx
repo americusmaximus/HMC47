@@ -35,7 +35,7 @@ ZSysMemBase::~ZSysMemBase() {}
 // 0x0ffb18d0
 void ZSysMem::Method0x4(u32 p2 /* TODO */, u32 p3 /* TODO */) {
     if (g_pSysInterface == nullptr
-        || g_pSysInterface->Unk0x38F1 || g_pSysInterface->Unk0xA75 != 0.0f) {
+        || g_pSysInterface->Unk0x38F1 || g_pSysInterface->DebugOptionsVisibility != 0.0f) {
         u32 todo1, todo2;
         this->Method0x70(&todo1, &todo2);
 
@@ -55,9 +55,8 @@ void ZSysMem::Method0x8() {
     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 36)
         ->LogMessage("Alloc  : Process %.3f/%.3f Internal %.3f/%.3f : Count %.3f",
             todo1 / 1048576.0, todo2 / 1048576.0,
-            (this->Unk0x1A - this->Unk0x16) / 1048576.0, this->Unk0x24A + this->Unk0x246);
+            this->Unk0x24E / 1048576.0, this->Unk0x252 / 1048576.0, this->Unk0x24A + this->Unk0x246);
 
-    // TODO NOT IMPLEMENTED
     //g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 37)
     //    ->LogMessage("Texture: Light %d Texture %d", )
 }
@@ -70,6 +69,22 @@ void ZSysMem::Method0x70(u32* todo1, u32* todo2) {
 
 // 0x0ffb1af0
 ZSysMem::ZSysMem() {
+    FUN_0ffc7530(&this->Unk0x16);
+
+    this->Unk0x242 = 0;
+    this->Unk0x23A = 0;
+    this->Unk0x23E = 0;
+    this->Unk0x246 = 0;
+    this->Unk0x24A = 0;
+    this->Unk0x24E = 0;
+    this->Unk0x252 = 0;
+    this->Unk0x256 = 0;
+
+    g_pSysMem = this;
+
+
+
+
     // TODO NOT IMPLEMENTED
 }
 

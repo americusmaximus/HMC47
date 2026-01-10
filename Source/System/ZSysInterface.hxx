@@ -248,11 +248,11 @@ public:
     bool DisableConfig;                                                         // 0x38F2
     bool Unk0x38F3;                                                             // 0x38F3
     bool Unk0x38F4;                                                             // 0x38F4
-    ZDynamicLoader* Unk0x38F5;                                                  // 0x38F5
+    ZDynamicLoader* SoundLoader;                                                // 0x38F5
     ZRenderLoader* RenderLoader;                                                // 0x38F9
-    ZDynamicLoader* Unk0x38FD;                                                  // 0x38FD
-    ZDynamicLoader* Unk0x3901;                                                  // 0x3901
-    ZDynamicLoader* Unk0x3905;                                                  // 0x3905
+    ZDynamicLoader* ScriptLoader;                                               // 0x38FD
+    ZDynamicLoader* DirectPlayLoader;                                           // 0x3901
+    ZDynamicLoader* LocaleLoader;                                               // 0x3905
     ZString Unk0x3909;                                                          // 0x3909
     bool ScriptDebug;                                                           // 0x3989
     bool ScriptDebugPrint;                                                      // 0x398A

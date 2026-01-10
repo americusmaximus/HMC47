@@ -59,10 +59,10 @@ ZSysInterface::ZSysInterface(HMODULE module) {
     this->Unk0xAA1 = 0; // TODO
 
     this->RenderLoader = nullptr;
-    this->Unk0x38FD = nullptr;
-    this->Unk0x3901 = nullptr;
-    this->Unk0x3905 = nullptr;
-    this->Unk0x38F5 = nullptr;
+    this->ScriptLoader = nullptr;
+    this->DirectPlayLoader = nullptr;
+    this->LocaleLoader = nullptr;
+    this->SoundLoader = nullptr;
 
     this->Unk0x5D = 0; // TODO
 
@@ -165,7 +165,7 @@ void ZSysInterface::Method0x20(bool todo) {
         g_pSysMem->Method0x8();
 
         if (!todo) {
-            if (g_pSysInterface->Unk0x38F5 != nullptr) {
+            if (g_pSysInterface->SoundLoader != nullptr) {
                 // TODO NOT IMPLEMENTED
             }
         }
@@ -321,10 +321,10 @@ bool StartEngine() {
             }
         }
 
-        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->Unk0x38FD, g_pSysInterface->ScriptDll);
-        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->Unk0x38F5, g_pSysInterface->SoundDll);
-        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->Unk0x3901, g_pSysInterface->DirectPlayDll);
-        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->Unk0x3905, g_pSysInterface->LocaleDll);
+        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->ScriptLoader, g_pSysInterface->ScriptDll);
+        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->SoundLoader, g_pSysInterface->SoundDll);
+        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->DirectPlayLoader, g_pSysInterface->DirectPlayDll);
+        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->LocaleLoader, g_pSysInterface->LocaleDll);
 
         // TODO NOT IMPLEMENTED
 
@@ -487,9 +487,9 @@ static LRESULT WINAPI MainWindowHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
                 SetWindowPos(hWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
             }
 
-            if (g_pSysInterface->Unk0x38F5 != nullptr) {
-                if (g_pSysInterface->Unk0x38F5->Unk0x1C != nullptr) {
-                    g_pSysInterface->Unk0x38F5->Unk0x1C->Method0x48();
+            if (g_pSysInterface->SoundLoader != nullptr) {
+                if (g_pSysInterface->SoundLoader->Unk0x1C != nullptr) {
+                    g_pSysInterface->SoundLoader->Unk0x1C->Method0x48();
                 }
             }
         }

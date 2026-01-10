@@ -116,6 +116,12 @@ protected:
 
     // TODO
 
+    bool Unk0x231;                                                          // 0x231
+    u32 Unk0x232;                                                           // 0x232
+    u32 Unk0x236;                                                           // 0x236
+    u32 Unk0x23A;                                                           // 0x23A
+    u32 Unk0x23E;                                                           // 0x23E
+    u32 Unk0x242;                                                           // 0x242
     u32 Unk0x246;                                                           // 0x246
     u32 Unk0x24A;                                                           // 0x24A
     u32 Unk0x24E;                                                           // 0x24E
