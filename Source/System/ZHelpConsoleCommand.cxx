@@ -20,28 +20,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Globals.hxx"
+#include "ZConsole.hxx"
 
-// 0x0fbb5aa8
-ZRenderConsoleCommand::ZRenderConsoleCommand(const char* name, ZRenderBase* instance)
-    : ZConsoleCommand(name) {
-    this->Instance = instance;
+// 0x0ffd448c
+ZHelpConsoleCommand::ZHelpConsoleCommand(const char* command, ZConsoleHandler* handler)
+    :ZConsoleCommand(command) {
+    this->Handler = handler;
 }
 
-// 0x0fba36b0
-// 0x0fba36d0
-ZRenderConsoleCommand::~ZRenderConsoleCommand() {}
+// 0x0ffc8aa0
+void ZHelpConsoleCommand::Execute(const char* value) {
+    this->Handler->PrintStatus(value);
+}
 
-// 0x0fba3630
-void ZRenderConsoleCommand::Execute(const char* value) {
-    if (_strcmpi(this->Command, "r_font_size") == 0) {
-        if (value != nullptr) {
-            this->Instance->Method0xBC(this->FUN_0fbb210c());
-
-            return;
-        }
-
-        g_pSysCom->Log("Z:\\Engine\\Drawing\\Source\\RenderBase.cpp", 116)
-            ->LogMessage("%s = %f", this->Command, this->Instance->Method0xC0());
-    }
+// 0x0ffc8ab0
+// 0x0ffc8af0
+ZHelpConsoleCommand::~ZHelpConsoleCommand() {
+    delete this->Command;
 }

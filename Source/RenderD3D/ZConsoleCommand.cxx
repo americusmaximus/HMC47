@@ -23,15 +23,15 @@ SOFTWARE.
 #include "Globals.hxx"
 
 // 0x0fbb5ac0
-ZConsoleCommandHandler::ZConsoleCommandHandler(const char* name) {
-    this->Command = new char[strlen(name) + 1];
-    strcpy(this->Command, name);
+ZConsoleCommand::ZConsoleCommand(const char* command) {
+    this->Command = new char[strlen(command) + 1];
+    strcpy(this->Command, command);
 }
 
 // 0x0fba35c0
-ZConsoleCommandHandler::~ZConsoleCommandHandler() {
+ZConsoleCommand::~ZConsoleCommand() {
     delete[] this->Command;
 }
 
 // 0x0fbac830
-void ZConsoleCommandHandler::Method0x4(u32, u32) {}
+void ZConsoleCommand::Method0x4(u32, u32) {}

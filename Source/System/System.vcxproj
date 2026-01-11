@@ -166,6 +166,11 @@
     <ClCompile Include="Main.cxx" />
     <ClCompile Include="RefTab.cxx" />
     <ClCompile Include="ZConsole.cxx" />
+    <ClCompile Include="ZConsoleAutoComplete.cxx" />
+    <ClCompile Include="ZConsoleAutoCompleteHandler.cxx" />
+    <ClCompile Include="ZConsoleCommand.cxx" />
+    <ClCompile Include="ZConsoleHandler.cxx" />
+    <ClCompile Include="ZHelpConsoleCommand.cxx" />
     <ClCompile Include="ZString.cxx" />
     <ClCompile Include="ZSysCom.cxx" />
     <ClCompile Include="ZSysFile.cxx" />

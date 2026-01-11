@@ -33,13 +33,13 @@ ZVisualConsoleCommand::ZVisualConsoleCommand(const char* name, f32* visibility)
 ZVisualConsoleCommand::~ZVisualConsoleCommand() {}
 
 // 0x0fbb0550
-void ZVisualConsoleCommand::Execute(const char* command) {
-    if (command == nullptr) {
+void ZVisualConsoleCommand::Execute(const char* value) {
+    if (value == nullptr) {
         g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\ConsoleCommand.cpp", 54)
             ->LogMessage("%s(%p) = %f", this->Command, this->Visibility, *this->Visibility);
 
         return;
     }
 
-    *this->Visibility = this->FUN_0fbb210c(command);
+    *this->Visibility = this->FUN_0fbb210c(value);
 }

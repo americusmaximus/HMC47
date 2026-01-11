@@ -115,8 +115,8 @@ public:
     virtual void Method0xD4() = 0;                                              // 0xD4
     virtual void Method0xD8() = 0;                                              // 0xD8
     virtual void Method0xDC() = 0;                                              // 0xDC
-    virtual void EnqueueConsoleCommand(ZConsoleCommandBase* command);           // 0xE0
-    virtual void DequeueConsoleCommand(ZConsoleCommandBase* command);           // 0xE4
+    virtual void RegisterConsoleCommand(ZConsoleCommand* command);              // 0xE0
+    virtual void UnregisterConsoleCommand(ZConsoleCommand* command);            // 0xE4
     virtual void Method0xE8();                                                  // 0xE8
     virtual ZConsole* GetConsole();                                             // 0xEC
     virtual void Method0xF0();                                                  // 0xF0

@@ -124,10 +124,19 @@ bool ZSysInterfaceBase::Method0x0() {
 }
 
 // 0x0ffaa720
-void ZSysInterfaceBase::EnqueueConsoleCommand(ZConsoleCommandBase* command) {
+void ZSysInterfaceBase::RegisterConsoleCommand(ZConsoleCommand* command) {
     ZConsole* console = this->GetConsole();
 
     if (console != nullptr) {
-        console->Method0x1C(command);
+        console->RegisterCommand(command);
+    }
+}
+
+// 0x0ffaa750
+void ZSysInterfaceBase::UnregisterConsoleCommand(ZConsoleCommand* command) {
+    ZConsole* console = this->GetConsole();
+
+    if (console != nullptr) {
+        console->UnregisterCommand(command);
     }
 }

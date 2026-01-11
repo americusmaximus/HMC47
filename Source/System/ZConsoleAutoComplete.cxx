@@ -20,28 +20,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Globals.hxx"
+#include "ZConsole.hxx"
 
-// 0x0fbb5aa8
-ZRenderConsoleCommand::ZRenderConsoleCommand(const char* name, ZRenderBase* instance)
-    : ZConsoleCommand(name) {
-    this->Instance = instance;
+ZConsoleAutoComplete::ZConsoleAutoComplete() {
+    this->Items = nullptr;
+    this->Unk0x4 = 0;
+    this->Unk0x8 = 32; // TODO
+    this->Unk0xC = 0;
 }
 
-// 0x0fba36b0
-// 0x0fba36d0
-ZRenderConsoleCommand::~ZRenderConsoleCommand() {}
+ZConsoleAutoComplete::~ZConsoleAutoComplete() {
+    // TODO NOT IMPLEMENTED
 
-// 0x0fba3630
-void ZRenderConsoleCommand::Execute(const char* value) {
-    if (_strcmpi(this->Command, "r_font_size") == 0) {
-        if (value != nullptr) {
-            this->Instance->Method0xBC(this->FUN_0fbb210c());
-
-            return;
-        }
-
-        g_pSysCom->Log("Z:\\Engine\\Drawing\\Source\\RenderBase.cpp", 116)
-            ->LogMessage("%s = %f", this->Command, this->Instance->Method0xC0());
-    }
+    this->Unk0x4 = 0;
+    this->Unk0xC = 0;
 }

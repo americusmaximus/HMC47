@@ -283,7 +283,7 @@ public:
 
 public:
     virtual ~ZRenderConsoleCommand();
-    virtual void Execute(const char* command);                                              // 0x8
+    virtual void Execute(const char* value);                                                // 0x8
 
 protected:
     ZRenderBase* Instance;                                                                  // 0x8

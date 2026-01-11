@@ -474,7 +474,7 @@ void ZRender::HandleRightButtonUp(WPARAM wParam, s32 x, s32 y) {
     }
 
     g_pSysInterface->Unk0xAD5 = false;
-    g_pSysInterface->Unk0x2EA2 = fale;
+    g_pSysInterface->Unk0x2EA2 = false;
 }
 
 // 0x0fba7400

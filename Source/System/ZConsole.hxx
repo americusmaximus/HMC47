@@ -38,10 +38,28 @@ public:
 public:
     virtual ~ZConsoleCommand();                                                     // 0x0
     virtual void Method0x4(u32, u32);                                               // 0x4
-    virtual void Execute(const char* command) = 0;                                  // 0x8
+    virtual void Execute(const char* value) = 0;                                    // 0x8
 
-protected:
+public:
     char* Command;                                                                  // 0x4
+};
+
+struct ZConsoleCommandNode {
+    inline ZConsoleCommandNode(ZConsoleCommand* command) {
+        this->Next = nullptr;
+        this->Previous = nullptr;
+
+        this->NextMatch = nullptr;
+        this->PreviousMatch = nullptr;
+
+        this->Command = command;
+    }
+
+    ZConsoleCommandNode* Next;                                                      // 0x0
+    ZConsoleCommandNode* Previous;                                                  // 0x4
+    ZConsoleCommandNode* PreviousMatch;                                             // 0x8
+    ZConsoleCommandNode* NextMatch;                                                 // 0xC
+    ZConsoleCommand* Command;                                                       // 0x10
 };
 
 class ZVisualConsoleCommand : public ZConsoleCommand {
@@ -50,11 +68,13 @@ public:
 
 public:
     virtual ~ZVisualConsoleCommand();                                               // 0x0
-    virtual void Execute(const char* command);                                      // 0x8
+    virtual void Execute(const char* value);                                        // 0x8
 
 protected:
     f32* Visibility;                                                                // 0x8
 };
+
+class ZHelpConsoleCommand;
 
 class ZConsoleHandler {
 public:
@@ -62,16 +82,42 @@ public:
     ~ZConsoleHandler();
 
 public:
-    virtual void Method0x0();                                                       // 0x0
-    virtual void Method0x4();                                                       // 0x4
-    virtual void Method0x8();                                                       // 0x8
-    virtual void Method0xC();                                                       // 0xC
-    virtual void Method0x10();                                                      // 0x10
-    virtual void Method0x14();                                                      // 0x14
+    virtual void Register(ZConsoleCommand* command);                                // 0x0
+    virtual void Unregister(ZConsoleCommand* command);                              // 0x4
+    virtual ZConsoleCommandNode* Find(const char* command,
+        bool direction, bool exact, ZConsoleCommandNode* node);                     // 0x8
+    virtual bool Execute(const char* command, const char* value);                   // 0xC
+    virtual void PrintStatus(const char* value);                                    // 0x10
+    virtual ZConsoleCommandNode* GetNodes();                                        // 0x14
 
 protected:
+    ZConsoleCommandNode* Nodes;                                                     // 0x4
+    ZHelpConsoleCommand* Help;                                                      // 0x8
+};
+
+class ZConsoleAutoComplete {
+public:
+    ZConsoleAutoComplete();
+    ~ZConsoleAutoComplete();
+
+public:
+    void* Items;                                                                    // 0x0
     u32 Unk0x4;                                                                     // 0x4
     u32 Unk0x8;                                                                     // 0x8
+    u32 Unk0xC;                                                                     // 0xC
+};
+
+class ZConsoleAutoCompleteHandler {
+public:
+    ZConsoleAutoCompleteHandler(ZConsoleAutoComplete* complete);
+
+public:
+    virtual ~ZConsoleAutoCompleteHandler();                                         // 0x0x
+
+protected:
+    ZConsoleAutoComplete* AutoComplete;                                             // 0x4
+    void* Unk0x8;                                                                   // 0x8
+    u32 Unk0xC;                                                                     // 0xC
 };
 
 class ZConsole {
@@ -80,20 +126,20 @@ public:
     ~ZConsole();
 
 public:
-    virtual void Method0x0();                                                       // 0x0
-    virtual void Method0x4();                                                       // 0x4
-    virtual void Method0x8();                                                       // 0x8
-    virtual void Method0xC();                                                       // 0xC
-    virtual void Method0x10();                                                      // 0x10
-    virtual void Method0x14();                                                      // 0x14
+    virtual bool Method0x0();                                                       // 0x0
+    virtual void __cdecl Method0x4(const char* fromat, ...);                        // 0x4
+    virtual const char* Method0x8(s32 index);                                       // 0x8
+    virtual bool Method0xC();                                                       // 0xC
+    virtual void Method0x10(WPARAM wParam, LPARAM lParam);                          // 0x10
+    virtual void Method0x14(u32 todo, u32);                                         // 0x14
     virtual void Method0x18();                                                      // 0x18
-    virtual void Method0x1C();                                                      // 0x1C
-    virtual void Method0x20();                                                      // 0x20
-    virtual void Method0x24();                                                      // 0x24
-    virtual void Method0x28();                                                      // 0x28
-    virtual void Method0x2C();                                                      // 0x2C
-    virtual void Method0x30();                                                      // 0x20
-    virtual void Method0x34();                                                      // 0x34
+    virtual void RegisterCommand(ZConsoleCommand* command);                         // 0x1C
+    virtual void UnregisterCommand(ZConsoleCommand* command);                       // 0x20
+    virtual void Method0x24(const char* command);                                   // 0x24
+    virtual void ToggleVisibility();                                                // 0x28
+    virtual void Method0x2C(bool todo);                                             // 0x2C
+    virtual void Method0x30(const char* command);                                   // 0x30
+    virtual f32 Method0x34();                                                       // 0x34
 
 protected:
     bool Visible;                                                                   // 0x4
@@ -102,8 +148,8 @@ protected:
     f32 Unk0x7;                                                                     // 0x7
     f32 Unk0xB;                                                                     // 0xB
     char* Lines[ZCONSOLE_MAX_LINE_COUNT];                                           // 0xF
-    u32 Unk0xFAF;                                                                   // 0xFAF
-    u32 Unk0xFB3;                                                                   // 0xFB3
+    s32 LineCount;                                                                  // 0xFAF
+    s32 Unk0xFB3;                                                                   // 0xFB3
     char* Commands[ZCONSOLE_MAX_COMMAND_COUNT];                                     // 0xFB3
     char Input[ZCONSOLE_MAX_INPUT_LENGTH];                                          // 0x1007
     u32 Unk0x10CF;                                                                  // 0x10CF
@@ -112,15 +158,31 @@ protected:
     ZConsoleHandler Handler;                                                        // 0x10DB
     u32 Unk0x10E7;                                                                  // 0x10E7
     bool Unk0x10EB;                                                                 // 0x10EB
-    void* Unk0x10EC;                                                                // 0x10EC
-    void* Unk0x10F0;                                                                // 0x10F0
+    ZConsoleAutoComplete* AutoComplete;                                             // 0x10EC
+    ZConsoleAutoCompleteHandler* AutoCompleteHandler;                               // 0x10F0
+};
+
+class ZHelpConsoleCommand : public ZConsoleCommand {
+public:
+    ZHelpConsoleCommand(const char* command, ZConsoleHandler* handler);
+
+public:
+    virtual ~ZHelpConsoleCommand();                                                 // 0x0
+    virtual void Execute(const char* value);                                        // 0x8
+
+protected:
+    ZConsoleHandler* Handler;
 };
 
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZConsoleCommand)           == 0x8,     "ZConsoleCommand size mismatch.");
-static_assert(sizeof(ZVisualConsoleCommand)     == 0xC,     "ZVisualConsoleCommand size mismatch.");
-static_assert(sizeof(ZConsoleHandler)           == 0xC,     "ZConsoleHandler size mismatch.");
-static_assert(sizeof(ZConsole)                  == 0x10F4,  "ZConsole size mismatch.");
+static_assert(sizeof(ZConsole)                      == 0x10F4,  "ZConsole size mismatch.");
+static_assert(sizeof(ZConsoleAutoComplete)          == 0x10,    "ZConsoleAutoComplete size mismatch.");
+static_assert(sizeof(ZConsoleAutoCompleteHandler)   == 0x10,    "ZConsoleAutoCompleteHandler size mismatch.");
+static_assert(sizeof(ZConsoleCommand)               == 0x8,     "ZConsoleCommand size mismatch.");
+static_assert(sizeof(ZConsoleCommandNode)           == 0x14,    "ZConsoleCommandNode size mismatch.");
+static_assert(sizeof(ZConsoleHandler)               == 0xC,     "ZConsoleHandler size mismatch.");
+static_assert(sizeof(ZHelpConsoleCommand)           == 0xC,     "ZHelpConsoleCommand size mismatch.");
+static_assert(sizeof(ZVisualConsoleCommand)         == 0xC,     "ZVisualConsoleCommand size mismatch.");
 #endif
