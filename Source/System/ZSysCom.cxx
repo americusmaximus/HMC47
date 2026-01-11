@@ -152,7 +152,8 @@ void ZSysCom::LogMessage(const char* format, ...) {
 void ZSysCom::Method0x30(const char* format, ...) {
     char buffer[4096];
 
-    if ((g_pSysInterface == nullptr || g_pSysInterface->Unk0x38F1 || g_pSysInterface->Unk0xA75 != 0.0f)
+    if ((g_pSysInterface == nullptr
+        || g_pSysInterface->Unk0x38F1 || g_pSysInterface->DebugOptionsVisibility != 0.0f)
         && this->Unk0x12) {
         if (this->Unk0x23 == nullptr) {
             // TODO NOT IMPLEMENTED
@@ -181,8 +182,10 @@ void ZSysCom::Method0x38(const char* format, ...) {
     }
 
     if (g_pSysInterface != nullptr) {
-        if (g_pSysInterface->Method0xEC() != nullptr) {
-            // TODO NOT IMPLEMENTED
+        ZConsole* console = g_pSysInterface->GetConsole();
+
+        if (console != nullptr) {
+            console->Method0x4(buffer);
         }
     }
 }

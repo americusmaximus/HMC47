@@ -165,6 +165,7 @@
     <ClCompile Include="LinkSortRefTab.cxx" />
     <ClCompile Include="Main.cxx" />
     <ClCompile Include="RefTab.cxx" />
+    <ClCompile Include="ZConsole.cxx" />
     <ClCompile Include="ZString.cxx" />
     <ClCompile Include="ZSysCom.cxx" />
     <ClCompile Include="ZSysFile.cxx" />
@@ -180,13 +181,11 @@
     <ClInclude Include="LinkSortRefTab.hxx" />
     <ClInclude Include="RefTab.hxx" />
     <ClInclude Include="Texture.hxx" />
-    <ClInclude Include="ZConsoleCommand.hxx" />
     <ClInclude Include="ZCounter.hxx" />
     <ClInclude Include="ZDynamicLoader.hxx" />
     <ClInclude Include="ZException.hxx" />
     <ClInclude Include="ZExceptionRender.hxx" />
     <ClInclude Include="ZRender.hxx" />
-    <ClInclude Include="ZRenderConsoleCommand.hxx" />
     <ClInclude Include="ZRenderLoader.hxx" />
     <ClInclude Include="ZTextureManager.hxx" />
     <ClInclude Include="ZSettings.hxx" />

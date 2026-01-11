@@ -23,41 +23,15 @@ SOFTWARE.
 #include "Globals.hxx"
 
 // 0x0fbb5ac0
-ZConsoleCommandBase::ZConsoleCommandBase(const char* name) {
-    this->Name = new char[strlen(name) + 1];
-    strcpy(this->Name, name);
+ZConsoleCommandHandler::ZConsoleCommandHandler(const char* name) {
+    this->Command = new char[strlen(name) + 1];
+    strcpy(this->Command, name);
 }
 
 // 0x0fba35c0
-ZConsoleCommandBase::~ZConsoleCommandBase() {
-    delete[] this->Name;
+ZConsoleCommandHandler::~ZConsoleCommandHandler() {
+    delete[] this->Command;
 }
-
-// 0x0fba35f0
-// 0x0fba3610
-ZConsoleCommand::~ZConsoleCommand() {}
 
 // 0x0fbac830
-void ZConsoleCommandBase::Method0x4() {}
-
-// 0x0fbac830
-void ZConsoleCommand::Method0x4() {}
-
-// 0x0fbb0550
-void ZConsoleCommand::SetVisibility(const char* value) {
-    if (value == nullptr) {
-        g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\ConsoleCommand.cpp", 54)
-            ->LogMessage("%s(%p) = %f", this->Name, this->Visibility, *this->Visibility);
-
-        return;
-    }
-
-    *this->Visibility = this->FUN_0fbb210c(value);
-}
-
-
-// 0x0fbb5ab4
-ZConsoleCommand::ZConsoleCommand(const char* name, f32* visibility)
-    : ZConsoleCommandBase(name) {
-    this->Visibility = visibility;
-}
+void ZConsoleCommandHandler::Method0x4(u32, u32) {}

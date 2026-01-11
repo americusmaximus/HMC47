@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ZSysInterface.hxx"
+#include "Globals.hxx"
 
 // 0x0ffa8da0
 ZSysInterfaceBase::ZSysInterfaceBase() {
@@ -35,7 +35,7 @@ ZSysInterfaceBase::ZSysInterfaceBase() {
     this->EnableTripleBuffering = false;
     this->Unk0x6 = false;
     this->Unk0x7 = false;
-    this->Unk0x398D = 1.0f;
+    this->TimeMultiplierVisibility = 1.0f;
     this->WindowHasFocus = FALSE;
     this->Unk0x3A1A = 0; // TODO
     this->Unk0x3A16 = nullptr;
@@ -89,7 +89,7 @@ ZSysInterfaceBase::ZSysInterfaceBase() {
 ZSysInterfaceBase::~ZSysInterfaceBase() {
     if (strlen(this->Unk0x7E1) != 0) {
         g_pSysFile->Method0x58(this->Unk0x7E1, this->Unk0x3A16,
-            (void*)((size_t)this->Unk0x3A1A - (size_t)this->Unk0x3A16), 0);
+            (void*)((size_t)this->Unk0x3A1A - (size_t)this->Unk0x3A16), 0); // TODO
     }
 
     if (this->Unk0x3A16 != nullptr) {
@@ -125,7 +125,9 @@ bool ZSysInterfaceBase::Method0x0() {
 
 // 0x0ffaa720
 void ZSysInterfaceBase::EnqueueConsoleCommand(ZConsoleCommandBase* command) {
-    if (this->Method0xEC() != 0 /* TODO */) {
-        // TODO NOT IMPLEMENTED
+    ZConsole* console = this->GetConsole();
+
+    if (console != nullptr) {
+        console->Method0x1C(command);
     }
 }

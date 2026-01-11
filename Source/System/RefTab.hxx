@@ -108,6 +108,10 @@ protected:
 
 #pragma pack(pop)
 
+#ifdef _WIN64
+#error RefTab is incompatible with x64.
+#endif
+
 #if defined(_DEBUG) && !defined(_WIN64)
 static_assert(sizeof(RefTab)    == 0x1C,    "RefTab size mismatch.");
 #endif

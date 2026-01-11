@@ -23,28 +23,25 @@ SOFTWARE.
 #include "Globals.hxx"
 
 // 0x0fbb5aa8
-ZRenderConsoleCommand::ZRenderConsoleCommand(const char* name, ZRenderBase* instance)
-    : ZConsoleCommandBase(name) {
+ZRenderConsoleCommandHandler::ZRenderConsoleCommandHandler(const char* name, ZRenderBase* instance)
+    : ZConsoleCommandHandler(name) {
     this->Instance = instance;
 }
 
 // 0x0fba36b0
 // 0x0fba36d0
-ZRenderConsoleCommand::~ZRenderConsoleCommand() {}
-
-// 0x0fbac830
-void ZRenderConsoleCommand::Method0x4() {}
+ZRenderConsoleCommandHandler::~ZRenderConsoleCommandHandler() {}
 
 // 0x0fba3630
-void ZRenderConsoleCommand::SetVisibility(const char* value) {
-    if (_strcmpi(this->Name, "r_font_size") == 0) {
-        if (value != nullptr) {
-            this->Instance->Method0xBC(this->Instance->FUN_0fbb210c());
+void ZRenderConsoleCommandHandler::Execute(const char* command) {
+    if (_strcmpi(this->Command, "r_font_size") == 0) {
+        if (command != nullptr) {
+            this->Instance->Method0xBC(this->FUN_0fbb210c());
 
             return;
         }
 
         g_pSysCom->Log("Z:\\Engine\\Drawing\\Source\\RenderBase.cpp", 116)
-            ->LogMessage("%s = %f", this->Instance->Method0xC0(), );
+            ->LogMessage("%s = %f", this->Command, this->Instance->Method0xC0());
     }
 }

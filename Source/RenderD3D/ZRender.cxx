@@ -130,13 +130,13 @@ ZRender::ZRender(HINSTANCE instance, HWND window) : ZRenderBase(instance, window
         this->Unk0x14D[i] = new RefTab(32, 0);
     }
 
-    this->FogOverrideCommand = new ZConsoleCommand("r_fog_near_far_override", &g_ZRenderFogOverride);
+    this->FogOverrideCommand = new ZVisualConsoleCommandHandler("r_fog_near_far_override", &g_ZRenderFogOverride);
     g_pSysInterface->EnqueueConsoleCommand(this->FogOverrideCommand);
 
-    this->FogNearCommand = new ZConsoleCommand("r_fog_near", &g_ZRenderFogNear);
+    this->FogNearCommand = new ZVisualConsoleCommandHandler("r_fog_near", &g_ZRenderFogNear);
     g_pSysInterface->EnqueueConsoleCommand(this->FogNearCommand);
 
-    this->FogFarCommand = new ZConsoleCommand("r_fog_far", &g_ZRenderFogFar);
+    this->FogFarCommand = new ZVisualConsoleCommandHandler("r_fog_far", &g_ZRenderFogFar);
     g_pSysInterface->EnqueueConsoleCommand(this->FogFarCommand);
 }
 
@@ -271,16 +271,16 @@ void ZRender::HandleKeyDown(WPARAM wParam, LPARAM lParam) {
     }
 
     if (this->ParentWindow != NULL) {
-        void* todo_a = g_pSysInterface->Method0xEC(); // TODO
+        ZConsole* console = g_pSysInterface->GetConsole();
 
-        if (todo_a != nullptr) {
+        if (console != nullptr) {
             if (((lParam & 0xff0000) == 0x290000) && ((lParam & 0x40000000) == 0)) { // TODO
                 this->Unk0x80 = true;
                 return;
             }
 
-            if (todo_a->Method0xC()) {
-                todo_a->Method0x10(wParam, lParam);
+            if (console->Method0xC()) {
+                console->Method0x10(wParam, lParam);
                 return;
             }
         }
@@ -480,12 +480,11 @@ void ZRender::HandleRightButtonUp(WPARAM wParam, s32 x, s32 y) {
 // 0x0fba7400
 void ZRender::HandleKeyUp(WPARAM wParam, LPARAM lParam) {
     g_pSysInterface->Unk0x4 = false;
+    ZConsole* console = g_pSysInterface->GetConsole();
 
-    void* todo_a = g_pSysInterface->Method0xEC(); // TODO
-
-    if (todo_a != nullptr) {
-        if (todo_a->Method0xC()) {
-            thodo_a->Method0x14(wParam, lParam);
+    if (console != nullptr) {
+        if (console->Method0xC()) {
+            console->Method0x14(wParam, lParam);
         }
     }
 

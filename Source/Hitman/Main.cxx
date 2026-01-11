@@ -83,7 +83,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int) {
             }
         }
 
-        g_pSysInterface->Method0x84(cfg);
+        g_pSysInterface->ExecuteWithArgs(cfg);
 
         FreeLibrary(system);
     }

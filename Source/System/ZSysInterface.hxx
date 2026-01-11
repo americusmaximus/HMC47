@@ -56,9 +56,6 @@ struct Unk0x1E00 {
 // 0x0ffd3494
 class ZSysInterfaceBase {
 public:
-    typedef void(__cdecl* LPFNRUNENGINE)(u32 code); // TODO
-
-public:
     ZSysInterfaceBase();
 
 public:
@@ -95,8 +92,8 @@ public:
     virtual void Method0x78() = 0;                                              // 0x78
     virtual void Method0x7C() = 0;                                              // 0x7C
     virtual void Method0x80() = 0;                                              // 0x80
-    virtual void Method0x84(const char*) = 0;                                   // 0x84
-    virtual bool Method0x88(u32) = 0;                                           // 0x88
+    virtual void ExecuteWithArgs(const char*) = 0;                              // 0x84
+    virtual bool Execute(u32) = 0;                                              // 0x88
     virtual void Method0x8C() = 0;                                              // 0x8C
     virtual void Method0x90() = 0;                                              // 0x90
     virtual void Method0x94() = 0;                                              // 0x94
@@ -121,7 +118,7 @@ public:
     virtual void EnqueueConsoleCommand(ZConsoleCommandBase* command);           // 0xE0
     virtual void DequeueConsoleCommand(ZConsoleCommandBase* command);           // 0xE4
     virtual void Method0xE8();                                                  // 0xE8
-    virtual void* Method0xEC();                                                 // 0xEC
+    virtual ZConsole* GetConsole();                                             // 0xEC
     virtual void Method0xF0();                                                  // 0xF0
     virtual void Method0xF4();                                                  // 0xF4
     virtual void Method0xF8();                                                  // 0xF8
@@ -284,6 +281,9 @@ public:
     ZSysInterface(HMODULE module);
 
 public:
+    typedef void (ZSysInterface::* LPFNRUNACTION)(u32 code); // TODO
+
+public:
     virtual ~ZSysInterface();                                                           // 0x4
     virtual void Initialize();                                                          // 0x8
     virtual bool HandleWindowMessages(HWND hwnd);                                       // 0xC
@@ -316,8 +316,8 @@ public:
     virtual void Method0x78();                                                          // 0x78
     virtual void Method0x7C();                                                          // 0x7C
     virtual void Method0x80();                                                          // 0x80
-    virtual void Method0x84(const char* ini);                                           // 0x84
-    virtual bool Method0x88(u32 code /* TODO */);                                       // 0x88
+    virtual void ExecuteWithArgs(const char* ini);                                      // 0x84
+    virtual bool Execute(u32 code /* TODO */);                                          // 0x88
     virtual void Method0x8C();                                                          // 0x8C
     virtual void Method0x90();                                                          // 0x90
     virtual void Method0x94();                                                          // 0x94
@@ -338,27 +338,30 @@ public:
     virtual void Method0xD4();                                                          // 0xD4
     virtual void __cdecl Method0xD8(u32 todo1, u32 todo2, const char* format, ...);     // 0xD8
     virtual void Method0xDC();                                                          // 0xDC
-    virtual void Method0x10C(u32 todo1, u32 todo2);                                     // 0x10C
+    virtual void Method0x10C(const char* path, u32 line);                               // 0x10C
     virtual u64 GetProcessorTicks(const char* path, u32 line);                          // 0x128
     virtual void Method0x12C();                                                         // 0x12C
 
 public:
     void LoadDynamicObject(ZDynamicLoader** result, const char* name);
+    void ExecuteEngineWrapper(u32 code);   // TODO
 
 protected:
     bool CreateMainWindow();
+    void SetCommandLine(const char* ini);
+    void ExecuteEngine(u32 code);   // TODO
 
 public:
     ZString LogPath;                                                            // 0x3A45
     bool UseTryCatchMainLoop;                                                   // 0x3AC5
-    u32 Unk0x3AC6;                                                              // 0x3AC6
+    u32 ExceptionCount;                                                         // 0x3AC6
     ZString WindowTitle;                                                        // 0x3ACA
     ZString Unk0x3B4A;                                                          // 0x3B4A
-    bool Unk0x3BCA;                                                             // 0x3BCA
+    bool Continue;                                                              // 0x3BCA
     u64 Unk0x3BCD;                                                              // 0x3BCD
     u32 Unk0x3BD3;                                                              // 0x3BD3
     u32 Unk0x3BD7;                                                              // 0x3BD7
-    LPFNRUNENGINE Unk0x3BDB;                                                    // 0x3BDB
+    LPFNRUNACTION RunAction;                                                    // 0x3BDB
 };
 
 #pragma pack(pop)
@@ -366,6 +369,6 @@ public:
 #if defined(_DEBUG) && !defined(_WIN64)
 static_assert(sizeof(Unk0xF00)          == 0xF00,   "Unk0xF00 size mismatch."); // TODO
 static_assert(sizeof(Unk0x1E00)         == 0x1E00,  "Unk0x1E00 size mismatch."); // TODO
-static_assert(sizeof(ZSysInterfaceBase) == 0x3A45,  "ZSysInterfaceBase size mismatch.");
 static_assert(sizeof(ZSysInterface)     == 0x3BDF,  "ZSysInterface size mismatch.");
+static_assert(sizeof(ZSysInterfaceBase) == 0x3A45,  "ZSysInterfaceBase size mismatch.");
 #endif

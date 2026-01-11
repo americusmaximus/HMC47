@@ -130,11 +130,11 @@ ZSysInterface::ZSysInterface(HMODULE module) {
         this->ScriptDebugPrint = false;
 
         this->PlayVideo = "";
-        this->Unk0x3BDB = FUN_0ffae110;
+        this->RunAction = ExecuteEngine;
         this->LogPath = "Z:\\error.log";
 
         this->UseTryCatchMainLoop = false;
-        this->Unk0x3AC6 = 0; // TODO
+        this->ExceptionCount = 0;
 
         FUN_0ffb408e(FUN_0ffaa860);
     }
@@ -150,11 +150,11 @@ void ZSysInterface::Initialize() {
         ->LogMessage("---------------------------------------------------------------");
 
     this->SetWindowTitle(nullptr);
-    this->Unk0x3BCA = false;
+    this->Continue = false;
 
     this->Unk0x3B4A = "pic0001.tga";
     this->MasterControl = new ZMasterControl();
-    this->Unk0x3BCA = true;
+    this->Continue = true;
 }
 
 // 0x0ffab8c0
@@ -178,14 +178,14 @@ bool ZSysInterface::IsKeyPressed(s32 key) {
 }
 
 // 0x0ffad1f0
-bool ZSysInterface::Method0x88(u32 code) {
+bool ZSysInterface::Execute(u32 code) {
     if (!this->IsEngineRunning) {
-        if (!this->Unk0x3BCA) {
+        if (!this->Continue) {
             return false;
         }
 
         this->SetWindowTitle(nullptr);
-        this->Unk0x3BCA = false;
+        this->Continue = false;
 
         g_pSysFile->Method0x4();
 
@@ -199,8 +199,8 @@ bool ZSysInterface::Method0x88(u32 code) {
     this->Unk0x5 = this->Unk0x4;
     this->Unk0x4 = true;
 
-    if (this->HandleWindowMessages(NULL) && !this->Unk0x3BCA && !this->Unk0x6) {
-        this->Unk0x3BDB(code);
+    if (this->HandleWindowMessages(NULL) && !this->Continue && !this->Unk0x6) {
+        this->RunAction(code);
         this->Method0x8C();
 
         return true;
@@ -210,6 +210,24 @@ bool ZSysInterface::Method0x88(u32 code) {
     this->IsEngineRunning = false;
 
     return false;
+}
+
+// 0x0ffad290
+void ZSysInterface::ExecuteWithArgs(const char* ini) {
+    this->SetCommandLine(ini);
+
+    bool run = this->HandleWindowMessages(NULL);
+
+    if (run) {
+        while (this->Execute(1)) {} // TODO
+
+        run = this->Continue;
+    }
+}
+
+// 0x0ffad2e0
+void ZSysInterface::SetCommandLine(const char* ini) {
+    this->CommandLine = ini;
 }
 
 // 0x0ffad510
@@ -301,7 +319,7 @@ bool StartEngine() {
 
     if (g_pSysInterface->Method0x18(g_pSysInterface->CommandLine, 21 /* TODO */)) {
         if (g_pSysInterface->UseTryCatchMainLoop) {
-            g_pSysInterface->Unk0x3BDB = FUN_0ffae080;
+            g_pSysInterface->RunAction = &ZSysInterface::ExecuteEngineWrapper;
             g_pSysFile->Touch(g_pSysInterface->LogPath);
 
             // TODO NOT IMPLEMENTED
@@ -343,6 +361,64 @@ bool StartEngine() {
 void ZSysInterface::RestoreDisplaySettings() {
     ChangeDisplaySettingsA(NULL, 0);
     exit(EXIT_FAILURE);
+}
+
+// 0x0ffae080
+void ZSysInterface::ExecuteEngineWrapper(u32 code) {
+    try {
+        this->ExecuteEngine(code);
+    }
+    catch (...) {
+        g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1325)
+            ->LogMessage("Exception caught in main loop");
+        this->ExceptionCount++;
+    }
+}
+
+// 0x0ffae110
+void ZSysInterface::ExecuteEngine(u32 code) {
+    if (!this->Unk0x38F1 && !this->WindowHasFocus) {
+        MSG msg;
+        if (!PeekMessageA(&msg, NULL, 0, 0, PM_NOREMOVE)) {
+            WaitMessage();
+            return;
+        }
+    }
+    else {
+        const DWORD64 start = __rdtsc();
+
+        g_pSysInterface->Method0x10C("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1341);
+        this->Method0x90();
+
+        for (ZRenderBase* render = this->Render; render != nullptr; render = render->Current) {
+            render->Method0x24();
+
+            if (render->Method0x6C() != nullptr) {
+                RefLink link;
+
+                LinkSortRefTab* list = render->Method0x6C();
+                list->GetStart(&link);
+                void* result = REFTAB_KEY_TO_PTR(list->GetNextKey(&link)); // TODO
+
+                while (link.Next != nullptr) {
+                    if (result != nullptr) {
+                        // TODO NOT IMPLEMENTED
+
+                        result = REFTAB_KEY_TO_PTR(list->GetNextKey(&link)); // TODO
+                    }
+                }
+            }
+        }
+
+        this->Unk0x59->Method0x48();
+        this->Method0x38(code);
+
+        const DWORD64 end = __rdtsc();
+
+        if (this->TimersVisibility != 0.0f) {
+            g_pSysInterface->Method0xD8(0, 30, "Mainloop: %f", (end - start) * 60.0f / this->ProcessorCounter);
+        }
+    }
 }
 
 // 0x0ffb0270
@@ -444,7 +520,7 @@ bool ZSysInterface::HandleWindowMessages(HWND hwnd) {
 void ZSysInterface::Method0x10() {
     this->Unk0x6 = true;
 
-    if (this->Unk0x3AC6 != 0 /* TODO */) {
+    if (this->ExceptionCount != 0) {
         g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 2156)
             ->LogMessage("Errors occured during execution - an error log has been generated in %s", this->LogPath);
     }
@@ -533,7 +609,7 @@ void ZSysInterface::Method0x9C() {
 }
 
 // 0x0ffb17a0
-void ZSysInterface::Method0x10C(u32 todo1, u32 todo2) {
+void ZSysInterface::Method0x10C(const char* path, u32 line) {
     // TODO NOT IMPLEMENTED
 }
 

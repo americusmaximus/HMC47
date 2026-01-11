@@ -20,22 +20,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ZTextureManagerD3D.hxx"
+#include "Globals.hxx"
 
-// 0x0fb971d0
-// 0x0fbb5460
-ZTextureManagerD3D::ZTextureManagerD3D() {}
-
-// 0x0fb97200
-// 0x0fb97220
-ZTextureManagerD3D::~ZTextureManagerD3D() {}
-
-// 0x0fb971e0
-bool ZTextureManagerD3D::SupportsCompression() {
-    return this->Unk0xC != 0; // TODO
+// 0x0fbb5ab4
+ZVisualConsoleCommandHandler::ZVisualConsoleCommandHandler(const char* name, f32* visibility)
+    : ZConsoleCommandHandler(name) {
+    this->Visibility = visibility;
 }
 
-// 0x0fb971f0
-bool ZTextureManagerD3D::SupportsEMBM() {
-    return this->Unk0x144 != 0; // TODO
+// 0x0fba35f0
+// 0x0fba3610
+ZVisualConsoleCommandHandler::~ZVisualConsoleCommandHandler() {}
+
+// 0x0fbb0550
+void ZVisualConsoleCommandHandler::Execute(const char* command) {
+    if (command == nullptr) {
+        g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\ConsoleCommand.cpp", 54)
+            ->LogMessage("%s(%p) = %f", this->Command, this->Visibility, *this->Visibility);
+
+        return;
+    }
+
+    *this->Visibility = this->FUN_0fbb210c(command);
 }

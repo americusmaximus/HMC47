@@ -146,6 +146,6 @@ protected:
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZSysFileBase)  == 0xC,     "ZSysFileBase size mismatch.");
 static_assert(sizeof(ZSysFile)      == 0x14,    "ZSysFile size mismatch.");
+static_assert(sizeof(ZSysFileBase)  == 0xC,     "ZSysFileBase size mismatch.");
 #endif

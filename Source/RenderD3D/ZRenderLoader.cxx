@@ -144,7 +144,7 @@ void ZRenderLoader::Method0x3C(u32* todo) {
 
                 if (bytes != 0) {
                     g_pSysCom->Log("Z:\\Engine\\Drawing\\Source\\RenderBase.cpp", 1297)
-                        ->LogMessage("Loaded %.2fMb in %d LGT textures", bytes / 1048576.0, count);
+                        ->LogMessage("Loaded %.2fMb in %d LGT textures", bytes / 1048576.0f, count);
                 }
             }
 

@@ -91,6 +91,6 @@ protected:
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
+static_assert(sizeof(ZSysCom)       == 0x27,    "ZSysCom size mismatch.");
 static_assert(sizeof(ZSysComBase)   == 0x11,    "ZSysComBase size mismatch.");
-static_assert(sizeof(ZSysCom)       == 0x27,    "ZSysMem size mismatch.");
 #endif

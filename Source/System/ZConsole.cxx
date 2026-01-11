@@ -20,29 +20,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ZConsoleCommand.hxx"
+#include "ZConsole.hxx"
 
-class ZRenderBase;
+// 0x0ffc5400
+// 0x0ffd4370
+ZConsole::ZConsole() {
+    FUN_0ffc8900((undefined4*)&this->field_0x10db);
 
-#pragma pack(push, 1)
+    this->Unk0x7 = 0;
+    this->Unk0xB = 0.2f;
+    this->Unk0x4 = false;
+    this->Unk0x6 = false;
 
-class ZRenderBase;
+    strcpy(this->Input, ">");
 
-class ZRenderConsoleCommand : public ZConsoleCommandBase {
-public:
-    ZRenderConsoleCommand(const char* name, ZRenderBase* instance);
+    this->Unk0x10CF = 1;
+    this->Unk0x10E7 = 0;
+    this->Unk0x10EB = false;
+    this->Unk0xFAF = 0;
+    this->Unk0xFB3 = 0;
+    this->Unk0x5 = false;
 
-public:
-    virtual ~ZRenderConsoleCommand();
-    virtual void Method0x4();                                                       // 0x4
-    virtual void SetVisibility(const char* value);                                  // 0x8
+    for (u32 i = 0; i < ZCONSOLE_MAX_LINE_COUNT; i++) {
+        this->Lines[i] = new char[ZCONSOLE_MAX_LINE_LENGTH];
+    }
 
-protected:
-    ZRenderBase* Instance;
-};
+    ZeroMemory(&this->Commands, ZCONSOLE_MAX_COMMAND_COUNT * sizeof(char*));
 
-#pragma pack(pop)
+    this->Unk0x10D7 = 0;
+    this->Unk0x10D3 = 0;
 
-#if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZRenderConsoleCommand)     == 0xC, "ZRenderConsoleCommand size mismatch.");
-#endif
+
+    TODO
+}

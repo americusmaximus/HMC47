@@ -157,6 +157,6 @@ protected:
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZRenderState)          == 0x11C,   "ZRenderState size mismatch.");
 static_assert(sizeof(ZRenderD3D)            == 0xC21,   "ZRenderD3D size mismatch.");
+static_assert(sizeof(ZRenderState)          == 0x11C,   "ZRenderState size mismatch.");
 #endif

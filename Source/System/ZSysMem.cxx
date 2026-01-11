@@ -41,9 +41,9 @@ void ZSysMem::Method0x4(u32 p2 /* TODO */, u32 p3 /* TODO */) {
 
         g_pSysInterface->Method0xD8(p2, p3,
             "Process %.3f / %.3f  Internal %.3f / %.3f : %.3f Count %d",
-            todo1 / 1048576.0, todo2 / 1048576.0,
-            this->Unk0x24E / 1048576.0, this->Unk0x252 / 1048576.0,
-            (this->Unk0x1A - this->Unk0x16) / 1048576.0, this->Unk0x24A + this->Unk0x246);
+            todo1 / 1048576.0f, todo2 / 1048576.0f,
+            this->Unk0x24E / 1048576.0f, this->Unk0x252 / 1048576.0,
+            (this->Unk0x1A - this->Unk0x16) / 1048576.0f, this->Unk0x24A + this->Unk0x246);
     }
 }
 
@@ -54,8 +54,8 @@ void ZSysMem::Method0x8() {
 
     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 36)
         ->LogMessage("Alloc  : Process %.3f/%.3f Internal %.3f/%.3f : Count %.3f",
-            todo1 / 1048576.0, todo2 / 1048576.0,
-            this->Unk0x24E / 1048576.0, this->Unk0x252 / 1048576.0, this->Unk0x24A + this->Unk0x246);
+            todo1 / 1048576.0f, todo2 / 1048576.0f,
+            this->Unk0x24E / 1048576.0f, this->Unk0x252 / 1048576.0f, this->Unk0x24A + this->Unk0x246);
 
     //g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 37)
     //    ->LogMessage("Texture: Light %d Texture %d", )
