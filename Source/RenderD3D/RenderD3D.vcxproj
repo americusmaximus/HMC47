@@ -185,14 +185,14 @@
     <ClCompile Include="ZDynamicLoader.cxx" />
     <ClCompile Include="ZRender.cxx" />
     <ClCompile Include="ZRenderBase.cxx" />
-    <ClCompile Include="ZRenderConsoleCommandHandler.cxx" />
+    <ClCompile Include="ZRenderConsoleCommand.cxx" />
     <ClCompile Include="ZRenderD3D.cxx" />
     <ClCompile Include="ZRenderLoader.cxx" />
     <ClCompile Include="ZRenderLoaderD3D.cxx" />
     <ClCompile Include="ZTextureManager.cxx" />
     <ClCompile Include="ZTextureManagerD3D.cxx" />
     <ClCompile Include="ZVertexBufferManager.cxx" />
-    <ClCompile Include="ZVisualConsoleCommandHandler.cxx" />
+    <ClCompile Include="ZVisualConsoleCommand.cxx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.hxx" />

@@ -31,12 +31,12 @@ SOFTWARE.
 
 #pragma pack(push, 1)
 
-class ZConsoleCommandHandler {
+class ZConsoleCommand {
 public:
-    ZConsoleCommandHandler(const char* command);
+    ZConsoleCommand(const char* command);
 
 public:
-    virtual ~ZConsoleCommandHandler();                                              // 0x0
+    virtual ~ZConsoleCommand();                                                     // 0x0
     virtual void Method0x4(u32, u32);                                               // 0x4
     virtual void Execute(const char* command) = 0;                                  // 0x8
 
@@ -44,16 +44,34 @@ protected:
     char* Command;                                                                  // 0x4
 };
 
-class ZVisualConsoleCommandHandler : public ZConsoleCommandHandler {
+class ZVisualConsoleCommand : public ZConsoleCommand {
 public:
-    ZVisualConsoleCommandHandler(const char* command, f32* visibility);
+    ZVisualConsoleCommand(const char* command, f32* visibility);
 
 public:
-    virtual ~ZVisualConsoleCommandHandler();
+    virtual ~ZVisualConsoleCommand();                                               // 0x0
     virtual void Execute(const char* command);                                      // 0x8
 
 protected:
     f32* Visibility;                                                                // 0x8
+};
+
+class ZConsoleHandler {
+public:
+    ZConsoleHandler();
+    ~ZConsoleHandler();
+
+public:
+    virtual void Method0x0();                                                       // 0x0
+    virtual void Method0x4();                                                       // 0x4
+    virtual void Method0x8();                                                       // 0x8
+    virtual void Method0xC();                                                       // 0xC
+    virtual void Method0x10();                                                      // 0x10
+    virtual void Method0x14();                                                      // 0x14
+
+protected:
+    u32 Unk0x4;                                                                     // 0x4
+    u32 Unk0x8;                                                                     // 0x8
 };
 
 class ZConsole {
@@ -62,26 +80,26 @@ public:
     ~ZConsole();
 
 public:
-    void Method0x0();                                                               // 0x0
-    void Method0x4();                                                               // 0x4
-    void Method0x8();                                                               // 0x8
-    void Method0xC();                                                               // 0xC
-    void Method0x10();                                                              // 0x10
-    void Method0x14();                                                              // 0x14
-    void Method0x18();                                                              // 0x18
-    void Method0x1C();                                                              // 0x1C
-    void Method0x20();                                                              // 0x20
-    void Method0x24();                                                              // 0x24
-    void Method0x28();                                                              // 0x28
-    void Method0x2C();                                                              // 0x2C
-    void Method0x30();                                                              // 0x20
-    void Method0x34();                                                              // 0x34
+    virtual void Method0x0();                                                       // 0x0
+    virtual void Method0x4();                                                       // 0x4
+    virtual void Method0x8();                                                       // 0x8
+    virtual void Method0xC();                                                       // 0xC
+    virtual void Method0x10();                                                      // 0x10
+    virtual void Method0x14();                                                      // 0x14
+    virtual void Method0x18();                                                      // 0x18
+    virtual void Method0x1C();                                                      // 0x1C
+    virtual void Method0x20();                                                      // 0x20
+    virtual void Method0x24();                                                      // 0x24
+    virtual void Method0x28();                                                      // 0x28
+    virtual void Method0x2C();                                                      // 0x2C
+    virtual void Method0x30();                                                      // 0x20
+    virtual void Method0x34();                                                      // 0x34
 
 protected:
-    bool Unk0x4;                                                                    // 0x4
+    bool Visible;                                                                   // 0x4
     bool Unk0x5;                                                                    // 0x5
     bool Unk0x6;                                                                    // 0x6
-    u32 Unk0x7;                                                                     // 0x7
+    f32 Unk0x7;                                                                     // 0x7
     f32 Unk0xB;                                                                     // 0xB
     char* Lines[ZCONSOLE_MAX_LINE_COUNT];                                           // 0xF
     u32 Unk0xFAF;                                                                   // 0xFAF
@@ -91,9 +109,7 @@ protected:
     u32 Unk0x10CF;                                                                  // 0x10CF
     u32 Unk0x10D3;                                                                  // 0x10D3
     u32 Unk0x10D7;                                                                  // 0x10D7
-
-    // TODO
-
+    ZConsoleHandler Handler;                                                        // 0x10DB
     u32 Unk0x10E7;                                                                  // 0x10E7
     bool Unk0x10EB;                                                                 // 0x10EB
     void* Unk0x10EC;                                                                // 0x10EC
@@ -103,7 +119,8 @@ protected:
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZConsoleCommandHandler)        == 0x8,     "ZConsoleCommandHandler size mismatch.");
-static_assert(sizeof(ZVisualConsoleCommandHandler)  == 0xC,     "ZVisualConsoleCommandHandler size mismatch.");
-static_assert(sizeof(ZConsole)                      == 0x10F4,  "ZConsole size mismatch.");
+static_assert(sizeof(ZConsoleCommand)           == 0x8,     "ZConsoleCommand size mismatch.");
+static_assert(sizeof(ZVisualConsoleCommand)     == 0xC,     "ZVisualConsoleCommand size mismatch.");
+static_assert(sizeof(ZConsoleHandler)           == 0xC,     "ZConsoleHandler size mismatch.");
+static_assert(sizeof(ZConsole)                  == 0x10F4,  "ZConsole size mismatch.");
 #endif

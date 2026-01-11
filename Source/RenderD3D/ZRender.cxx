@@ -130,13 +130,13 @@ ZRender::ZRender(HINSTANCE instance, HWND window) : ZRenderBase(instance, window
         this->Unk0x14D[i] = new RefTab(32, 0);
     }
 
-    this->FogOverrideCommand = new ZVisualConsoleCommandHandler("r_fog_near_far_override", &g_ZRenderFogOverride);
+    this->FogOverrideCommand = new ZVisualConsoleCommand("r_fog_near_far_override", &g_ZRenderFogOverride);
     g_pSysInterface->EnqueueConsoleCommand(this->FogOverrideCommand);
 
-    this->FogNearCommand = new ZVisualConsoleCommandHandler("r_fog_near", &g_ZRenderFogNear);
+    this->FogNearCommand = new ZVisualConsoleCommand("r_fog_near", &g_ZRenderFogNear);
     g_pSysInterface->EnqueueConsoleCommand(this->FogNearCommand);
 
-    this->FogFarCommand = new ZVisualConsoleCommandHandler("r_fog_far", &g_ZRenderFogFar);
+    this->FogFarCommand = new ZVisualConsoleCommand("r_fog_far", &g_ZRenderFogFar);
     g_pSysInterface->EnqueueConsoleCommand(this->FogFarCommand);
 }
 

@@ -25,11 +25,9 @@ SOFTWARE.
 // 0x0ffc5400
 // 0x0ffd4370
 ZConsole::ZConsole() {
-    FUN_0ffc8900((undefined4*)&this->field_0x10db);
-
-    this->Unk0x7 = 0;
+    this->Unk0x7 = 0.0f;
     this->Unk0xB = 0.2f;
-    this->Unk0x4 = false;
+    this->Visible = false;
     this->Unk0x6 = false;
 
     strcpy(this->Input, ">");

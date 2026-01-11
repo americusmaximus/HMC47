@@ -38,7 +38,7 @@ SOFTWARE.
 #define ZRENDERFEATURE_TEXTURECOMPRESSION   4
 #define ZRENDERFEATURE_TRILINEARFILTERING   5
 
-class ZRenderConsoleCommandHandler;
+class ZRenderConsoleCommand;
 
 #pragma pack(push, 1)
 
@@ -196,17 +196,17 @@ public:
     RefTab* Unk0xEB;                                                                // 0xEB
     RefTab* Unk0xEF;                                                                // 0xEF
     f32 Unk0xF3;                                                                    // 0xF3
-    ZVisualConsoleCommandHandler* DebugCommand;                                     // 0xF7
-    ZVisualConsoleCommandHandler* TimersCommand;                                    // 0xFB
-    ZVisualConsoleCommandHandler* TimeMultiplierCommand;                            // 0xFF
-    ZVisualConsoleCommandHandler* FogCommand;                                       // 0x103
-    ZVisualConsoleCommandHandler* NativeDrawCommand;                                // 0x107
-    ZVisualConsoleCommandHandler* ShowCursorCommand;                                // 0x10B
-    ZVisualConsoleCommandHandler* GammaCommand;                                     // 0x10F
-    ZVisualConsoleCommandHandler* TextureStatCommand;                               // 0x113
-    ZVisualConsoleCommandHandler* ShowDrawModesCommand;                             // 0x117
-    ZRenderConsoleCommandHandler* FontSizeCommand;                                  // 0x11B
-    ZRenderConsoleCommandHandler* AntialiasCommand;                                 // 0x11F
+    ZVisualConsoleCommand* DebugCommand;                                            // 0xF7
+    ZVisualConsoleCommand* TimersCommand;                                           // 0xFB
+    ZVisualConsoleCommand* TimeMultiplierCommand;                                   // 0xFF
+    ZVisualConsoleCommand* FogCommand;                                              // 0x103
+    ZVisualConsoleCommand* NativeDrawCommand;                                       // 0x107
+    ZVisualConsoleCommand* ShowCursorCommand;                                       // 0x10B
+    ZVisualConsoleCommand* GammaCommand;                                            // 0x10F
+    ZVisualConsoleCommand* TextureStatCommand;                                      // 0x113
+    ZVisualConsoleCommand* ShowDrawModesCommand;                                    // 0x117
+    ZRenderConsoleCommand* FontSizeCommand;                                         // 0x11B
+    ZRenderConsoleCommand* AntialiasCommand;                                        // 0x11F
     f32 Unk0x123;                                                                   // 0x123
     f32 Unk0x127;                                                                   // 0x127
 };
@@ -272,21 +272,21 @@ protected:
     // TODO
 
     RefTab* Unk0x14D[512 /* TODO */];                                                       // 0x14D
-    ZVisualConsoleCommandHandler* FogOverrideCommand;                                        // 0x94D
-    ZVisualConsoleCommandHandler* FogNearCommand;                                            // 0x951
-    ZVisualConsoleCommandHandler* FogFarCommand;                                             // 0x955
+    ZVisualConsoleCommand* FogOverrideCommand;                                              // 0x94D
+    ZVisualConsoleCommand* FogNearCommand;                                                  // 0x951
+    ZVisualConsoleCommand* FogFarCommand;                                                   // 0x955
 };
 
-class ZRenderConsoleCommandHandler : public ZConsoleCommandHandler {
+class ZRenderConsoleCommand : public ZConsoleCommand {
 public:
-    ZRenderConsoleCommandHandler(const char* command, ZRenderBase* instance);
+    ZRenderConsoleCommand(const char* command, ZRenderBase* instance);
 
 public:
-    virtual ~ZRenderConsoleCommandHandler();
-    virtual void Execute(const char* command);                                      // 0x8
+    virtual ~ZRenderConsoleCommand();
+    virtual void Execute(const char* command);                                              // 0x8
 
 protected:
-    ZRenderBase* Instance;                                                          // 0x8
+    ZRenderBase* Instance;                                                                  // 0x8
 };
 
 #pragma pack(pop)
@@ -294,5 +294,5 @@ protected:
 #if defined(_DEBUG) && !defined(_WIN64)
 static_assert(sizeof(ZRender)                       == 0x959,   "ZRender size mismatch.");
 static_assert(sizeof(ZRenderBase)                   == 0x12B,   "ZRenderBase size mismatch.");
-static_assert(sizeof(ZRenderConsoleCommandHandler)  == 0xC,     "ZRenderConsoleCommandHandler size mismatch.");
+static_assert(sizeof(ZRenderConsoleCommand)         == 0xC,     "ZRenderConsoleCommand size mismatch.");
 #endif

@@ -22,24 +22,26 @@ SOFTWARE.
 
 #include "Globals.hxx"
 
-// 0x0fbb5ab4
-ZVisualConsoleCommandHandler::ZVisualConsoleCommandHandler(const char* name, f32* visibility)
-    : ZConsoleCommandHandler(name) {
-    this->Visibility = visibility;
+// 0x0fbb5aa8
+ZRenderConsoleCommand::ZRenderConsoleCommand(const char* name, ZRenderBase* instance)
+    : ZConsoleCommand(name) {
+    this->Instance = instance;
 }
 
-// 0x0fba35f0
-// 0x0fba3610
-ZVisualConsoleCommandHandler::~ZVisualConsoleCommandHandler() {}
+// 0x0fba36b0
+// 0x0fba36d0
+ZRenderConsoleCommand::~ZRenderConsoleCommand() {}
 
-// 0x0fbb0550
-void ZVisualConsoleCommandHandler::Execute(const char* command) {
-    if (command == nullptr) {
-        g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\ConsoleCommand.cpp", 54)
-            ->LogMessage("%s(%p) = %f", this->Command, this->Visibility, *this->Visibility);
+// 0x0fba3630
+void ZRenderConsoleCommand::Execute(const char* command) {
+    if (_strcmpi(this->Command, "r_font_size") == 0) {
+        if (command != nullptr) {
+            this->Instance->Method0xBC(this->FUN_0fbb210c());
 
-        return;
+            return;
+        }
+
+        g_pSysCom->Log("Z:\\Engine\\Drawing\\Source\\RenderBase.cpp", 116)
+            ->LogMessage("%s = %f", this->Command, this->Instance->Method0xC0());
     }
-
-    *this->Visibility = this->FUN_0fbb210c(command);
 }
