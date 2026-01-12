@@ -186,20 +186,21 @@
     <ClInclude Include="LinkSortRefTab.hxx" />
     <ClInclude Include="RefTab.hxx" />
     <ClInclude Include="Texture.hxx" />
+    <ClInclude Include="ZConsole.hxx" />
     <ClInclude Include="ZCounter.hxx" />
-    <ClInclude Include="ZModule.hxx" />
     <ClInclude Include="ZException.hxx" />
     <ClInclude Include="ZExceptionRender.hxx" />
+    <ClInclude Include="ZModule.hxx" />
     <ClInclude Include="ZRender.hxx" />
     <ClInclude Include="ZRenderModule.hxx" />
-    <ClInclude Include="ZTextureManager.hxx" />
     <ClInclude Include="ZSettings.hxx" />
+    <ClInclude Include="ZSoundModule.hxx" />
     <ClInclude Include="ZString.hxx" />
     <ClInclude Include="ZSysCom.hxx" />
     <ClInclude Include="ZSysFile.hxx" />
     <ClInclude Include="ZSysInterface.hxx" />
     <ClInclude Include="ZSysMem.hxx" />
-    <ClInclude Include="ZConsole.hxx" />
+    <ClInclude Include="ZTextureManager.hxx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Globals\Globals.vcxproj">

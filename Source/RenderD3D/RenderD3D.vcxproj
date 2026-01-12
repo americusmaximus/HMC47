@@ -187,8 +187,8 @@
     <ClCompile Include="ZRenderBase.cxx" />
     <ClCompile Include="ZRenderConsoleCommand.cxx" />
     <ClCompile Include="ZRenderD3D.cxx" />
-    <ClCompile Include="ZRenderModule.cxx" />
     <ClCompile Include="ZRenderLoaderD3D.cxx" />
+    <ClCompile Include="ZRenderModule.cxx" />
     <ClCompile Include="ZTextureManager.cxx" />
     <ClCompile Include="ZTextureManagerD3D.cxx" />
     <ClCompile Include="ZVertexBufferManager.cxx" />

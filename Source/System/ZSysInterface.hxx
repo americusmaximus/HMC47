@@ -27,6 +27,7 @@ SOFTWARE.
 #include "ZRender.hxx"
 #include "ZRenderModule.hxx"
 #include "ZSettings.hxx"
+#include "ZSoundModule.hxx"
 
 #pragma pack(push, 1)
 
@@ -245,7 +246,7 @@ public:
     bool DisableConfig;                                                         // 0x38F2
     bool Unk0x38F3;                                                             // 0x38F3
     bool Unk0x38F4;                                                             // 0x38F4
-    ZModule* SoundModule;                                                       // 0x38F5
+    ZSoundModule* SoundModule;                                                  // 0x38F5
     ZRenderModule* RenderModule;                                                // 0x38F9
     ZModule* ScriptModule;                                                      // 0x38FD
     ZModule* DirectPlayModule;                                                  // 0x3901

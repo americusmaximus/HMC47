@@ -574,8 +574,8 @@ static LRESULT WINAPI MainWindowHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
             }
 
             if (g_pSysInterface->SoundModule != nullptr) {
-                if (g_pSysInterface->SoundModule->Unk0x1C != nullptr) {
-                    g_pSysInterface->SoundModule->Unk0x1C->Method0x48();
+                if (g_pSysInterface->SoundModule->GetUnk0xC() != nullptr) {
+                    g_pSysInterface->SoundModule->GetUnk0xC()->Method0x48();
                 }
             }
         }
