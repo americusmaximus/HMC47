@@ -187,11 +187,11 @@
     <ClInclude Include="RefTab.hxx" />
     <ClInclude Include="Texture.hxx" />
     <ClInclude Include="ZCounter.hxx" />
-    <ClInclude Include="ZDynamicLoader.hxx" />
+    <ClInclude Include="ZModule.hxx" />
     <ClInclude Include="ZException.hxx" />
     <ClInclude Include="ZExceptionRender.hxx" />
     <ClInclude Include="ZRender.hxx" />
-    <ClInclude Include="ZRenderLoader.hxx" />
+    <ClInclude Include="ZRenderModule.hxx" />
     <ClInclude Include="ZTextureManager.hxx" />
     <ClInclude Include="ZSettings.hxx" />
     <ClInclude Include="ZString.hxx" />

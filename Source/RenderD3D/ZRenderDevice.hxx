@@ -29,7 +29,7 @@ SOFTWARE.
 #pragma pack(push, 1)
 
 struct ZRenderDevice {
-    char Name[MAX_RENDER_DEVICE_NAME_LENGTH];                               // 0x00
+    char Name[MAX_RENDER_DEVICE_NAME_LENGTH];                               // 0x0
     LPGUID IDD3D;                                                           // 0x28
     D3DDEVICEDESC7 Desc;                                                    // 0x2C
     u32 Acceleration;                                                       // 0x118

@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "CGraphics.hxx"
 
-#include <System/ZDynamicLoader.hxx>
+#include <System/ZModule.hxx>
 
 #define GLIDE3
 #define __MSC__ _MSC_VER
@@ -32,7 +32,7 @@ SOFTWARE.
 
 #include <gl/GL.h>
 
-#define DIRECTDRAW_VERSION                  0x0700
+#define DIRECTDRAW_VERSION                      0x0700
 #include <ddraw.h>
 
 #define MAX_GRAPHICS_DEVICE_COUNT               4
@@ -76,7 +76,7 @@ enum MemorySufficiency {
 #pragma pack(push, 1)
 
 // 0x0fbbb110
-class CSystemProbe : public ZDynamicLoader {
+class CSystemProbe : public ZModule {
 private:
     typedef HRESULT(WINAPI* LPDIRECTDRAWCREATE)(LPGUID, LPDIRECTDRAW*, LPUNKNOWN);
     typedef const GLubyte* (APIENTRY* LPGLGETSTRING)(GLenum name);
@@ -86,43 +86,43 @@ public:
     CSystemProbe();
 
 public:
-    virtual ~CSystemProbe();
-    virtual void LogSystemInfo();
-    virtual void PrintSystemInfo();
-    virtual void SaveSystemInfo(const char* name);
-    virtual u32 DetectAllCapabilities();
-    virtual GraphicsAPI GetGraphicsAPI();
-    virtual GraphicsResolution GetResolution();
-    virtual GraphicsColorDepth GetColorDepth();
-    virtual GraphicsGenericSetting GetUnk14(); // TODO
-    virtual GraphicsShadowQuality GetShadowQuality();
-    virtual GraphicsTextureQuality GetTextureQuality();
-    virtual GraphicsGenericSetting GetAnisotropicFiltering();
-    virtual GraphicsGenericSetting GetAntiAliasing();
-    virtual GraphicsGenericSetting GetTextureCompression();
-    virtual GraphicsGenericSetting GetPaletteCompression();
-    virtual GraphicsGenericSetting GetVertexLighing();
-    virtual GraphicsGenericSetting GetFullScreen();
-    virtual CGraphicsSettings* GetSettings();
-    virtual MemorySufficiency* GetMemorySufficieny();
-    virtual u32 DetectSystemCapabilities();
+    virtual ~CSystemProbe();                                                            // 0x0
+    virtual void LogSystemInfo();                                                       // 0x38
+    virtual void PrintSystemInfo();                                                     // 0x3C
+    virtual void SaveSystemInfo(const char* name);                                      // 0x40
+    virtual u32 DetectAllCapabilities();                                                // 0x44
+    virtual GraphicsAPI GetGraphicsAPI();                                               // 0x48
+    virtual GraphicsResolution GetResolution();                                         // 0x4C
+    virtual GraphicsColorDepth GetColorDepth();                                         // 0x50
+    virtual GraphicsGenericSetting Method0x54();                                        // 0x54
+    virtual GraphicsShadowQuality GetShadowQuality();                                   // 0x58
+    virtual GraphicsTextureQuality GetTextureQuality();                                 // 0x5C
+    virtual GraphicsGenericSetting GetAnisotropicFiltering();                           // 0x60
+    virtual GraphicsGenericSetting GetAntiAliasing();                                   // 0x64
+    virtual GraphicsGenericSetting GetTextureCompression();                             // 0x68
+    virtual GraphicsGenericSetting GetPaletteCompression();                             // 0x6C
+    virtual GraphicsGenericSetting GetVertexLighing();                                  // 0x70
+    virtual GraphicsGenericSetting GetFullScreen();                                     // 0x74
+    virtual CGraphicsSettings* GetSettings();                                           // 0x78
+    virtual MemorySufficiency* GetMemorySufficieny();                                   // 0x7C
+    virtual u32 DetectSystemCapabilities();                                             // 0x80
 
 protected:
-    u32 Capabilities;
-    u32 DeviceCount;
-    CGraphicsDevice Devices[MAX_GRAPHICS_DEVICE_COUNT];
-    u32 Unk0x1D; // TODO
-    CGraphicsSettings Active;
-    MemorySufficiency MemorySufficiency;
-    u32 Unk0x20C; // TODO
-    u32 SettingsCount;
-    CGraphicsSettings Settings[MAX_GRAPHICS_SETTINGS_COUNT];
-    f32 ProcessorCounter;
-    ProcessorType ProcessorType;
-    u32 SystemMemory; // In KB
-    u32 VideoMemory; // In KB
-    u32 GraphicsResult;
-    CGraphicsPreset* Presets;
+    u32 Capabilities;                                                                   // 0xC
+    u32 DeviceCount;                                                                    // 0x10
+    CGraphicsDevice Devices[MAX_GRAPHICS_DEVICE_COUNT];                                 // 0x14
+    u32 Unk0x1D;                                                                        // 0x1D4
+    CGraphicsSettings Active;                                                           // 0x1D8
+    MemorySufficiency MemorySufficiency;                                                // 0x208
+    u32 Unk0x20C;                                                                       // 0x20C
+    u32 SettingsCount;                                                                  // 0x210
+    CGraphicsSettings Settings[MAX_GRAPHICS_SETTINGS_COUNT];                            // 0x214
+    f32 ProcessorCounter;                                                               // 0x3C4
+    ProcessorType ProcessorType;                                                        // 0x3C8
+    u32 SystemMemory; // In KB                                                          // 0x3CC
+    u32 VideoMemory; // In KB                                                           // 0x3D0
+    u32 GraphicsResult;                                                                 // 0x3D4
+    CGraphicsPreset* Presets;                                                           // 0x3D8
 
 protected:
     u32 InitializeDirectDraw();
@@ -143,7 +143,7 @@ protected:
     u32 SetProcessorSettings();
     u32 InitializePresets();
     u32 SetMemorySufficiency();
-    u32 SetUnk0x20C(); // TODO
+    u32 SetUnk0x20C();
 
     static BOOL WINAPI DirectDrawEnumerateCallback(LPGUID, LPSTR, LPSTR, LPVOID, HMONITOR);
 };

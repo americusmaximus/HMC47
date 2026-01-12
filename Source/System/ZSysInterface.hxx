@@ -25,7 +25,7 @@ SOFTWARE.
 #include "ZConsole.hxx"
 #include "ZMasterControl.hxx"
 #include "ZRender.hxx"
-#include "ZRenderLoader.hxx"
+#include "ZRenderModule.hxx"
 #include "ZSettings.hxx"
 
 #pragma pack(push, 1)
@@ -106,8 +106,8 @@ public:
     virtual void Method0xB0() = 0;                                              // 0xB0
     virtual void Method0xB4() = 0;                                              // 0xB4
     virtual void Method0xB8() = 0;                                              // 0xB8
-    virtual ZDynamicLoader* CreateLibraryObject(const char*) = 0;               // 0xBC
-    virtual bool ReleaseLibraryObject(ZDynamicLoader*) = 0;                     // 0xC0
+    virtual ZModule* LoadModule(const char*) = 0;                               // 0xBC
+    virtual bool ReleaseModule(ZModule*) = 0;                                   // 0xC0
     virtual void Method0xC4() = 0;                                              // 0xC4
     virtual void __cdecl Method0xC8(u32, u32, const char*, ...) = 0;            // 0xC8
     virtual void Method0xCC() = 0;                                              // 0xCC
@@ -245,11 +245,11 @@ public:
     bool DisableConfig;                                                         // 0x38F2
     bool Unk0x38F3;                                                             // 0x38F3
     bool Unk0x38F4;                                                             // 0x38F4
-    ZDynamicLoader* SoundLoader;                                                // 0x38F5
-    ZRenderLoader* RenderLoader;                                                // 0x38F9
-    ZDynamicLoader* ScriptLoader;                                               // 0x38FD
-    ZDynamicLoader* DirectPlayLoader;                                           // 0x3901
-    ZDynamicLoader* LocaleLoader;                                               // 0x3905
+    ZModule* SoundModule;                                                       // 0x38F5
+    ZRenderModule* RenderModule;                                                // 0x38F9
+    ZModule* ScriptModule;                                                      // 0x38FD
+    ZModule* DirectPlayModule;                                                  // 0x3901
+    ZModule* LocaleModule;                                                      // 0x3905
     ZString Unk0x3909;                                                          // 0x3909
     bool ScriptDebug;                                                           // 0x3989
     bool ScriptDebugPrint;                                                      // 0x398A
@@ -271,7 +271,7 @@ public:
     u32 Unk0x3A37;                                                              // 0x3A37
     ZConsole* Console;                                                          // 0x3A3B
     bool Unk0x3A3F;                                                             // 0x3A3F
-    ZDynamicLoader* Engine;                                                     // 0x3A40
+    ZModule* Engine;                                                            // 0x3A40
     bool ProcessingWindowMessages;                                              // 0x3A44
 };
 
@@ -330,8 +330,8 @@ public:
     virtual void Method0xB0();                                                          // 0xB0
     virtual void Method0xB4();                                                          // 0xB4
     virtual void Method0xB8();                                                          // 0xB8
-    virtual ZDynamicLoader* CreateLibraryObject(const char* path);                      // 0xBC
-    virtual bool ReleaseLibraryObject(ZDynamicLoader* ptr);                             // 0xC0
+    virtual ZModule* LoadModule(const char* path);                                      // 0xBC
+    virtual bool ReleaseModule(ZModule* module);                                        // 0xC0
     virtual void Method0xC4();                                                          // 0xC4
     virtual void Method0xC8();                                                          // 0xC8
     virtual void Method0xCC();                                                          // 0xCC
@@ -343,7 +343,7 @@ public:
     virtual void Method0x12C();                                                         // 0x12C
 
 public:
-    void LoadDynamicObject(ZDynamicLoader** result, const char* name);
+    void InitializeModule(ZModule** result, const char* name);
     void ExecuteEngineWrapper(u32 code);   // TODO
 
 protected:

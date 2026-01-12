@@ -21,9 +21,7 @@ SOFTWARE.
 */
 
 #include "Globals.hxx"
-#include "ZDynamicLoader.hxx"
 #include "ZExceptionRender.hxx"
-#include "ZSysInterface.hxx"
 
 #include <stdio.h>
 
@@ -58,11 +56,11 @@ ZSysInterface::ZSysInterface(HMODULE module) {
     this->Unk0xAA5 = 0; //TODO
     this->Unk0xAA1 = 0; // TODO
 
-    this->RenderLoader = nullptr;
-    this->ScriptLoader = nullptr;
-    this->DirectPlayLoader = nullptr;
-    this->LocaleLoader = nullptr;
-    this->SoundLoader = nullptr;
+    this->RenderModule = nullptr;
+    this->ScriptModule = nullptr;
+    this->DirectPlayModule = nullptr;
+    this->LocaleModule = nullptr;
+    this->SoundModule = nullptr;
 
     this->Unk0x5D = 0; // TODO
 
@@ -165,7 +163,7 @@ void ZSysInterface::Method0x20(bool todo) {
         g_pSysMem->Method0x8();
 
         if (!todo) {
-            if (g_pSysInterface->SoundLoader != nullptr) {
+            if (g_pSysInterface->SoundModule != nullptr) {
                 // TODO NOT IMPLEMENTED
             }
         }
@@ -241,10 +239,10 @@ void ZSysInterface::Method0xC4() {
 
     this->Method0x24();
 
-    if (this->RenderLoader != nullptr) {
-        this->RenderLoader->Release();
-        this->ReleaseLibraryObject(this->RenderLoader);
-        this->RenderLoader = nullptr;
+    if (this->RenderModule != nullptr) {
+        this->RenderModule->Release();
+        this->ReleaseModule(this->RenderModule);
+        this->RenderModule = nullptr;
     }
 
     this->WindowWidth = this->PreviousWindowWidth;
@@ -268,12 +266,12 @@ void ZSysInterface::Method0xC4() {
     this->CreateMainWindow();
 
     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1022)
-        ->LogMessage("Loading new Render %s", this->DrawDll);
+        ->LogMessage("Loading new Render %s", this->DrawDll.AsString());
 
-    this->LoadDynamicObject(&this->RenderLoader, this->DrawDll);
+    this->InitializeModule(&this->RenderModule, this->DrawDll);
 
-    if (this->RenderLoader != nullptr) {
-        this->RenderLoader->InitializeRenderer(this->MainWindow);
+    if (this->RenderModule != nullptr) {
+        this->RenderModule->InitializeRenderer(this->MainWindow);
     }
     else {
         MessageBoxA(NULL,
@@ -284,17 +282,17 @@ void ZSysInterface::Method0xC4() {
 }
 
 // 0x0ffada10
-void ZSysInterface::LoadDynamicObject(ZDynamicLoader** result, const char* name) {
+void ZSysInterface::InitializeModule(ZModule** result, const char* name) {
     if (*result == nullptr && name != nullptr) {
         if (strlen(name) != 0) {
-            ZDynamicLoader* object = this->CreateLibraryObject(name);
+            ZModule* object = this->LoadModule(name);
 
             *result = object;
 
             if (object != nullptr) {
                 object->Initialize();
 
-                if (object->DynamicLibraryModule == NULL) {
+                if (object->ModuleHandle == NULL) {
                     *result = nullptr;
                     delete object;
 
@@ -314,7 +312,7 @@ void ZSysInterface::LoadDynamicObject(ZDynamicLoader** result, const char* name)
 bool StartEngine() {
     if (!g_pSysInterface->Unk0x38F1) {
         g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1106)
-            ->LogMessage("Starting engine, Commandline=\"%s\"\n", g_pSysInterface->CommandLine);
+            ->LogMessage("Starting engine, Commandline=\"%s\"\n", g_pSysInterface->CommandLine.AsString());
     }
 
     if (g_pSysInterface->Method0x18(g_pSysInterface->CommandLine, 21 /* TODO */)) {
@@ -332,22 +330,22 @@ bool StartEngine() {
             // TODO NOT IMPLEMENTED
         }
 
-        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->Engine, "EngineData.dll");
-        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->RenderLoader, g_pSysInterface->DrawDll);
+        g_pSysInterface->InitializeModule(&g_pSysInterface->Engine, "EngineData.dll");
+        g_pSysInterface->InitializeModule(&g_pSysInterface->RenderModule, g_pSysInterface->DrawDll);
 
-        if (g_pSysInterface->RenderLoader == nullptr) {
+        if (g_pSysInterface->RenderModule == nullptr) {
             if (g_pSysInterface->DrawDll == nullptr) {
                 g_pSysCom->LogFatal("No Render is selected. Please select one.");
             }
             else {
-                g_pSysCom->LogFatal("Render '%s' is not supported.", g_pSysInterface->DrawDll);
+                g_pSysCom->LogFatal("Render '%s' is not supported.", g_pSysInterface->DrawDll.AsString());
             }
         }
 
-        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->ScriptLoader, g_pSysInterface->ScriptDll);
-        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->SoundLoader, g_pSysInterface->SoundDll);
-        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->DirectPlayLoader, g_pSysInterface->DirectPlayDll);
-        g_pSysInterface->LoadDynamicObject(&g_pSysInterface->LocaleLoader, g_pSysInterface->LocaleDll);
+        g_pSysInterface->InitializeModule(&g_pSysInterface->ScriptModule, g_pSysInterface->ScriptDll);
+        g_pSysInterface->InitializeModule(&g_pSysInterface->SoundModule, g_pSysInterface->SoundDll);
+        g_pSysInterface->InitializeModule(&g_pSysInterface->DirectPlayModule, g_pSysInterface->DirectPlayDll);
+        g_pSysInterface->InitializeModule(&g_pSysInterface->LocaleModule, g_pSysInterface->LocaleDll);
 
         // TODO NOT IMPLEMENTED
 
@@ -522,7 +520,8 @@ void ZSysInterface::Method0x10() {
 
     if (this->ExceptionCount != 0) {
         g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 2156)
-            ->LogMessage("Errors occured during execution - an error log has been generated in %s", this->LogPath);
+            ->LogMessage("Errors occured during execution - an error log has been generated in %s",
+                this->LogPath.AsString());
     }
 }
 
@@ -574,9 +573,9 @@ static LRESULT WINAPI MainWindowHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
                 SetWindowPos(hWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
             }
 
-            if (g_pSysInterface->SoundLoader != nullptr) {
-                if (g_pSysInterface->SoundLoader->Unk0x1C != nullptr) {
-                    g_pSysInterface->SoundLoader->Unk0x1C->Method0x48();
+            if (g_pSysInterface->SoundModule != nullptr) {
+                if (g_pSysInterface->SoundModule->Unk0x1C != nullptr) {
+                    g_pSysInterface->SoundModule->Unk0x1C->Method0x48();
                 }
             }
         }
@@ -643,12 +642,12 @@ void ZSysInterface::Sleep(f32 time) {
 }
 
 // 0x0ffb1330
-bool ZSysInterface::ReleaseLibraryObject(ZDynamicLoader* ptr) {
+bool ZSysInterface::ReleaseModule(ZModule* ptr) {
     if (ptr == nullptr) {
         return false;
     }
 
-    HMODULE module = ptr->DynamicLibraryModule;
+    HMODULE module = ptr->ModuleHandle;
 
     delete ptr;
 

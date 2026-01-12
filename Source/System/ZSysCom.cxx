@@ -185,7 +185,7 @@ void ZSysCom::Method0x38(const char* format, ...) {
         ZConsole* console = g_pSysInterface->GetConsole();
 
         if (console != nullptr) {
-            console->Method0x4(buffer);
+            console->Append(buffer);
         }
     }
 }

@@ -26,12 +26,12 @@ SOFTWARE.
 
 #pragma pack(push, 1)
 
-class ZDynamicLoader {
+class ZModule {
 public:
-    ZDynamicLoader();
+    ZModule();
 
 public:
-    virtual ~ZDynamicLoader();                                                  // 0x0
+    virtual ~ZModule();                                                         // 0x0
     virtual void Method0x4();                                                   // 0x4
     virtual void Initialize();                                                  // 0x8
     virtual void Release();                                                     // 0xC
@@ -42,17 +42,17 @@ public:
     virtual void Method0x20();                                                  // 0x20
     virtual void Method0x24();                                                  // 0x24
     virtual void Method0x28();                                                  // 0x28
-    virtual void SetDynamicLibrary(HMODULE module, const char* name);           // 0x2C
+    virtual void SetModule(HMODULE module, const char* name);                   // 0x2C
     virtual FARPROC GetFunctionAddress(const char* name);                       // 0x30
     virtual void Method0x34();                                                  // 0x34
 
 public:
-    char* DynamicLibraryName;                                                   // 0x4
-    HMODULE DynamicLibraryModule;                                               // 0x8
+    char* ModuleName;                                                           // 0x4
+    HMODULE ModuleHandle;                                                       // 0x8
 };
 
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZDynamicLoader)    == 0xC,     "ZDynamicLoader size mismatch.");
+static_assert(sizeof(ZModule)       == 0xC,     "ZModule size mismatch.");
 #endif

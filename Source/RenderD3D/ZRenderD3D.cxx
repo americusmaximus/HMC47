@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "ZExceptionRenderD3D.hxx"
 #include "ZRenderD3D.hxx"
-#include "ZRenderLoaderD3D.hxx"
+#include "ZRenderModuleD3D.hxx"
 
 #define MAX_RENDER_DEVICE_COUNT         20
 
@@ -456,14 +456,14 @@ void ZRenderD3D::Initialize() {
         // TODO
         uStack_4 = 1;
         this->VertexBufferManager
-            = new ZVertexBufferManager(selected->IDD3D, this->Device, 1000, piVar7, g_Loader->Unk0xC, 0);
+            = new ZVertexBufferManager(selected->IDD3D, this->Device, 1000, piVar7, g_Module->Unk0xC, 0);
     }
     else {
         // TODO
         uStack_4 = 0;
         if (rgb != nullptr) {
             this->VertexBufferManager
-                = new ZVertexBufferManager(selected->IDD3D, this->Device, 1000, piVar7, g_Loader->Unk0xC, 0);
+                = new ZVertexBufferManager(selected->IDD3D, this->Device, 1000, piVar7, g_Module->Unk0xC, 0);
         }
     }
 

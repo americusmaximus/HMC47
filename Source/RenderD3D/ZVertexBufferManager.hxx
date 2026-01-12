@@ -34,7 +34,7 @@ public:
     ZVertexBufferManager(LPGUID id, LPDIRECT3DDEVICE7 device, u32 count, u32 todo1, u32 todo2, u32 todo3);
 
 public:
-    virtual ~ZVertexBufferManager();
+    virtual ~ZVertexBufferManager();                                                // 0x0
 
 protected:
 

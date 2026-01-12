@@ -22,18 +22,18 @@ SOFTWARE.
 
 #include "Globals.hxx"
 #include "ZRenderD3D.hxx"
-#include "ZRenderLoaderD3D.hxx"
+#include "ZRenderModuleD3D.hxx"
 
-ZRenderLoaderD3D* g_Loader;                                                         // 0x0fbbdac0
+ZRenderModuleD3D* g_Module;                                                         // 0x0fbbdac0
 
 // 0x0fba9980
-void ZRenderLoaderD3D::Method0x28() {
+void ZRenderModuleD3D::Method0x28() {
     g_pSysInterface->Method0x24();
 }
 
 // 0x0fb81060
 // 0x0fbb5190
-ZRenderLoaderD3D::ZRenderLoaderD3D() {
+ZRenderModuleD3D::ZRenderModuleD3D() {
     this->Manager = new ZTextureManagerD3D();
 
     this->Method0x44();
@@ -42,7 +42,7 @@ ZRenderLoaderD3D::ZRenderLoaderD3D() {
 
 // 0x0fb810e0
 // 0x0fb81110
-ZRenderLoaderD3D::~ZRenderLoaderD3D() {
+ZRenderModuleD3D::~ZRenderModuleD3D() {
     if (this->Manager != nullptr) {
         delete this->Manager;
     }
@@ -52,12 +52,12 @@ ZRenderLoaderD3D::~ZRenderLoaderD3D() {
 }
 
 // 0x0fb81180
-void ZRenderLoaderD3D::Initialize() {
+void ZRenderModuleD3D::Initialize() {
     this->Method0x48(1); // TODO
 }
 
 // 0x0fb81190
-void ZRenderLoaderD3D::InitializeRenderer(HWND window) {
+void ZRenderModuleD3D::InitializeRenderer(HWND window) {
     ZRenderD3D* render =
         new ZRenderD3D(g_pSysInterface->Module, window, (ZTextureManagerD3D*)this->Manager);
 
@@ -68,7 +68,7 @@ void ZRenderLoaderD3D::InitializeRenderer(HWND window) {
 }
 
 // 0x0fb81240
-void ZRenderLoaderD3D::Method0x40() {
+void ZRenderModuleD3D::Method0x40() {
     RefLink link;
 
     if (this->Unk0x18 != nullptr) {
@@ -87,16 +87,16 @@ void ZRenderLoaderD3D::Method0x40() {
 
 // 0x0fb812f0
 // 0x0fba9990
-void ZRenderLoaderD3D::Method0x3C(u32* todo) {
-    ZRenderLoader::Method0x3C(todo);
+void ZRenderModuleD3D::Method0x3C(u32* todo) {
+    ZRenderModule::Method0x3C(todo);
 }
 
 // 0x0fb90a60
-void ZRenderLoaderD3D::Method0x44() {
+void ZRenderModuleD3D::Method0x44() {
     // TODO NOT IMPLEMENTED
 }
 
 // 0x0fb96db0
-void ZRenderLoaderD3D::Method0x50() {
+void ZRenderModuleD3D::Method0x50() {
     // TODO NOT IMPLEMENTED
 }

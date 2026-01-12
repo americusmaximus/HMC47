@@ -23,22 +23,22 @@ SOFTWARE.
 #include "Globals.hxx"
 
 #include <System/Texture.hxx>
-#include <System/ZRenderLoader.hxx>
+#include <System/ZRenderModule.hxx>
 
-static u32 g_ZRenderLoadedUnknown;                                                  // 0x0fbc5280 // TODO
-
-// 0x0fb81a00
-void ZRenderLoader::Method0x40() {}
+static u32 g_ZRenderModuleUnknown;                                                  // 0x0fbc5280 // TODO
 
 // 0x0fb81a00
-void ZRenderLoader::Method0x44() {}
+void ZRenderModule::Method0x40() {}
+
+// 0x0fb81a00
+void ZRenderModule::Method0x44() {}
 
 // 0x0fb9aa90
-void ZRenderLoader::InitializeRenderer(HWND) {}
+void ZRenderModule::InitializeRenderer(HWND) {}
 
 // 0x0fba51c0
 // 0x0fbb5c48
-ZRenderLoader::ZRenderLoader() {
+ZRenderModule::ZRenderModule() {
     this->Unk0x1C = new LinkRefTab(8, 0);
     this->Unk0x18 = nullptr;
     this->Count = -1;
@@ -48,7 +48,7 @@ ZRenderLoader::ZRenderLoader() {
 
 // 0x0fba5250
 // 0x0fba5270
-ZRenderLoader::~ZRenderLoader() {
+ZRenderModule::~ZRenderModule() {
     this->Method0x48(-1);
 
     if (this->Unk0x1C != nullptr) {
@@ -57,17 +57,17 @@ ZRenderLoader::~ZRenderLoader() {
 }
 
 // 0x0x0fba52d0
-void ZRenderLoader::Method0x10() {
+void ZRenderModule::Method0x10() {
     this->Method0x48(this->Count + 1);
 }
 
 // 0x0fba52e0
-void ZRenderLoader::Method0x14() {
+void ZRenderModule::Method0x14() {
     this->Method0x48(this->Count - 1);
 }
 
 // 0x0fba52f0
-void ZRenderLoader::Method0x48(s32 count) {
+void ZRenderModule::Method0x48(s32 count) {
     if (this->Count < count) {
         while (this->Count < count) {
             this->Unk0x18 = new RefTab(64, 0);
@@ -80,7 +80,7 @@ void ZRenderLoader::Method0x48(s32 count) {
             this->Count++;
         }
 
-        g_ZRenderLoadedUnknown = 0; // TODO
+        g_ZRenderModuleUnknown = 0; // TODO
     }
 
     while (count < this->Count) {
@@ -102,11 +102,11 @@ void ZRenderLoader::Method0x48(s32 count) {
         this->Count--;
     }
 
-    g_ZRenderLoadedUnknown = this->Unk0x20[this->Count];
+    g_ZRenderModuleUnknown = this->Unk0x20[this->Count];
 }
 
 // 0x0fba5410
-void ZRenderLoader::Method0x3C(u32* todo) {
+void ZRenderModule::Method0x3C(u32* todo) {
     {
         const u32 size = g_pSysFile->GetSize("Pack.LGT", false);
 

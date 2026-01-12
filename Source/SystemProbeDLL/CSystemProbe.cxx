@@ -106,7 +106,7 @@ CSystemProbe::CSystemProbe() {
         this->Active.ColorDepth             = GRAPHICSCOLORDEPTH_UNKNOWN;
         this->Active.ShadowQuality          = GRAPHICSSHADOWQUALITY_UNKNOWN;
         this->Active.TextureQuality         = GRAPHICSTEXTUREQUALITY_UNKNOWN;
-        this->Active.Unk14                  = GRAPHICSGENERICSETTING_UNKNOWN;
+        this->Active.Unk0x14                = GRAPHICSGENERICSETTING_UNKNOWN;
         this->Active.AnisotropicFiltering   = GRAPHICSGENERICSETTING_UNKNOWN;
         this->Active.AntiAliasing           = GRAPHICSGENERICSETTING_UNKNOWN;
         this->Active.TextureCompression     = GRAPHICSGENERICSETTING_UNKNOWN;
@@ -123,7 +123,7 @@ CSystemProbe::CSystemProbe() {
         this->Settings[i].ColorDepth            = GRAPHICSCOLORDEPTH_UNKNOWN;
         this->Settings[i].ShadowQuality         = GRAPHICSSHADOWQUALITY_UNKNOWN;
         this->Settings[i].TextureQuality        = GRAPHICSTEXTUREQUALITY_UNKNOWN;
-        this->Settings[i].Unk14                 = GRAPHICSGENERICSETTING_UNKNOWN;
+        this->Settings[i].Unk0x14               = GRAPHICSGENERICSETTING_UNKNOWN;
         this->Settings[i].AnisotropicFiltering  = GRAPHICSGENERICSETTING_UNKNOWN;
         this->Settings[i].AntiAliasing          = GRAPHICSGENERICSETTING_UNKNOWN;
         this->Settings[i].TextureCompression    = GRAPHICSGENERICSETTING_UNKNOWN;
@@ -156,8 +156,8 @@ GraphicsColorDepth CSystemProbe::GetColorDepth() {
 }
 
 // 0x0fbb1160
-GraphicsGenericSetting CSystemProbe::GetUnk14() {
-    return this->Active.Unk14;
+GraphicsGenericSetting CSystemProbe::Method0x54() {
+    return this->Active.Unk0x14;
 }
 
 // 0x0fbb1170
@@ -700,8 +700,8 @@ u32 CSystemProbe::SetDefaultActiveSettings() {
         this->Active.TextureQuality = GRAPHICSTEXTUREQUALITY_FULL;
     }
 
-    if (this->Active.Unk14 == GRAPHICSGENERICSETTING_UNKNOWN) {
-        this->Active.Unk14 = GRAPHICSGENERICSETTING_ON;
+    if (this->Active.Unk0x14 == GRAPHICSGENERICSETTING_UNKNOWN) {
+        this->Active.Unk0x14 = GRAPHICSGENERICSETTING_ON;
     }
 
     if (this->Active.AnisotropicFiltering == GRAPHICSGENERICSETTING_UNKNOWN) {
@@ -799,13 +799,13 @@ u32 CSystemProbe::SetActiveSettings() {
         f32 value = 0.0f;
 
         for (u32 i = 0; i < this->SettingsCount; i++) {
-            if (this->Active.Unk14 != GRAPHICSGENERICSETTING_UNKNOWN) {
-                value += (f32)this->Active.Unk14;
+            if (this->Active.Unk0x14 != GRAPHICSGENERICSETTING_UNKNOWN) {
+                value += (f32)this->Active.Unk0x14;
                 count = count + 1;
             }
         }
 
-        this->Active.Unk14 =
+        this->Active.Unk0x14 =
             (GraphicsGenericSetting)this->AverageSettingValue(value, count);
     }
 
@@ -907,15 +907,15 @@ u32 CSystemProbe::SetSystemMemorySettings() {
             this->Settings[this->SettingsCount].ColorDepth = GRAPHICSCOLORDEPTH_16BIT;
             this->Settings[this->SettingsCount].ShadowQuality = GRAPHICSSHADOWQUALITY_NONE;
             this->Settings[this->SettingsCount].TextureQuality = GRAPHICSTEXTUREQUALITY_VERY_LOW;
-            this->Settings[this->SettingsCount].Unk14 = GRAPHICSGENERICSETTING_OFF;
+            this->Settings[this->SettingsCount].Unk0x14 = GRAPHICSGENERICSETTING_OFF;
         }
         else if (this->SystemMemory < 128000) {
             this->Settings[this->SettingsCount].TextureQuality = GRAPHICSTEXTUREQUALITY_MEDIUM;
-            this->Settings[this->SettingsCount].Unk14 = GRAPHICSGENERICSETTING_ON;
+            this->Settings[this->SettingsCount].Unk0x14 = GRAPHICSGENERICSETTING_ON;
         }
         else {
             this->Settings[this->SettingsCount].TextureQuality = GRAPHICSTEXTUREQUALITY_FULL;
-            this->Settings[this->SettingsCount].Unk14 = GRAPHICSGENERICSETTING_ON;
+            this->Settings[this->SettingsCount].Unk0x14 = GRAPHICSGENERICSETTING_ON;
         }
 
         this->SettingsCount = this->SettingsCount + 1;
@@ -936,35 +936,35 @@ u32 CSystemProbe::SetProcessorSettings() {
         this->Settings[this->SettingsCount].ColorDepth = GRAPHICSCOLORDEPTH_16BIT;
         this->Settings[this->SettingsCount].ShadowQuality = GRAPHICSSHADOWQUALITY_NONE;
         this->Settings[this->SettingsCount].TextureQuality = GRAPHICSTEXTUREQUALITY_VERY_LOW;
-        this->Settings[this->SettingsCount].Unk14 = GRAPHICSGENERICSETTING_OFF;
+        this->Settings[this->SettingsCount].Unk0x14 = GRAPHICSGENERICSETTING_OFF;
 
         break;
     }
     case PROCESSORTYPE_SLOW: {
         this->Settings[this->SettingsCount].Resolution = GRAPHICSRESOLUTION_800x600;
         this->Settings[this->SettingsCount].ShadowQuality = GRAPHICSSHADOWQUALITY_NONE;
-        this->Settings[this->SettingsCount].Unk14 = GRAPHICSGENERICSETTING_OFF;
+        this->Settings[this->SettingsCount].Unk0x14 = GRAPHICSGENERICSETTING_OFF;
 
         break;
     }
     case PROCESSORTYPE_MEDIUM: {
         this->Settings[this->SettingsCount].Resolution = GRAPHICSRESOLUTION_1024x768;
         this->Settings[this->SettingsCount].ShadowQuality = GRAPHICSSHADOWQUALITY_HITMAN;
-        this->Settings[this->SettingsCount].Unk14 = GRAPHICSGENERICSETTING_ON;
+        this->Settings[this->SettingsCount].Unk0x14 = GRAPHICSGENERICSETTING_ON;
 
         break;
     }
     case PROCESSORTYPE_FAST: {
         this->Settings[this->SettingsCount].Resolution = GRAPHICSRESOLUTION_1024x768;
         this->Settings[this->SettingsCount].ShadowQuality = GRAPHICSSHADOWQUALITY_HITMAN;
-        this->Settings[this->SettingsCount].Unk14 = GRAPHICSGENERICSETTING_ON;
+        this->Settings[this->SettingsCount].Unk0x14 = GRAPHICSGENERICSETTING_ON;
 
         break;
     }
     case PROCESSORTYPE_VERY_FAST: {
         this->Settings[this->SettingsCount].Resolution = GRAPHICSRESOLUTION_1024x768;
         this->Settings[this->SettingsCount].ShadowQuality = GRAPHICSSHADOWQUALITY_ALL;
-        this->Settings[this->SettingsCount].Unk14 = GRAPHICSGENERICSETTING_ON;
+        this->Settings[this->SettingsCount].Unk0x14 = GRAPHICSGENERICSETTING_ON;
 
         break;
     }

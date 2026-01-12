@@ -41,6 +41,10 @@ public:
         this->Set(value == nullptr ? "" : value);
     }
 
+    inline char* AsString() {
+        return this->Ptr;
+    }
+
     inline ZString& operator=(const ZString& value) {
         if (this != &value) {
             this->Set(value.Ptr);

@@ -20,70 +20,70 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <System/ZDynamicLoader.hxx>
+#include <System/ZModule.hxx>
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x4() {}
+void ZModule::Method0x4() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Initialize() {}
+void ZModule::Initialize() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Release() {}
+void ZModule::Release() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x14() {}
+void ZModule::Method0x14() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x18() {}
+void ZModule::Method0x18() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x1C() {}
+void ZModule::Method0x1C() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x20() {}
+void ZModule::Method0x20() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x24() {}
+void ZModule::Method0x24() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x28() {}
+void ZModule::Method0x28() {}
 
 // 0x0fb81230
-void ZDynamicLoader::Method0x10() {}
+void ZModule::Method0x10() {}
 
 // 0x0fb81a00
-void ZDynamicLoader::Method0x34() {}
+void ZModule::Method0x34() {}
 
 // 0x0fba9f70
 // 0x0fbb5f64
-ZDynamicLoader::ZDynamicLoader() {
-    DynamicLibraryName = nullptr;
-    DynamicLibraryModule = NULL;
+ZModule::ZModule() {
+    this->ModuleName = nullptr;
+    this->ModuleHandle = NULL;
 }
 
 // 0x0fba9f90
 // 0x0fba9ff0
-ZDynamicLoader::~ZDynamicLoader() {
-    if (this->DynamicLibraryName != nullptr) {
-        delete[] this->DynamicLibraryName;
+ZModule::~ZModule() {
+    if (this->ModuleName != nullptr) {
+        delete[] this->ModuleName;
     }
 }
 
 // 0x0fbaa020
-void ZDynamicLoader::SetDynamicLibrary(HMODULE module, const char* name) {
-    if (this->DynamicLibraryName != nullptr) {
-        delete[] this->DynamicLibraryName;
+void ZModule::SetModule(HMODULE module, const char* name) {
+    if (this->ModuleName != nullptr) {
+        delete[] this->ModuleName;
     }
 
-    this->DynamicLibraryName = new char[strlen(name) + 1];
-    strcpy(this->DynamicLibraryName, name);
+    this->ModuleName = new char[strlen(name) + 1];
+    strcpy(this->ModuleName, name);
 
-    this->DynamicLibraryModule = module;
+    this->ModuleHandle = module;
 }
 
 // 0x0fbaa0c0
-FARPROC ZDynamicLoader::GetFunctionAddress(const char* name) {
-    return this->DynamicLibraryModule == NULL
-        ? NULL : GetProcAddress(this->DynamicLibraryModule, name);
+FARPROC ZModule::GetFunctionAddress(const char* name) {
+    return this->ModuleHandle == NULL
+        ? nullptr : GetProcAddress(this->ModuleHandle, name);
 }

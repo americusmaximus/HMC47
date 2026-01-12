@@ -101,7 +101,7 @@ public:
     virtual s32 Method0xB0();                                                       // 0xB0
     virtual f32 Method0xB4();                                                       // 0xB4
     virtual f32 Method0xB8();                                                       // 0xB8
-    virtual void Method0xBC(f32 value);                                             // 0xBC
+    virtual void SetFontSize(f32 value);                                            // 0xBC
     virtual f32 Method0xC0();                                                       // 0xC0
     virtual bool Method0xC4();                                                      // 0xC4
     virtual void Method0xC8(u32 todo1, u32 todo2, u32 todo3);                       // 0xC8

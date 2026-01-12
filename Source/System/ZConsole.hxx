@@ -127,7 +127,7 @@ public:
 
 public:
     virtual bool Method0x0();                                                       // 0x0
-    virtual void __cdecl Method0x4(const char* fromat, ...);                        // 0x4
+    virtual void __cdecl Append(const char* format, ...);                           // 0x4
     virtual const char* Method0x8(s32 index);                                       // 0x8
     virtual bool Method0xC();                                                       // 0xC
     virtual void Method0x10(WPARAM wParam, LPARAM lParam);                          // 0x10

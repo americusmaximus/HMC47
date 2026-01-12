@@ -179,7 +179,7 @@
     <ClCompile Include="CSystemProbe.cxx" />
     <ClCompile Include="Common.cxx" />
     <ClCompile Include="Main.cxx" />
-    <ClCompile Include="ZDynamicLoader.cxx" />
+    <ClCompile Include="ZModule.cxx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Globals\Globals.vcxproj">

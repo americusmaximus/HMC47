@@ -91,7 +91,7 @@ ZConsole::~ZConsole() {
 }
 
 // 0x0ffc56e0
-void ZConsole::Method0x4(const char* fromat, ...) {
+void ZConsole::Append(const char* format, ...) {
     // TODO NOT IMPLEMENTED
 }
 
@@ -160,10 +160,10 @@ void ZConsole::Method0x18() {
         char* value = strtok(nullptr, "");
 
         if (this->Handler.Execute(command, value)) {
-            this->Method0x4("%s %s", command, value);
+            this->Append("%s %s", command, value);
         }
         else {
-            this->Method0x4("%s - Unknown command - use <commands> to display list", command);
+            this->Append("%s - Unknown command - use <commands> to display list", command);
         }
 
         this->Input[0] = NULL;

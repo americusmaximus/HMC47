@@ -31,7 +31,7 @@ CGraphicsPreset::CGraphicsPreset() {
     this->Settings.ColorDepth           = GRAPHICSCOLORDEPTH_UNKNOWN;
     this->Settings.ShadowQuality        = GRAPHICSSHADOWQUALITY_UNKNOWN;
     this->Settings.TextureQuality       = GRAPHICSTEXTUREQUALITY_UNKNOWN;
-    this->Settings.Unk14                = GRAPHICSGENERICSETTING_UNKNOWN;
+    this->Settings.Unk0x14              = GRAPHICSGENERICSETTING_UNKNOWN;
     this->Settings.AnisotropicFiltering = GRAPHICSGENERICSETTING_UNKNOWN;
     this->Settings.AntiAliasing         = GRAPHICSGENERICSETTING_UNKNOWN;
     this->Settings.TextureCompression   = GRAPHICSGENERICSETTING_UNKNOWN;

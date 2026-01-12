@@ -43,26 +43,26 @@ enum GraphicsDeviceType {
 #pragma pack(push, 1)
 
 struct CGraphicsDevice {
-    GraphicsDeviceAcceleration  Acceleration;
-    GraphicsDeviceType          Type;
-    u32                         Memory;     // In KB
-    char                        Name[MAX_GRAPHICS_DEVICE_NAME_LENGTH];
-    char                        Driver[MAX_GRAPHICS_DEVICE_NAME_LENGTH];
+    GraphicsDeviceAcceleration  Acceleration;                                           // 0x0
+    GraphicsDeviceType          Type;                                                   // 0x4
+    u32                         Memory;     // In KB                                    // 0x8
+    char                        Name[MAX_GRAPHICS_DEVICE_NAME_LENGTH];                  // 0xC
+    char                        Driver[MAX_GRAPHICS_DEVICE_NAME_LENGTH];                // 0x3E
 };
 
 struct CGraphicsSettings {
-    GraphicsAPI                     API;
-    GraphicsResolution              Resolution;
-    GraphicsColorDepth              ColorDepth;
-    GraphicsShadowQuality           ShadowQuality;
-    GraphicsTextureQuality          TextureQuality;
-    GraphicsGenericSetting          Unk14; // TODO
-    GraphicsGenericSetting          AnisotropicFiltering;
-    GraphicsGenericSetting          AntiAliasing;
-    GraphicsGenericSetting          TextureCompression;
-    GraphicsGenericSetting          PaletteCompression;
-    GraphicsGenericSetting          VertexLighing;
-    GraphicsGenericSetting          FullScreen;
+    GraphicsAPI                     API;                                                // 0x0
+    GraphicsResolution              Resolution;                                         // 0x4
+    GraphicsColorDepth              ColorDepth;                                         // 0x8
+    GraphicsShadowQuality           ShadowQuality;                                      // 0xC
+    GraphicsTextureQuality          TextureQuality;                                     // 0x10
+    GraphicsGenericSetting          Unk0x14;                                            // 0x14
+    GraphicsGenericSetting          AnisotropicFiltering;                               // 0x18
+    GraphicsGenericSetting          AntiAliasing;                                       // 0x1C
+    GraphicsGenericSetting          TextureCompression;                                 // 0x20
+    GraphicsGenericSetting          PaletteCompression;                                 // 0x24
+    GraphicsGenericSetting          VertexLighing;                                      // 0x28
+    GraphicsGenericSetting          FullScreen;                                         // 0x2C
 };
 
 class CGraphicsPreset {
@@ -72,15 +72,15 @@ public:
     CGraphicsPreset* GetNext();
 
 public:
-    CGraphicsPreset* Next;
-    char Name[MAX_GRAPHICS_DEVICE_NAME_LENGTH];
-    CGraphicsSettings Settings;
+    CGraphicsPreset* Next;                                                              // 0x0
+    char Name[MAX_GRAPHICS_DEVICE_NAME_LENGTH];                                         // 0x4
+    CGraphicsSettings Settings;                                                         // 0x36
 };
 
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(CGraphicsDevice) == 0x70,      "CGraphicsDevice size mismatch.");
-static_assert(sizeof(CGraphicsPreset) == 0x66,      "CGraphicsPreset size mismatch.");
+static_assert(sizeof(CGraphicsDevice)   == 0x70,    "CGraphicsDevice size mismatch.");
+static_assert(sizeof(CGraphicsPreset)   == 0x66,    "CGraphicsPreset size mismatch.");
 static_assert(sizeof(CGraphicsSettings) == 0x30,    "CGraphicsSettings size mismatch.");
 #endif

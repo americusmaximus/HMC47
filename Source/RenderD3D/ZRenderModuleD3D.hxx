@@ -22,37 +22,33 @@ SOFTWARE.
 
 #pragma once
 
-#include "LinkRefTab.hxx"
-#include "ZTextureManager.hxx"
-#include "ZDynamicLoader.hxx"
+#include <System/ZRenderModule.hxx>
 
 #pragma pack(push, 1)
 
-class ZRenderLoader : public ZDynamicLoader {
+class ZRenderModuleD3D : public ZRenderModule {
 public:
-    ZRenderLoader();
+    ZRenderModuleD3D();
 
 public:
-    virtual ~ZRenderLoader();                                                   // 0x0
-    virtual void Method0x10();                                                  // 0x10
-    virtual void Method0x14();                                                  // 0x14
+    virtual ~ZRenderModuleD3D();                                                // 0x0
+    virtual void Initialize();                                                  // 0x8
+    virtual void Method0x28();                                                  // 0x28
     virtual void InitializeRenderer(HWND window);                               // 0x38
     virtual void Method0x3C(u32* todo);                                         // 0x3C
     virtual void Method0x40();                                                  // 0x40
     virtual void Method0x44();                                                  // 0x44
-    virtual void Method0x48(s32 count);                                         // 0x48
+    virtual void Method0x50();                                                  // 0x50
 
 public:
-    u32 Unk0xC;                                                                 // 0xC
-    ZTextureManager* Manager;                                                   // 0x10
-    s32 Count;                                                                  // 0x14
-    RefTab* Unk0x18;                                                            // 0x18
-    LinkRefTab* Unk0x1C;                                                        // 0x1C
-    u32 Unk0x20[20 /* TODO */];                                                 // 0x20
+    void* Unk0x70;                                                              // 0x70
+    void* Unk0x74;                                                              // 0x74
 };
 
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZRenderLoader)     == 0x70,     "ZRenderLoader size mismatch.");
+static_assert(sizeof(ZRenderModuleD3D)  == 0x78,    "ZRenderModuleD3D size mismatch.");
 #endif
+
+extern ZRenderModuleD3D* g_Module;

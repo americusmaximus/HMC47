@@ -265,37 +265,37 @@ ZRenderBase::ZRenderBase(HINSTANCE instance, HWND window) {
 
     if (!g_pSysInterface->Unk0x38F1) {
         this->DebugCommand = new ZVisualConsoleCommand("ip_debug", &g_pSysInterface->DebugOptionsVisibility);
-        g_pSysInterface->EnqueueConsoleCommand(this->DebugCommand);
+        g_pSysInterface->RegisterConsoleCommand(this->DebugCommand);
 
         this->TimersCommand = new ZVisualConsoleCommand("ip_timers", &g_pSysInterface->TimersVisibility);
-        g_pSysInterface->EnqueueConsoleCommand(this->TimersCommand);
+        g_pSysInterface->RegisterConsoleCommand(this->TimersCommand);
 
         this->TimeMultiplierCommand = new ZVisualConsoleCommand("ip_timemultiplier", &g_pSysInterface->TimeMultiplierVisibility);
-        g_pSysInterface->EnqueueConsoleCommand(this->TimeMultiplierCommand);
+        g_pSysInterface->RegisterConsoleCommand(this->TimeMultiplierCommand);
 
         this->FogCommand = new ZVisualConsoleCommand("r_fog", &g_ZRenderBaseFog);
-        g_pSysInterface->EnqueueConsoleCommand(this->FogCommand);
+        g_pSysInterface->RegisterConsoleCommand(this->FogCommand);
 
         this->NativeDrawCommand = new ZVisualConsoleCommand("r_native_draw", &this->NativeDrawVisibility);
-        g_pSysInterface->EnqueueConsoleCommand(this->NativeDrawCommand);
+        g_pSysInterface->RegisterConsoleCommand(this->NativeDrawCommand);
 
         this->ShowCursorCommand = new ZVisualConsoleCommand("r_show_cursor", &this->ShowCursorVisibility);
-        g_pSysInterface->EnqueueConsoleCommand(this->ShowCursorCommand);
+        g_pSysInterface->RegisterConsoleCommand(this->ShowCursorCommand);
 
         this->GammaCommand = new ZVisualConsoleCommand("r_gamma", &g_ZRenderBaseGamma);
-        g_pSysInterface->EnqueueConsoleCommand(this->GammaCommand);
+        g_pSysInterface->RegisterConsoleCommand(this->GammaCommand);
 
         this->TextureStatCommand = new ZVisualConsoleCommand("r_texturestat", &g_ZRenderBaseTextureStat);
-        g_pSysInterface->EnqueueConsoleCommand(this->TextureStatCommand);
+        g_pSysInterface->RegisterConsoleCommand(this->TextureStatCommand);
 
         this->FontSizeCommand = new ZRenderConsoleCommand("r_font_size", this);
-        g_pSysInterface->EnqueueConsoleCommand(this->FontSizeCommand);
+        g_pSysInterface->RegisterConsoleCommand(this->FontSizeCommand);
 
         this->AntialiasCommand = new ZRenderConsoleCommand("r_antialias", this);
-        g_pSysInterface->EnqueueConsoleCommand(this->AntialiasCommand);
+        g_pSysInterface->RegisterConsoleCommand(this->AntialiasCommand);
 
         this->ShowDrawModesCommand = new ZVisualConsoleCommand("r_show_draw_modes", &g_ZRenderBaseShowDrawModes);
-        g_pSysInterface->EnqueueConsoleCommand(this->ShowDrawModesCommand);
+        g_pSysInterface->RegisterConsoleCommand(this->ShowDrawModesCommand);
     }
 
     this->Unk0xE7 = new RefTab(32, 0);
@@ -455,7 +455,7 @@ void ZRenderBase::Method0xE8(s32 todo1, s32 todo2, const char* value, ...) {
 }
 
 // 0x0fba5030
-void ZRenderBase::Method0xBC(f32 value) {
+void ZRenderBase::SetFontSize(f32 value) {
     if (0.0f < value) {
         this->Unk0xF3 = value;
         this->Unk0x123 = value * 5.0f;

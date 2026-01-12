@@ -41,5 +41,5 @@ void ZVisualConsoleCommand::Execute(const char* value) {
         return;
     }
 
-    *this->Visibility = this->FUN_0fbb210c(value);
+    *this->Visibility = atof(value);
 }

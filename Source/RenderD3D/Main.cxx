@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ZRenderLoaderD3D.hxx"
+#include "ZRenderModuleD3D.hxx"
 
 // 0x0fb9f6f1
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID) {
@@ -32,6 +32,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID) {
 }
 
 // 0x0fb81000
-ZRenderLoaderD3D* Create() {
-    return g_Loader = new ZRenderLoaderD3D();
+ZRenderModuleD3D* Create() {
+    return g_Module = new ZRenderModuleD3D();
 }

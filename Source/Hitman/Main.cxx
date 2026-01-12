@@ -31,12 +31,12 @@ __declspec(dllimport) ZSysInterface* g_pSysInterface;
 
 // 0x00401010
 void __CRTDECL SignalHandler(int signal) {
-    if (g_pSysInterface->SoundLoader != nullptr) {
-        g_pSysInterface->SoundLoader->Method0x28();
+    if (g_pSysInterface->SoundModule != nullptr) {
+        g_pSysInterface->SoundModule->Method0x28();
     }
 
-    if (g_pSysInterface->RenderLoader != nullptr) {
-        g_pSysInterface->RenderLoader->Method0x28();
+    if (g_pSysInterface->RenderModule != nullptr) {
+        g_pSysInterface->RenderModule->Method0x28();
     }
 }
 

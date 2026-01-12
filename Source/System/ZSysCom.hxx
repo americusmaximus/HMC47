@@ -66,7 +66,7 @@ public:
     virtual ~ZSysCom();                                                         // 0x4
     virtual void ReleaseUnk0x0C();                                              // 0x8
     virtual void Method0x14(HWND hwnd);                                         // 0x14
-    virtual void Method0x18(int wp, LPARAM param, bool send);                   // 0x18
+    virtual void Method0x18(int wp /* TOOD */, LPARAM param, bool send);        // 0x18
     virtual LRESULT Method0x1C(UINT uMsg, WPARAM wParam, LPARAM lParam);        // 0x1C
     virtual ZSysCom* Log(const char* path, u32 line);                           // 0x20
     virtual void __cdecl LogFatal(const char* format, ...);                     // 0x24

@@ -182,12 +182,12 @@
     <ClCompile Include="Main.cxx" />
     <ClCompile Include="RefTab.cxx" />
     <ClCompile Include="ZConsoleCommand.cxx" />
-    <ClCompile Include="ZDynamicLoader.cxx" />
+    <ClCompile Include="ZModule.cxx" />
     <ClCompile Include="ZRender.cxx" />
     <ClCompile Include="ZRenderBase.cxx" />
     <ClCompile Include="ZRenderConsoleCommand.cxx" />
     <ClCompile Include="ZRenderD3D.cxx" />
-    <ClCompile Include="ZRenderLoader.cxx" />
+    <ClCompile Include="ZRenderModule.cxx" />
     <ClCompile Include="ZRenderLoaderD3D.cxx" />
     <ClCompile Include="ZTextureManager.cxx" />
     <ClCompile Include="ZTextureManagerD3D.cxx" />
@@ -200,7 +200,7 @@
     <ClInclude Include="ZExceptionRenderD3D.hxx" />
     <ClInclude Include="ZRenderD3D.hxx" />
     <ClInclude Include="ZRenderDevice.hxx" />
-    <ClInclude Include="ZRenderLoaderD3D.hxx" />
+    <ClInclude Include="ZRenderModuleD3D.hxx" />
     <ClInclude Include="ZTextureManagerD3D.hxx" />
     <ClInclude Include="ZVertexBufferManager.hxx" />
   </ItemGroup>
