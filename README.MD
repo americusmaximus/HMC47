@@ -22,22 +22,25 @@ git clone --recurse-submodules https://github.com/americusmaximus/HMC47
 
 ## Modules
 
-### Hitman
-✔ The executable, a simple game launcher.
+### ✔ Hitman
+A simple game launcher that loads system module and passes the control flow execution to it.
 
-### Globals
-✔ Globals module serves as a glue for DLL linking of a few game-wide objects used to communicate between different part of the game for a multitude of reasons.
+### ✔ Globals
+Globals module serves as a glue for DLL linking of a few game-wide objects used to communicate between different part of the game for a multitude of reasons.
+
+### Sound
+DirectSound-powered sound management module.
 
 ### System
 System module owns creation and management of the objects that are then being used by other modules via Globals to communicate with each other, manage memory, and work with file system, archive files, and other game resources.
 
-### System Probe
-✔ System Probe is a module that is responsible for querying system graphics capabilities and providing the recommended graphics settings back to the game. It is used only in the graphics settings screen upon user request.
+### ✔ System Probe
+System Probe is a module that is responsible for querying system graphics capabilities and providing the recommended graphics settings back to the game. It is used only in the graphics settings screen upon user request.
 
 ## Third-Party Modules
 
-### EAX
-✔ EAX 2 Wrapper from Creative Technolody for Environmental Audio Extensions.
+### ✔ EAX
+EAX 2 Wrapper from Creative Technolody for Environmental Audio Extensions 2.
 
 ## Thanks
 1. [0danny](https://github.com/0danny/re47) for some reverse engineering of the game files.
