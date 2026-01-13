@@ -23,6 +23,7 @@ SOFTWARE.
 #pragma once
 
 #include "ZConsole.hxx"
+#include "ZDirectPlayModule.hxx"
 #include "ZMasterControl.hxx"
 #include "ZRender.hxx"
 #include "ZRenderModule.hxx"
@@ -249,7 +250,7 @@ public:
     ZSoundModule* SoundModule;                                                  // 0x38F5
     ZRenderModule* RenderModule;                                                // 0x38F9
     ZModule* ScriptModule;                                                      // 0x38FD
-    ZModule* DirectPlayModule;                                                  // 0x3901
+    ZDirectPlayModule* DirectPlayModule;                                        // 0x3901
     ZModule* LocaleModule;                                                      // 0x3905
     ZString Unk0x3909;                                                          // 0x3909
     bool ScriptDebug;                                                           // 0x3989

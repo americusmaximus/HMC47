@@ -20,5 +20,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#include <System/ZDirectPlayModule.hxx>
 
+// 0x10007108
+ZDirectPlayModule::ZDirectPlayModule() {
+    this->Instance = nullptr;
+}
+
+// 0x10001060
+ZDirectPlayModule::~ZDirectPlayModule() {}
+
+// 0x100010b0
+void ZDirectPlayModule::Initialize() {
+    this->Instance = new ZDirectPlay();
+}
+
+// 0x10001160
+void ZDirectPlayModule::Release() {
+    if (this->Instance != nullptr) {
+        delete this->Instance;
+        this->Instance = nullptr;
+    }
+}

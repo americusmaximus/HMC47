@@ -32,6 +32,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID) {
 }
 
 // 0x0fb81000
+extern "C"
 ZRenderModuleD3D* Create() {
     return g_Module = new ZRenderModuleD3D();
 }

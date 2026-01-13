@@ -20,22 +20,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "CSystemProbe.hxx"
+#pragma once
 
-// 0x0fbb6a9c
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID) {
-    if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
-        DisableThreadLibraryCalls(hModule);
-    }
+#include "ZDirectPlay.hxx"
+#include "ZModule.hxx"
 
-    return TRUE;
-}
+#pragma pack(push, 1)
 
-// 0x0fbb1000
-extern "C"
-CSystemProbe* Create() {
-    // 0x0fbbf32c
-    static CSystemProbe* probe = new CSystemProbe();
+class ZDirectPlayModule : public ZModule {
+public:
+    ZDirectPlayModule();
 
-    return probe;
-}
+public:
+    virtual ~ZDirectPlayModule();                                                       // 0x0
+    virtual void Initialize();                                                          // 0x8
+    virtual void Release();                                                             // 0xC
+
+protected:
+    ZDirectPlay* Instance;                                                              // 0xC
+};
+
+#pragma pack(pop)
+
+#if defined(_DEBUG) && !defined(_WIN64)
+static_assert(sizeof(ZDirectPlayModule) == 0x10, "ZDirectPlayModule size mismatch.");
+#endif

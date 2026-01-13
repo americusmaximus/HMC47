@@ -20,22 +20,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "CSystemProbe.hxx"
+#pragma once
 
-// 0x0fbb6a9c
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID) {
-    if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
-        DisableThreadLibraryCalls(hModule);
-    }
+#include <System/ZSysCom.hxx>
+#include <System/ZSysMem.hxx>
 
-    return TRUE;
-}
-
-// 0x0fbb1000
-extern "C"
-CSystemProbe* Create() {
-    // 0x0fbbf32c
-    static CSystemProbe* probe = new CSystemProbe();
-
-    return probe;
-}
+__declspec(dllimport) ZSysCom* g_pSysCom;
+__declspec(dllimport) ZSysMem* g_pSysMem;

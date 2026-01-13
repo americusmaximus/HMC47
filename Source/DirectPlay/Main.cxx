@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ZDirectPlayModule.hxx"
+#include <System/ZDirectPlayModule.hxx>
 
 // 0x10004562
 BOOL APIENTRY DllMain(HMODULE, DWORD, LPVOID lpReserved) {
@@ -28,6 +28,7 @@ BOOL APIENTRY DllMain(HMODULE, DWORD, LPVOID lpReserved) {
 }
 
 // 0x10001000
+extern "C"
 ZDirectPlayModule* Create() {
     return new ZDirectPlayModule();
 }
