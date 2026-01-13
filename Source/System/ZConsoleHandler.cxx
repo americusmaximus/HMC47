@@ -178,16 +178,18 @@ ZConsoleCommandNode* ZConsoleHandler::Find(const char* command,
         ? this->Nodes
         : (direction ? node->Next : node->Previous);
 
-    const size_t length = strlen(command) + 1;
+    const size_t length = strlen(command);
 
     while (result != nullptr) {
         const bool match = exact
             ? _strcmpi(command, result->Command->Command) == 0
             : _strnicmp(command, result->Command->Command, length) == 0;
 
-        if (!match) {
-            result = direction ? result->Next : result->Previous;
+        if (match) {
+            break;
         }
+
+        result = direction ? result->Next : result->Previous;
     }
 
     return result == nullptr ? node : result;
@@ -211,7 +213,7 @@ bool ZConsoleHandler::Execute(const char* command, const char* value) {
 
 // 0x0ffc8ee0
 void ZConsoleHandler::PrintStatus(const char*) {
-    for (ZConsoleCommandNode* node = this->Nodes; node != nullptr; node->Next) {
+    for (ZConsoleCommandNode* node = this->Nodes; node != nullptr; node = node->Next) {
         g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\ConsoleCommand.cpp", 284)
             ->LogMessage("%s", node->Command->Command);
     }

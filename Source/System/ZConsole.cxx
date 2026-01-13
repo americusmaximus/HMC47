@@ -213,7 +213,7 @@ void ZConsole::ExecuteCommand() {
 
     this->ItemOffset = 0;
 
-    char* command = strtok(this->Input, " ");
+    char* command = strtok(&this->Input[1], " ");
 
     if (command != nullptr && command[0] != NULL) {
         char* value = strtok(nullptr, "");
@@ -249,7 +249,8 @@ void ZConsole::HandleKeyDown(WPARAM wParam, LPARAM lParam) {
         if (count != 0) {
             for (u32 i = 0; i < count; i++) {
                 if (this->InputLength > 1) {
-                    this->Input[this->InputLength--] = NULL;
+                    this->InputLength--;
+                    this->Input[this->InputLength] = NULL;
                 }
             }
 
@@ -362,11 +363,11 @@ void ZConsole::HandleKeyDown(WPARAM wParam, LPARAM lParam) {
         break;
     }
     case VK_UP: {
-        this->Method0x2C(false);
+        this->RotateCommands(false);
         return;
     }
     case VK_DOWN: {
-        this->Method0x2C(true);
+        this->RotateCommands(true);
         return;
     }
     }

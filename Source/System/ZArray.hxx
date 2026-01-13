@@ -57,6 +57,8 @@ public:
 
             delete[] node->Value;
             delete node;
+
+            node = this->First;
         }
 
         this->Last = nullptr;
