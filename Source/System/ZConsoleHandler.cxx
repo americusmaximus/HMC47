@@ -70,17 +70,17 @@ void ZConsoleHandler::Register(ZConsoleCommand* command) {
     ZConsoleCommandNode* root = this->Nodes;
     ZConsoleCommandNode* node = new ZConsoleCommandNode(command);
 
-    if (strcmpi(command->Command, root->Command->Command) >= 0) {
+    if (_strcmpi(command->Command, root->Command->Command) >= 0) {
         ZConsoleCommandNode* current = root->Next;
 
         while (current != nullptr
-            && strcmpi(command->Command, current->Command->Command) > 0) {
+            && _strcmpi(command->Command, current->Command->Command) > 0) {
             root = root->Next;
             current = root->Next;
         }
 
         if (root->Next != nullptr
-            && strcmpi(command->Command, root->Next->Command->Command) == 0) {
+            && _strcmpi(command->Command, root->Next->Command->Command) == 0) {
             root = root->Next;
 
             if (root->NextMatch != nullptr) {
@@ -114,7 +114,7 @@ void ZConsoleHandler::Unregister(ZConsoleCommand* command) {
     ZConsoleCommandNode* root = this->Nodes;
 
     if (root != nullptr) {
-        while (strcmpi(root->Command->Command, command->Command) != 0) {
+        while (_strcmpi(root->Command->Command, command->Command) != 0) {
             root = root->Next;
 
             if (root == nullptr) {

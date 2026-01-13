@@ -231,6 +231,21 @@ void ZSysInterface::SetCommandLine(const char* ini) {
 // 0x0ffad510
 void ZSysInterface::Method0xC4() {
     // TODO TRY CATCH
+    try {
+    }
+    catch (ZExceptionRender e) {
+        char buffer[1024];
+        sprintf(buffer, "%s: %s. Using old render.", e.TODO1, e.TODO2);
+        this->RenderModule->Method0x24();
+        MessageBoxA(NULL, buffer, "Fatal error", MB_TOPMOST | MB_ICONHAND);
+        TODO
+    }
+    // TODO TRY CATCH
+    try {
+    }
+    catch (ZExceptionRender e) {
+        g_pSysCom->LogFatal("Unable to load old render.%s - %s", e.TODO1, e.TODO2);
+    }
 
     // TODO
 

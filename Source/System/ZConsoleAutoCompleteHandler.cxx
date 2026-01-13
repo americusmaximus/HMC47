@@ -23,15 +23,38 @@ SOFTWARE.
 #include "ZConsole.hxx"
 
 // 0x0ffd436c
-ZConsoleAutoCompleteHandler::ZConsoleAutoCompleteHandler(ZConsoleAutoComplete* complete) {
-    this->AutoComplete = complete;
-    this->Unk0x8 = 0;
-    this->Unk0xC = 0;
+ZConsoleAutoCompleteHandler::ZConsoleAutoCompleteHandler(ZArray<char const*>* items) {
+    this->Items = items;
+    this->Match = nullptr;
+    this->Index = 0;
 }
 
 // 0x0ffc5280
 ZConsoleAutoCompleteHandler::~ZConsoleAutoCompleteHandler() {
-    if (this->Unk0x8 != nullptr) {
-        delete this->Unk0x8; // TODO
+    if (this->Match != nullptr) {
+        delete[] this->Match;
     }
+}
+
+// 0x0ffc52e0
+const char* ZConsoleAutoCompleteHandler::GetMatch(const char* value) {
+    if (this->Match != nullptr) {
+        delete[] this->Match;
+        this->Match = nullptr;
+    }
+
+    if (value != nullptr) {
+        this->Match = new char[strlen(value) + 1];
+        strcpy(this->Match, value);
+
+        for (this->Index = 0; this->Index < this->Items->Count; this->Index++) {
+            const char* match = this->Items->Get(this->Index);
+
+            if (_strnicmp(this->Match, match, strlen(this->Match)) == 0) {
+                return match;
+            }
+        }
+    }
+
+    return nullptr;
 }

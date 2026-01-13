@@ -166,7 +166,6 @@
     <ClCompile Include="Main.cxx" />
     <ClCompile Include="RefTab.cxx" />
     <ClCompile Include="ZConsole.cxx" />
-    <ClCompile Include="ZConsoleAutoComplete.cxx" />
     <ClCompile Include="ZConsoleAutoCompleteHandler.cxx" />
     <ClCompile Include="ZConsoleCommand.cxx" />
     <ClCompile Include="ZConsoleHandler.cxx" />
@@ -186,6 +185,7 @@
     <ClInclude Include="LinkSortRefTab.hxx" />
     <ClInclude Include="RefTab.hxx" />
     <ClInclude Include="Texture.hxx" />
+    <ClInclude Include="ZArray.hxx" />
     <ClInclude Include="ZConsole.hxx" />
     <ClInclude Include="ZCounter.hxx" />
     <ClInclude Include="ZException.hxx" />

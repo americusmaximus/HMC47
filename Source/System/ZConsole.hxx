@@ -22,10 +22,10 @@ SOFTWARE.
 
 #pragma once
 
-#include "Common.hxx"
+#include "ZArray.hxx"
 
-#define ZCONSOLE_MAX_LINE_COUNT     1000
-#define ZCONSOLE_MAX_LINE_LENGTH    150
+#define ZCONSOLE_MAX_ITEM_COUNT     1000
+#define ZCONSOLE_MAX_ITEM_LENGTH    150
 #define ZCONSOLE_MAX_COMMAND_COUNT  20
 #define ZCONSOLE_MAX_INPUT_LENGTH   200
 
@@ -95,29 +95,22 @@ protected:
     ZHelpConsoleCommand* Help;                                                      // 0x8
 };
 
-class ZConsoleAutoComplete {
-public:
-    ZConsoleAutoComplete();
-    ~ZConsoleAutoComplete();
-
-public:
-    void* Items;                                                                    // 0x0
-    u32 Unk0x4;                                                                     // 0x4
-    u32 Unk0x8;                                                                     // 0x8
-    u32 Unk0xC;                                                                     // 0xC
-};
-
 class ZConsoleAutoCompleteHandler {
 public:
-    ZConsoleAutoCompleteHandler(ZConsoleAutoComplete* complete);
+    ZConsoleAutoCompleteHandler(ZArray<char const*>* items);
 
 public:
-    virtual ~ZConsoleAutoCompleteHandler();                                         // 0x0x
+    virtual ~ZConsoleAutoCompleteHandler();                                         // 0x0
+
+public:
+    const char* GetMatch(const char* value);
 
 protected:
-    ZConsoleAutoComplete* AutoComplete;                                             // 0x4
-    void* Unk0x8;                                                                   // 0x8
-    u32 Unk0xC;                                                                     // 0xC
+    ZArray<char const*>* Items;                                                     // 0x4
+
+public:
+    char* Match;                                                                    // 0x8
+    s32 Index;                                                                      // 0xC
 };
 
 class ZConsole {
@@ -126,39 +119,39 @@ public:
     ~ZConsole();
 
 public:
-    virtual bool Method0x0();                                                       // 0x0
+    virtual bool Animate();                                                         // 0x0
     virtual void __cdecl Append(const char* format, ...);                           // 0x4
-    virtual const char* Method0x8(s32 index);                                       // 0x8
-    virtual bool Method0xC();                                                       // 0xC
-    virtual void Method0x10(WPARAM wParam, LPARAM lParam);                          // 0x10
-    virtual void Method0x14(u32 todo, u32);                                         // 0x14
-    virtual void Method0x18();                                                      // 0x18
+    virtual const char* GetItem(s32 i);                                             // 0x8
+    virtual bool IsOpen();                                                          // 0xC
+    virtual void HandleKeyDown(WPARAM wParam, LPARAM lParam);                       // 0x10
+    virtual void HandleKeyUp(WPARAM wParam, LPARAM lParam);                         // 0x14
+    virtual void ExecuteCommand();                                                  // 0x18
     virtual void RegisterCommand(ZConsoleCommand* command);                         // 0x1C
     virtual void UnregisterCommand(ZConsoleCommand* command);                       // 0x20
-    virtual void Method0x24(const char* command);                                   // 0x24
+    virtual void RunCommand(const char* command);                                   // 0x24
     virtual void ToggleVisibility();                                                // 0x28
-    virtual void Method0x2C(bool todo);                                             // 0x2C
-    virtual void Method0x30(const char* command);                                   // 0x30
-    virtual f32 Method0x34();                                                       // 0x34
+    virtual void RotateCommands(bool direction);                                    // 0x2C
+    virtual void AppendCommand(const char* command);                                // 0x30
+    virtual f32 GetVisibility();                                                    // 0x34
 
-protected:
+public:
     bool Visible;                                                                   // 0x4
-    bool Unk0x5;                                                                    // 0x5
-    bool Unk0x6;                                                                    // 0x6
-    f32 Unk0x7;                                                                     // 0x7
-    f32 Unk0xB;                                                                     // 0xB
-    char* Lines[ZCONSOLE_MAX_LINE_COUNT];                                           // 0xF
-    s32 LineCount;                                                                  // 0xFAF
-    s32 Unk0xFB3;                                                                   // 0xFB3
-    char* Commands[ZCONSOLE_MAX_COMMAND_COUNT];                                     // 0xFB3
+    bool Shift;                                                                     // 0x5
+    bool Open;                                                                      // 0x6
+    f32 Visibility;                                                                 // 0x7
+    f32 VisibilityIteration;                                                        // 0xB
+    char* Items[ZCONSOLE_MAX_ITEM_COUNT];                                           // 0xF
+    s32 ItemCount;                                                                  // 0xFAF
+    s32 ItemOffset;                                                                 // 0xFB3
+    char* Commands[ZCONSOLE_MAX_COMMAND_COUNT];                                     // 0xFB7
     char Input[ZCONSOLE_MAX_INPUT_LENGTH];                                          // 0x1007
-    u32 Unk0x10CF;                                                                  // 0x10CF
-    u32 Unk0x10D3;                                                                  // 0x10D3
-    u32 Unk0x10D7;                                                                  // 0x10D7
+    s32 InputLength;                                                                // 0x10CF
+    s32 CommandIndex;                                                               // 0x10D3
+    s32 CommandCount;                                                               // 0x10D7
     ZConsoleHandler Handler;                                                        // 0x10DB
     u32 Unk0x10E7;                                                                  // 0x10E7
-    bool Unk0x10EB;                                                                 // 0x10EB
-    ZConsoleAutoComplete* AutoComplete;                                             // 0x10EC
+    bool AutoCompleting;                                                            // 0x10EB
+    ZArray<char const*>* AutoComplete;                                              // 0x10EC
     ZConsoleAutoCompleteHandler* AutoCompleteHandler;                               // 0x10F0
 };
 
@@ -171,14 +164,13 @@ public:
     virtual void Execute(const char* value);                                        // 0x8
 
 protected:
-    ZConsoleHandler* Handler;
+    ZConsoleHandler* Handler;                                                       // 0x4
 };
 
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
 static_assert(sizeof(ZConsole)                      == 0x10F4,  "ZConsole size mismatch.");
-static_assert(sizeof(ZConsoleAutoComplete)          == 0x10,    "ZConsoleAutoComplete size mismatch.");
 static_assert(sizeof(ZConsoleAutoCompleteHandler)   == 0x10,    "ZConsoleAutoCompleteHandler size mismatch.");
 static_assert(sizeof(ZConsoleCommand)               == 0x8,     "ZConsoleCommand size mismatch.");
 static_assert(sizeof(ZConsoleCommandNode)           == 0x14,    "ZConsoleCommandNode size mismatch.");

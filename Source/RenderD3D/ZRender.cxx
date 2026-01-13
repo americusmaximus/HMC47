@@ -130,14 +130,17 @@ ZRender::ZRender(HINSTANCE instance, HWND window) : ZRenderBase(instance, window
         this->Unk0x14D[i] = new RefTab(32, 0);
     }
 
-    this->FogOverrideCommand = new ZVisualConsoleCommand("r_fog_near_far_override", &g_ZRenderFogOverride);
-    g_pSysInterface->EnqueueConsoleCommand(this->FogOverrideCommand);
+    this->FogOverrideCommand =
+        new ZVisualConsoleCommand("r_fog_near_far_override", &g_ZRenderFogOverride);
+    g_pSysInterface->RegisterConsoleCommand(this->FogOverrideCommand);
 
-    this->FogNearCommand = new ZVisualConsoleCommand("r_fog_near", &g_ZRenderFogNear);
-    g_pSysInterface->EnqueueConsoleCommand(this->FogNearCommand);
+    this->FogNearCommand =
+        new ZVisualConsoleCommand("r_fog_near", &g_ZRenderFogNear);
+    g_pSysInterface->RegisterConsoleCommand(this->FogNearCommand);
 
-    this->FogFarCommand = new ZVisualConsoleCommand("r_fog_far", &g_ZRenderFogFar);
-    g_pSysInterface->EnqueueConsoleCommand(this->FogFarCommand);
+    this->FogFarCommand =
+        new ZVisualConsoleCommand("r_fog_far", &g_ZRenderFogFar);
+    g_pSysInterface->RegisterConsoleCommand(this->FogFarCommand);
 }
 
 // 0x0fba6260
@@ -153,17 +156,17 @@ ZRender::~ZRender() {
         delete this->Unk0x14D[i];
     }
 
-    g_pSysInterface->DequeueConsoleCommand(this->FogOverrideCommand);
+    g_pSysInterface->UnregisterConsoleCommand(this->FogOverrideCommand);
     if (this->FogOverrideCommand != nullptr) {
         delete this->FogOverrideCommand;
     }
 
-    g_pSysInterface->DequeueConsoleCommand(this->FogNearCommand);
+    g_pSysInterface->UnregisterConsoleCommand(this->FogNearCommand);
     if (this->FogOverrideCommand != nullptr) {
         delete this->FogNearCommand;
     }
 
-    g_pSysInterface->DequeueConsoleCommand(this->FogFarCommand);
+    g_pSysInterface->UnregisterConsoleCommand(this->FogFarCommand);
     if (this->FogFarCommand != nullptr) {
         delete this->FogFarCommand;
     }
@@ -274,13 +277,13 @@ void ZRender::HandleKeyDown(WPARAM wParam, LPARAM lParam) {
         ZConsole* console = g_pSysInterface->GetConsole();
 
         if (console != nullptr) {
-            if (((lParam & 0xff0000) == 0x290000) && ((lParam & 0x40000000) == 0)) { // TODO
+            if (LOBYTE(HIWORD(lParam)) == 0x29 /* GRAVE */ && !(HIWORD(lParam) & KF_REPEAT)) {
                 this->Unk0x80 = true;
                 return;
             }
 
-            if (console->Method0xC()) {
-                console->Method0x10(wParam, lParam);
+            if (console->IsOpen()) {
+                console->HandleKeyDown(wParam, lParam);
                 return;
             }
         }
@@ -483,8 +486,8 @@ void ZRender::HandleKeyUp(WPARAM wParam, LPARAM lParam) {
     ZConsole* console = g_pSysInterface->GetConsole();
 
     if (console != nullptr) {
-        if (console->Method0xC()) {
-            console->Method0x14(wParam, lParam);
+        if (console->IsOpen()) {
+            console->HandleKeyUp(wParam, lParam);
         }
     }
 
