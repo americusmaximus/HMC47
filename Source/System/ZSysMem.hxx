@@ -61,12 +61,14 @@ public:
     virtual void Method0x68() = 0;                                          // 0x68
     virtual void Method0x6C() = 0;                                          // 0x6C
     
+public:
+    bool Unk0x4;                                                            // 0x4
+
 protected:
-    bool Unk0x4; // TODO
-    u32 Unk0x5; // TODO
-    u32 Unk0x9; // TODO
-    u32 Unk0xD; // TODO
-    bool Unk0x11; // TODO
+    u32 Unk0x5;                                                             // 0x5
+    u32 Unk0x9;                                                             // 0x9
+    u32 Unk0xD;                                                             // 0xD
+    bool Unk0x11;                                                           // 0x11
 };
 
 // 0x0ffd37b8

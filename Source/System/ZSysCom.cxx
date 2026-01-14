@@ -25,11 +25,24 @@ SOFTWARE.
 
 #include <stdio.h>
 
+#define ZSYSCOM_ID_MESSAGE                  1234
+
+#define ZSYSCOM_ID_MESSAGE_INIT             9
+#define ZSYSCOM_ID_MESSAGE_EXIT             10
+#define ZSYSCOM_ID_MESSAGE_12               12 /* TODO */
+#define ZSYSCOM_ID_MESSAGE_22               22 /* TODO */
+
+#define ZSYSCOM_MAKE_ID_MESSAGE(X)          (this->ID * 256 + X)
+
+#define ZSYSCOM_COPYDATA_STRING             0
+
+#define MAX_ZSYSCOM_DBG_ITERATION_COUNT     200
+
 // 0x0ffa44d0
 ZSysComBase::ZSysComBase() {
-    this->Unk0x08 = 1234; // TODO
-    this->Unk0x0C = 0;
-    this->Unk0x10 = 0;
+    this->ID = ZSYSCOM_ID_MESSAGE;
+    this->Unk0x0C = nullptr;
+    this->Unk0x10 = false;
 }
 
 // 0x0ffa44f0
@@ -45,25 +58,25 @@ void ZSysComBase::ReleaseUnk0x0C() {
 }
 
 // 0x0ffa4560
-u32 ZSysComBase::GetUnk0x08() {
-    return this->Unk0x08;
+UINT ZSysComBase::GetID() {
+    return this->ID;
 }
 
 // 0x0ffc8a90
-UINT ZSysComBase::GetWindowMessage() {
-    return this->WindowMessage;
+UINT ZSysComBase::GetMsg() {
+    return this->Msg;
 }
 
 // 0x0ffa4570
 ZSysCom::ZSysCom() {
-    this->Unk0x23 = 0; // TODO
-    this->Unk0x11 = 0; // TODO
+    this->Unk0x23 = nullptr;
+    this->Lock = false;
     this->FilePath = nullptr;
     this->FileLine = 0;
-    this->Unk0x12 = false;
-    this->Window2 = NULL;
+    this->Init = false;
+    this->Debugger = NULL;
 
-    this->WindowMessage = RegisterWindowMessageA("ZSystemMessage");
+    this->Msg = RegisterWindowMessageA("ZSystemMessage");
 
     g_pSysCom = this;
 }
@@ -71,8 +84,10 @@ ZSysCom::ZSysCom() {
 // 0x0ffa45b0
 // 0x0ffa45f0
 ZSysCom::~ZSysCom() {
-    PostMessageA(this->Window2 == NULL
-        ? HWND_BROADCAST : this->Window2, this->WindowMessage, this->Unk0x08 * 0x100 + 10, 0); // TODO
+    HWND window = this->Debugger == NULL
+        ? HWND_BROADCAST : this->Debugger;
+
+    PostMessageA(window, this->Msg, ZSYSCOM_MAKE_ID_MESSAGE(ZSYSCOM_ID_MESSAGE_EXIT), 0);
 
     g_pSysCom = nullptr;
 }
@@ -87,35 +102,30 @@ void ZSysCom::ReleaseUnk0x0C() {
 }
 
 // 0x0ffa4650
-void ZSysCom::Method0x14(HWND hwnd) {
-    this->Window1 = hwnd;
-    this->Method0x18(9, (LPARAM)hwnd, false); // TODO
+void ZSysCom::Initialize(HWND hwnd) {
+    this->Window = hwnd;
+    this->SendMsg(ZSYSCOM_ID_MESSAGE_INIT, (LPARAM)hwnd, false);
 
-    HWND window = FindWindowA(NULL, "ZDebug");
+    if (FindWindowA(NULL, "ZDebug") != NULL) {
+        for (u32 i = 0; i < MAX_ZSYSCOM_DBG_ITERATION_COUNT; i++) {
+            MSG msg;
 
-    if (window == NULL) {
-        this->Unk0x12 = true;
-        return;
-    }
-
-    for (u32 i = 0; i < 200 /* TODO */; i++) {
-        MSG msg;
-
-        while (PeekMessageA(&msg, hwnd, 0, 0, PM_NOREMOVE)) {
-            if (GetMessageA(&msg, hwnd, 0, 0)) {
-                TranslateMessage(&msg);
-                DispatchMessageA(&msg);
+            while (PeekMessageA(&msg, hwnd, 0, 0, PM_NOREMOVE)) {
+                if (GetMessageA(&msg, hwnd, 0, 0)) {
+                    TranslateMessage(&msg);
+                    DispatchMessageA(&msg);
+                }
             }
-        }
 
-        if (this->Window2 != NULL) {
-            break;
-        }
+            if (this->Debugger != NULL) {
+                break;
+            }
 
-        Sleep(5);
+            Sleep(5);
+        }
     }
 
-    this->Unk0x12 = true;
+    this->Init = true;
 }
 
 // 0x0ffa4730
@@ -145,24 +155,83 @@ void ZSysCom::LogFatal(const char* format, ...) {
 
 // 0x0ffa47c0
 void ZSysCom::LogMessage(const char* format, ...) {
-    // TODO NOT IMPLEMENTED
+    char buffer[4096];
+
+    if (g_pSysInterface != nullptr
+        && !g_pSysInterface->Unk0x38F1 && g_pSysInterface->DebugOptionsVisibility == 0.0f) {
+        return;
+    }
+
+    if (!this->Init) {
+        return;
+    }
+
+    while (this->Lock) {}
+
+    this->Lock = true;
+
+    this->FormatString(buffer, "(%s:%d)", this->FilePath, this->FileLine);
+
+    va_list args;
+    va_start(args, format);
+    vsprintf(&buffer[strlen(buffer) + 1], format, args);
+    va_end(args);
+
+    // TODO '(' ???
+
+    if (buffer[0] != NULL) {
+        const size_t len = strlen(buffer);
+
+        if (buffer[len - 1] != '\n') {
+            strcat(buffer, "\n");
+        }
+    }
+
+    if (g_pSysMem->Unk0x4 && g_pSysInterface != nullptr) {
+        ZConsole* console = g_pSysInterface->GetConsole();
+
+        if (console != nullptr) {
+            console->Append(buffer);
+        }
+    }
+
+    if (this->Debugger != NULL) {
+        COPYDATASTRUCT cds;
+
+        cds.dwData = ZSYSCOM_COPYDATA_STRING;
+        cds.cbData = strlen(buffer) + 1;
+        cds.lpData = buffer;
+
+        SendMessageA(this->Debugger, WM_COPYDATA, NULL, (LPARAM)&cds);
+    }
+
+    this->Lock = false;
 }
 
 // 0x0ffa4960
 void ZSysCom::Method0x30(const char* format, ...) {
     char buffer[4096];
 
-    if ((g_pSysInterface == nullptr
-        || g_pSysInterface->Unk0x38F1 || g_pSysInterface->DebugOptionsVisibility != 0.0f)
-        && this->Unk0x12) {
-        if (this->Unk0x23 == nullptr) {
-            // TODO NOT IMPLEMENTED
-            //this->Unk0x23 = new TODO();
+    if (this->Init) {
+        if (g_pSysInterface == nullptr
+            || g_pSysInterface->Unk0x38F1 || g_pSysInterface->DebugOptionsVisibility != 0.0f) {
+            if (this->Unk0x23 == nullptr) {
+                this->Unk0x23 = new TODO();
+            }
+
+            this->FormatString(buffer, "(%s:%d)", this->FilePath, this->FileLine);
+
+            va_list args;
+            va_start(args, format);
+            vsprintf(&buffer[strlen(buffer) + 1], format, args);
+            va_end(args);
+
+            // TODO '(' ???
+
+            if (this->Unk0x23->Method0x64(buffer)) {
+                this->LogMessage(buffer);
+            }
         }
-
-        this->FormatString(buffer, "(%s:%d)", this->FilePath, this->FileLine);
-
-        // TODO NOT IMPLEMENTED
     }
 }
 
@@ -194,13 +263,13 @@ void ZSysCom::Method0x38(const char* format, ...) {
 void ZSysCom::Method0x34(const char* format, ...) {
     char buffer[1024];
 
-    if (this->Unk0x11) {
+    if (this->Lock) {
         return;
     }
 
-    while (this->Unk0x11) {}
+    while (this->Lock) {}
 
-    this->Unk0x11 = true;
+    this->Lock = true;
 
     va_list args;
     va_start(args, format);
@@ -213,27 +282,27 @@ void ZSysCom::Method0x34(const char* format, ...) {
         }
     }
 
-    if (this->Window2 == NULL) {
+    if (this->Debugger == NULL) {
         MessageBoxA(NULL, buffer, "ZSystem Default Output", MB_TOPMOST);
     }
     else {
-        COPYDATASTRUCT value;
+        COPYDATASTRUCT cds;
 
-        value.dwData = 0; // TODO
-        value.cbData = strlen(buffer) + 1;
-        value.lpData = buffer;
+        cds.dwData = ZSYSCOM_COPYDATA_STRING;
+        cds.cbData = strlen(buffer) + 1;
+        cds.lpData = buffer;
 
-        SendMessageA(this->Window2, WM_COPYDATA, NULL, (LPARAM)&value);
+        SendMessageA(this->Debugger, WM_COPYDATA, NULL, (LPARAM)&cds);
     }
 
-    this->Unk0x11 = false;
+    this->Lock = false;
 }
 
 // 0x0ffa4c70
 void ZSysCom::DataToDebug(const char* format, ...) {
     char buffer[1024];
 
-    if (this->Window2 != NULL) {
+    if (this->Debugger != NULL) {
         va_list args;
         va_start(args, format);
         vsprintf(buffer, format, args);
@@ -248,7 +317,7 @@ void ZSysCom::DataToDebug(const char* format, ...) {
         ATOM atom = GlobalAddAtomA(buffer);
 
         if (atom != NULL) {
-            this->Method0x18(12 /* TODO */, atom, false);
+            this->SendMsg(ZSYSCOM_ID_MESSAGE_12, atom, false);
             return;
         }
 
@@ -258,13 +327,15 @@ void ZSysCom::DataToDebug(const char* format, ...) {
 }
 
 // 0x0ffa4d40
-void ZSysCom::Method0x18(int wp, LPARAM param, bool send) {
-    if (!send) {
-        PostMessageA(this->Window2 == NULL
-            ? HWND_BROADCAST : this->Window2, this->WindowMessage, this->Unk0x08 * 0x100 + wp, param); // TODO
+void ZSysCom::SendMsg(WPARAM wParam, LPARAM lParam, bool send) {
+    if (send) {
+        if (this->Debugger != NULL) {
+            SendMessageA(NULL, this->Msg, ZSYSCOM_MAKE_ID_MESSAGE(wParam), lParam);
+        }
     }
-    else if (this->Window2 != NULL) {
-        SendMessageA(NULL, this->WindowMessage, this->Unk0x08 * 0x100 + wp, param); // TODO
+    else {
+        PostMessageA(this->Debugger == NULL ? HWND_BROADCAST : this->Debugger,
+            this->Msg, ZSYSCOM_MAKE_ID_MESSAGE(wParam), lParam);
     }
 }
 
@@ -280,7 +351,7 @@ void ZSysCom::Method0x3C() {
             // TODO NOT IMPLEMENTED
         }
 
-        this->Method0x18(0x16, 0, false); // TODO
+        this->SendMsg(ZSYSCOM_ID_MESSAGE_22, 0, false);
         this->Unk0x10 = false;
     }
 }
@@ -292,7 +363,7 @@ void ZSysCom::Method0x40() {
     }
 
     if (this->Unk0x10) {
-        this->Method0x18(0x16, 0, false); // TODO
+        this->SendMsg(ZSYSCOM_ID_MESSAGE_22, 0, false);
         this->Unk0x10 = false;
     }
 }
