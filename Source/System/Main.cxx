@@ -33,7 +33,7 @@ void __cdecl EditPrint(const char* value) {
 
 // 0x0ffaa7d0
 u32 __cdecl RunEngine(u32 code) {
-    g_pSysInterface->Method0x88(code);
+    g_pSysInterface->Execute(code);
 
     return EXIT_SUCCESS;
 }
@@ -47,11 +47,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID) {
             new ZSysFile();
             new ZSysInterface(hModule);
 
-            g_pSysCom->Method0x14(g_pSysInterface->MainWindow);
+            g_pSysCom->Initialize(g_pSysInterface->MainWindow);
             g_pSysInterface->Initialize();
         }
 
-        g_LibraryCallCount = g_LibraryCallCount + 1;
+        g_LibraryCallCount++;
     }
     else if (ul_reason_for_call == DLL_PROCESS_DETACH) {
         if (g_LibraryCallCount == 1) {
@@ -63,7 +63,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID) {
                 delete g_pSysFile;
             }
 
-            g_pSysCom->ReleaseUnk0x0C();
+            g_pSysCom->Release();
 
             if (g_pSysMem != nullptr) {
                 delete g_pSysMem;
@@ -74,7 +74,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID) {
             }
         }
 
-        g_LibraryCallCount = g_LibraryCallCount - 1;
+        g_LibraryCallCount--;
     }
 
     return TRUE;

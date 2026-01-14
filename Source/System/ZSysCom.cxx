@@ -49,7 +49,7 @@ ZSysComBase::ZSysComBase() {
 ZSysComBase::~ZSysComBase() {}
 
 // 0x0ffa4540
-void ZSysComBase::ReleaseUnk0x0C() {
+void ZSysComBase::Release() {
     if (this->Unk0x0C != nullptr) {
         delete this->Unk0x0C;
     }
@@ -93,12 +93,13 @@ ZSysCom::~ZSysCom() {
 }
 
 // 0x0ffa4630
-void ZSysCom::ReleaseUnk0x0C() {
+void ZSysCom::Release() {
     if (this->Unk0x23 != nullptr) {
         delete this->Unk0x23;
+        this->Unk0x23 = nullptr;
     }
 
-    ZSysComBase::ReleaseUnk0x0C();
+    ZSysComBase::Release();
 }
 
 // 0x0ffa4650
@@ -216,7 +217,7 @@ void ZSysCom::Method0x30(const char* format, ...) {
         if (g_pSysInterface == nullptr
             || g_pSysInterface->Unk0x38F1 || g_pSysInterface->DebugOptionsVisibility != 0.0f) {
             if (this->Unk0x23 == nullptr) {
-                this->Unk0x23 = new TODO();
+                this->Unk0x23 = new StringRefTab(32, 0);
             }
 
             this->FormatString(buffer, "(%s:%d)", this->FilePath, this->FileLine);
@@ -228,7 +229,7 @@ void ZSysCom::Method0x30(const char* format, ...) {
 
             // TODO '(' ???
 
-            if (this->Unk0x23->Method0x64(buffer)) {
+            if (this->Unk0x23->TryInsertString(buffer)) {
                 this->LogMessage(buffer);
             }
         }
@@ -341,7 +342,7 @@ void ZSysCom::SendMsg(WPARAM wParam, LPARAM lParam, bool send) {
 
 // 0x0ffa4da0
 LRESULT ZSysCom::Method0x1C(UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    // TODO NOT IMPLEMENTED
+    TODO NOT IMPLEMENTED
 }
 
 // 0x0ffa4f60

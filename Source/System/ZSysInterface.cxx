@@ -552,7 +552,7 @@ static LRESULT WINAPI MainWindowHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
         return 0;
     }
 
-    if (uMsg == g_pSysCom->GetWindowMessage()) {
+    if (uMsg == g_pSysCom->GetMsg()) {
         return g_pSysCom->Method0x1C(uMsg, wParam, lParam);
     }
 

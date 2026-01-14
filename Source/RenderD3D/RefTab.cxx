@@ -406,7 +406,9 @@ void RefTab::Remove(RefLink* link) {
         void* src = &this->Tail->Value[this->Tail->Size];
         void* dst = &link->Next->Value[link->Size];
 
-        CopyMemory(dst, src, this->BlockSize & REFTAB_COPY);
+        if (src != dst) {
+            CopyMemory(dst, src, (this->BlockSize * sizeof(u32)) & REFTAB_COPY);
+        }
     }
 
     Ref* tail = this->Tail;

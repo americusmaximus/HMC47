@@ -22,7 +22,8 @@ SOFTWARE.
 
 #pragma once
 
-#include "Common.hxx"
+#include "LinkRefTab.hxx"
+#include "StringRefTab.hxx"
 
 #pragma pack(push, 1)
 
@@ -34,7 +35,7 @@ public:
 public:
     virtual s32 __cdecl FormatString(char*, const char*, ...) = 0;              // 0x0
     virtual ~ZSysComBase();                                                     // 0x4
-    virtual void ReleaseUnk0x0C();                                              // 0x8
+    virtual void Release();                                                     // 0x8
     virtual UINT GetID();                                                       // 0xC
     virtual UINT GetMsg();                                                      // 0x10
     virtual void Initialize(HWND) = 0;                                          // 0x14
@@ -52,7 +53,7 @@ public:
 public:
     UINT Msg;                                                                   // 0x4
     UINT ID;                                                                    // 0x8
-    void* Unk0x0C;                                                              // 0xC
+    LinkRefTab* Unk0x0C;                                                        // 0xC
     bool Unk0x10;                                                               // 0x10
 };
 
@@ -64,7 +65,7 @@ public:
 public:
     virtual s32 __cdecl FormatString(char*, const char* format, ...);           // 0x0
     virtual ~ZSysCom();                                                         // 0x4
-    virtual void ReleaseUnk0x0C();                                              // 0x8
+    virtual void Release();                                                     // 0x8
     virtual void Initialize(HWND hwnd);                                         // 0x14
     virtual void SendMsg(WPARAM wParam, LPARAM lParam, bool send);              // 0x18
     virtual LRESULT Method0x1C(UINT uMsg, WPARAM wParam, LPARAM lParam);        // 0x1C
@@ -85,7 +86,7 @@ protected:
     u32 FileLine;                                                               // 0x17
     HWND Window;                                                                // 0x1B
     HWND Debugger;                                                              // 0x1F
-    void* Unk0x23;                                                              // 0x23
+    StringRefTab* Unk0x23;                                                      // 0x23
 };
 
 #pragma pack(pop)
