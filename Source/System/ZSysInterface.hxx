@@ -258,7 +258,7 @@ public:
     bool Unk0x398B;                                                             // 0x398B
     bool Unk0x398C;                                                             // 0x398C
     f32 TimeMultiplierVisibility;                                               // 0x398D
-    BOOL WindowHasFocus;                                                        // 0x3991
+    BOOL WindowHasFocus;    // TODO NAME AND TYPE                               // 0x3991
     bool Unk0x3995;                                                             // 0x3995
     char Unk0x3996[128 /* TODO */];                                             // 0x3996
     void* Unk0x3A16;                                                            // 0x3A16

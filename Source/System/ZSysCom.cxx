@@ -27,6 +27,13 @@ SOFTWARE.
 
 #define ZSYSCOM_ID_MESSAGE                  1234
 
+#define ZSYSCOM_ID_MESSAGE_2                2 /* TODO */
+#define ZSYSCOM_ID_MESSAGE_3                3 /* TODO */
+#define ZSYSCOM_ID_MESSAGE_4                4 /* TODO */
+#define ZSYSCOM_ID_MESSAGE_5                5 /* TODO */
+#define ZSYSCOM_ID_MESSAGE_6                6 /* TODO */
+#define ZSYSCOM_ID_MESSAGE_7                7 /* TODO */
+#define ZSYSCOM_ID_MESSAGE_8                8 /* TODO */
 #define ZSYSCOM_ID_MESSAGE_INIT             9
 #define ZSYSCOM_ID_MESSAGE_EXIT             10
 #define ZSYSCOM_ID_MESSAGE_12               12 /* TODO */
@@ -34,9 +41,15 @@ SOFTWARE.
 
 #define ZSYSCOM_MAKE_ID_MESSAGE(X)          (this->ID * 256 + X)
 
+#define ZSYSCOM_ID_MESSAGE_MASK             0xFFFFFF00
+#define ZSYSCOM_CHECK_ID_MESSAGE_MASK(X)    (X >> 8)
+#define ZSYSCOM_GET_ID_MESSAGE(X)           (X & 0x000000FF)
+
 #define ZSYSCOM_COPYDATA_STRING             0
 
 #define MAX_ZSYSCOM_DBG_ITERATION_COUNT     200
+
+#define MAX_ZSYSOM_CONFIG_BUFFER_LENGTH     256
 
 // 0x0ffa44d0
 ZSysComBase::ZSysComBase() {
@@ -133,6 +146,8 @@ void ZSysCom::Initialize(HWND hwnd) {
 ZSysCom* ZSysCom::Log(const char* path, u32 line) {
     this->FilePath = path;
     this->FileLine = line;
+
+    return this;
 }
 
 // 0x0ffa4750
@@ -342,14 +357,100 @@ void ZSysCom::SendMsg(WPARAM wParam, LPARAM lParam, bool send) {
 
 // 0x0ffa4da0
 LRESULT ZSysCom::Method0x1C(UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    TODO NOT IMPLEMENTED
+    if (!(wParam & ZSYSCOM_ID_MESSAGE_MASK)
+        || ZSYSCOM_CHECK_ID_MESSAGE_MASK(wParam) == this->ID) {
+        switch (ZSYSCOM_GET_ID_MESSAGE(wParam)) {
+        case ZSYSCOM_ID_MESSAGE_2: {
+            if (this->Debugger == NULL) {
+                this->Debugger = (HWND)lParam;
+            }
+
+            break;
+        }
+        case ZSYSCOM_ID_MESSAGE_3: {
+            if (this->Debugger == NULL) {
+                this->Debugger = (HWND)lParam;
+                this->SendMsg(ZSYSCOM_ID_MESSAGE_8, (LPARAM)this->Window, false);
+            }
+
+            break;
+        }
+        case ZSYSCOM_ID_MESSAGE_4: {
+            if (this->Debugger == (HWND)lParam) {
+                this->Debugger = NULL;
+            }
+
+            if (this->Unk0x0C != nullptr) {
+                this->Method0x40();
+                g_pSysInterface->WindowHasFocus--;
+            }
+
+            this->Unk0x10 = false;
+
+            break;
+        }
+        case ZSYSCOM_ID_MESSAGE_5: {
+            if (lParam == NULL) {
+                g_pSysCom->Method0x34("ZSM_DOSETTING: Didn't get any string\n");
+            }
+            else {
+                if (!this->Init) {
+                    GlobalDeleteAtom((ATOM)lParam);
+                }
+                else {
+                    char buffer[MAX_ZSYSOM_CONFIG_BUFFER_LENGTH];
+
+                    GlobalGetAtomNameA((ATOM)lParam, buffer, MAX_ZSYSOM_CONFIG_BUFFER_LENGTH - 1);
+                    GlobalDeleteAtom((ATOM)lParam);
+                    g_pSysInterface->Method0x18(buffer, 11); // TODO
+                }
+            }
+
+            break;
+        }
+        case ZSYSCOM_ID_MESSAGE_6: {
+            if (this->Unk0x0C == nullptr) {
+                this->Unk0x0C = new LinkRefTab(128, 5);
+                g_pSysInterface->WindowHasFocus++;
+            }
+
+            this->Unk0x10 = true;
+
+            break;
+        }
+        case ZSYSCOM_ID_MESSAGE_7: {
+            if (this->Unk0x0C != nullptr) {
+                this->Method0x40();
+                g_pSysInterface->WindowHasFocus--;
+            }
+
+            this->Unk0x10 = false;
+
+            break;
+        }
+        }
+    }
+
+    return 0;
 }
 
 // 0x0ffa4f60
 void ZSysCom::Method0x3C() {
+    RefLink link;
+
     if (g_pSysCom->Unk0x0C != nullptr) {
         if (this->Unk0x10 && this->Unk0x0C != nullptr) {
-            // TODO NOT IMPLEMENTED
+            this->Unk0x0C->GetStart(&link);
+            RefKeyValue* kv = this->Unk0x0C->GetNext(&link);
+
+            while (kv != nullptr) {
+
+                // TODO NOT IMPLEMENTED
+
+
+
+                kv = this->Unk0x0C->GetNext(&link);
+            }
         }
 
         this->SendMsg(ZSYSCOM_ID_MESSAGE_22, 0, false);
@@ -359,8 +460,25 @@ void ZSysCom::Method0x3C() {
 
 // 0x0ffa51f0
 void ZSysCom::Method0x40() {
+    RefLink link;
+
     if (this->Unk0x0C != nullptr) {
-        // TODO NOT IMPLEMENTED
+        this->Unk0x0C->GetStart(&link);
+        RefKeyValue* kv = this->Unk0x0C->GetNext(&link);
+
+        while (kv != nullptr) {
+
+            // TODO NOT IMPLEMENTED
+
+            kv = this->Unk0x0C->GetNext(&link);
+        }
+
+        this->Unk0x0C->Clear();
+        if (this->Unk0x0C != nullptr) {
+            delete this->Unk0x0C;
+        }
+
+        this->Unk0x0C = nullptr;
     }
 
     if (this->Unk0x10) {

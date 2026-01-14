@@ -22,7 +22,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "RefTab.hxx"
+#include "StringRefTab.hxx"
 
 #pragma pack(push, 1)
 
@@ -79,7 +79,7 @@ public:
 
 protected:
     void* Unk0x4;                                                                           // 0x4
-    void* Unk0x8;                                                                           // 0x8
+    StringRefTab* Unk0x8;                                                                   // 0x8
 };
 
 // 0x0ffd33e0
