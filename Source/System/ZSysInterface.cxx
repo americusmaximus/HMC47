@@ -160,7 +160,7 @@ void ZSysInterface::Method0x20(bool todo) {
     g_pSysFile->Method0x8();
 
     if (!this->Unk0x6) {
-        g_pSysMem->Method0x8();
+        g_pSysMem->PrintStatus();
 
         if (!todo) {
             if (g_pSysInterface->SoundModule != nullptr) {
@@ -446,11 +446,18 @@ bool ZSysInterface::Method0x18(const char* args, u32 todo) {
 }
 
 // 0x0ffb0860
-void ZSysInterface::Method0xD8(u32 todo1, u32 todo2, const char* format, ...) {
-    char buffer[1023];
+void ZSysInterface::DisplayDebugString(s32 x, s32 y, const char* format, ...) {
+    char buffer[1024];
 
     if (g_pSysInterface->DebugOptionsVisibility != 0.0f) {
-        // TODO NOT IMPLEMENTED
+        for (ZRenderBase* render = this->Render; render != nullptr; render = render->Current) {
+            va_list args;
+            va_start(args, format);
+            vsprintf(buffer, format, args);
+            va_end(args);
+
+            render->PrintString(x, y, buffer);
+        }
     }
 }
 

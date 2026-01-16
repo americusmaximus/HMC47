@@ -338,7 +338,7 @@ public:
     virtual void Method0xC8();                                                          // 0xC8
     virtual void Method0xCC();                                                          // 0xCC
     virtual void Method0xD4();                                                          // 0xD4
-    virtual void __cdecl Method0xD8(u32 todo1, u32 todo2, const char* format, ...);     // 0xD8
+    virtual void __cdecl DisplayDebugString(s32 x, s32 y, const char* format, ...);     // 0xD8
     virtual void Method0xDC();                                                          // 0xDC
     virtual void Method0x10C(const char* path, u32 line);                               // 0x10C
     virtual u64 GetProcessorTicks(const char* path, u32 line);                          // 0x128

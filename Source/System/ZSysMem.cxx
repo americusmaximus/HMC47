@@ -33,38 +33,43 @@ ZSysMemBase::ZSysMemBase() {
 ZSysMemBase::~ZSysMemBase() {}
 
 // 0x0ffb18d0
-void ZSysMem::Method0x4(u32 p2 /* TODO */, u32 p3 /* TODO */) {
+void ZSysMem::DisplayStatus(s32 x, s32 y) {
     if (g_pSysInterface == nullptr
         || g_pSysInterface->Unk0x38F1 || g_pSysInterface->DebugOptionsVisibility != 0.0f) {
-        u32 todo1, todo2;
-        this->Method0x70(&todo1, &todo2);
+        u32 allocated, total;
+        this->GetProcessMemoryStats(&allocated, &total);
 
-        g_pSysInterface->Method0xD8(p2, p3,
+        g_pSysInterface->DisplayDebugString(x, y,
             "Process %.3f / %.3f  Internal %.3f / %.3f : %.3f Count %d",
-            todo1 / 1048576.0f, todo2 / 1048576.0f,
+            allocated / 1048576.0f, total / 1048576.0f,
             this->Unk0x24E / 1048576.0f, this->Unk0x252 / 1048576.0,
             (this->Unk0x1A - this->Unk0x16) / 1048576.0f, this->Unk0x24A + this->Unk0x246);
     }
 }
 
 // 0x0ffb19d0
-void ZSysMem::Method0x8() {
-    u32 todo1, todo2;
-    this->Method0x70(&todo1, &todo2);
+void ZSysMem::PrintStatus() {
+    u32 allocated, total;
+    this->GetProcessMemoryStats(&allocated, &total);
 
     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 36)
         ->LogMessage("Alloc  : Process %.3f/%.3f Internal %.3f/%.3f : Count %.3f",
-            todo1 / 1048576.0f, todo2 / 1048576.0f,
+            allocated / 1048576.0f, total / 1048576.0f,
             this->Unk0x24E / 1048576.0f, this->Unk0x252 / 1048576.0f, this->Unk0x24A + this->Unk0x246);
 
-    //g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 37)
-    //    ->LogMessage("Texture: Light %d Texture %d", )
+    g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 37)
+        ->LogMessage("Texture: Light %d Texture %d",
+            this->Lights->GetCount(), this->Textures->GetCount());
+
+    if (this->Unk0x242 != nullptr) {
+        this->Unk0x242->FUN_0ffa3cd0(false);
+    }
 }
 
 // 0x0ffb1ad0
-void ZSysMem::Method0x70(u32* todo1, u32* todo2) {
-    *todo1 = 0; // TODO
-    *todo2 = 0; // TODO
+void ZSysMem::GetProcessMemoryStats(u32* allocated, u32* total) {
+    *allocated = 0;
+    *total = 0;
 }
 
 // 0x0ffb1af0
@@ -82,6 +87,9 @@ ZSysMem::ZSysMem() {
 
     g_pSysMem = this;
 
+    this->Textures = new CompareRefTab(256, 0);
+    this->Lights = new CompareRefTab(256, 0);
+    this->Unk0x5 = new TODO();
 
 
 

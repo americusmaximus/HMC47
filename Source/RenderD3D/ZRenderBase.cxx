@@ -452,12 +452,12 @@ void ZRenderBase::Method0x98() {
 }
 
 // 0x0fba4f30
-void ZRenderBase::Method0xE8(s32 todo1, s32 todo2, const char* value, ...) {
+void ZRenderBase::PrintString(s32 x, s32 y, const char* value, ...) {
     if (g_pSysInterface->DebugOptionsVisibility != 0.0f) {
         const s32 todo_1 = this->Method0xAC(); // TODO
         const s32 todo_2 = this->Method0xB0(); // TODO
 
-        if (todo1 < todo_1 && todo2 < todo_2) {
+        if (x < todo_1 && y < todo_2) {
 
 
             //TODO NOT IMPLEMENTED

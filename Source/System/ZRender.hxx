@@ -112,7 +112,7 @@ public:
     virtual void Method0xDC(f64* value);                                            // 0xDC
     virtual void Method0xE0(f32* value);                                            // 0xE0
     virtual void Method0xE4() = 0;                                                  // 0xE4
-    virtual void __cdecl Method0xE8(s32 todo1, s32 todo2, const char* format, ...); // 0xE8
+    virtual void __cdecl PrintString(s32 x, s32 y, const char* format, ...);        // 0xE8
     virtual void Method0xEC(const char* value);                                     // 0xEC
     virtual void SetShowCursorVisibility(u32 visibility);                           // 0xF0
     virtual u32 GetShowCursorVisibility();                                          // 0xF4

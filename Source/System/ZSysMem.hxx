@@ -22,7 +22,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "Common.hxx"
+#include "CompareRefTab.hxx"
 
 #pragma pack(push, 1)
 
@@ -33,8 +33,8 @@ public:
 
 public:
     virtual ~ZSysMemBase();                                                 // 0x0
-    virtual void Method0x4(u32, u32) = 0;                                   // 0x4
-    virtual void Method0x8() = 0;                                           // 0x8
+    virtual void DisplayMemoryUsageStatistics(s32, s32) = 0;                // 0x4
+    virtual void PrintMemoryUsageStatistics() = 0;                          // 0x8
     virtual void Method0xC() = 0;                                           // 0xC
     virtual void Method0x10() = 0;                                          // 0x10
     virtual void Method0x14() = 0;                                          // 0x14
@@ -65,9 +65,9 @@ public:
     bool Unk0x4;                                                            // 0x4
 
 protected:
-    u32 Unk0x5;                                                             // 0x5
+    void* Unk0x5;                                                           // 0x5
     u32 Unk0x9;                                                             // 0x9
-    u32 Unk0xD;                                                             // 0xD
+    void* Unk0xD;                                                           // 0xD
     bool Unk0x11;                                                           // 0x11
 };
 
@@ -78,8 +78,8 @@ public:
 
 public:
     virtual ~ZSysMem();                                                     // 0x0
-    virtual void Method0x4(u32 p2 /* TODO */, u32 p3 /* TODO */);           // 0x4
-    virtual void Method0x8();                                               // 0x8
+    virtual void DisplayStatus(s32 x, s32 y);                               // 0x4
+    virtual void PrintStatus();                                             // 0x8
     virtual void Method0xC();                                               // 0xC
     virtual void Method0x10();                                              // 0x10
     virtual void Method0x14();                                              // 0x14
@@ -105,7 +105,7 @@ public:
     virtual void Method0x64();                                              // 0x64
     virtual void Method0x68();                                              // 0x68
     virtual void Method0x6C();                                              // 0x6C
-    virtual void Method0x70(u32* todo1, u32* todo2);                        // 0x70
+    virtual void GetProcessMemoryStats(u32* allocated, u32* total);         // 0x70
 
 protected:
     u32 Unk0x12;                                                            // 0x12
@@ -119,11 +119,11 @@ protected:
     // TODO
 
     bool Unk0x231;                                                          // 0x231
-    u32 Unk0x232;                                                           // 0x232
-    u32 Unk0x236;                                                           // 0x236
+    CompareRefTab* Textures;                                                // 0x232
+    CompareRefTab* Lights;                                                  // 0x236
     u32 Unk0x23A;                                                           // 0x23A
     u32 Unk0x23E;                                                           // 0x23E
-    u32 Unk0x242;                                                           // 0x242
+    void* Unk0x242;                                                         // 0x242
     u32 Unk0x246;                                                           // 0x246
     u32 Unk0x24A;                                                           // 0x24A
     u32 Unk0x24E;                                                           // 0x24E

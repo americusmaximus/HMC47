@@ -173,6 +173,7 @@
   <ItemGroup>
     <ClCompile Include="BlockRefTab.cxx" />
     <ClCompile Include="Common.cxx" />
+    <ClCompile Include="CompareRefTab.cxx" />
     <ClCompile Include="LinkRefTab.cxx" />
     <ClCompile Include="LinkSortRefTab.cxx" />
     <ClCompile Include="Main.cxx" />
@@ -193,6 +194,7 @@
   <ItemGroup>
     <ClInclude Include="BlockRefTab.hxx" />
     <ClInclude Include="Common.hxx" />
+    <ClInclude Include="CompareRefTab.hxx" />
     <ClInclude Include="Globals.hxx" />
     <ClInclude Include="LinkRefTab.hxx" />
     <ClInclude Include="LinkSortRefTab.hxx" />
