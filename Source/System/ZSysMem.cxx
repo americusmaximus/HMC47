@@ -37,7 +37,7 @@ void ZSysMem::DisplayStatus(s32 x, s32 y) {
     if (g_pSysInterface == nullptr
         || g_pSysInterface->Unk0x38F1 || g_pSysInterface->DebugOptionsVisibility != 0.0f) {
         u32 allocated, total;
-        this->GetProcessMemoryStats(&allocated, &total);
+        this->GetProcessStats(&allocated, &total);
 
         g_pSysInterface->DisplayDebugString(x, y,
             "Process %.3f / %.3f  Internal %.3f / %.3f : %.3f Count %d",
@@ -50,7 +50,7 @@ void ZSysMem::DisplayStatus(s32 x, s32 y) {
 // 0x0ffb19d0
 void ZSysMem::PrintStatus() {
     u32 allocated, total;
-    this->GetProcessMemoryStats(&allocated, &total);
+    this->GetProcessStats(&allocated, &total);
 
     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 36)
         ->LogMessage("Alloc  : Process %.3f/%.3f Internal %.3f/%.3f : Count %.3f",
@@ -67,15 +67,13 @@ void ZSysMem::PrintStatus() {
 }
 
 // 0x0ffb1ad0
-void ZSysMem::GetProcessMemoryStats(u32* allocated, u32* total) {
+void ZSysMem::GetProcessStats(u32* allocated, u32* total) {
     *allocated = 0;
     *total = 0;
 }
 
 // 0x0ffb1af0
 ZSysMem::ZSysMem() {
-    FUN_0ffc7530(&this->Unk0x16);
-
     this->Unk0x242 = 0;
     this->Unk0x23A = 0;
     this->Unk0x23E = 0;
@@ -89,7 +87,7 @@ ZSysMem::ZSysMem() {
 
     this->Textures = new CompareRefTab(256, 0);
     this->Lights = new CompareRefTab(256, 0);
-    this->Unk0x5 = new TODO();
+    this->Tab = new AllocRefTab();
 
 
 

@@ -22,7 +22,9 @@ SOFTWARE.
 
 #pragma once
 
+#include "AllocRefTab.hxx"
 #include "CompareRefTab.hxx"
+#include "ZMalloc.hxx"
 
 #pragma pack(push, 1)
 
@@ -65,7 +67,7 @@ public:
     bool Unk0x4;                                                            // 0x4
 
 protected:
-    void* Unk0x5;                                                           // 0x5
+    AllocRefTab* Tab;                                                       // 0x5
     u32 Unk0x9;                                                             // 0x9
     void* Unk0xD;                                                           // 0xD
     bool Unk0x11;                                                           // 0x11
@@ -105,11 +107,11 @@ public:
     virtual void Method0x64();                                              // 0x64
     virtual void Method0x68();                                              // 0x68
     virtual void Method0x6C();                                              // 0x6C
-    virtual void GetProcessMemoryStats(u32* allocated, u32* total);         // 0x70
+    virtual void GetProcessStats(u32* allocated, u32* total);               // 0x70
 
 protected:
     u32 Unk0x12;                                                            // 0x12
-    u32 Unk0x16;                                                            // 0x16
+    ZMalloc Allocator;                                                      // 0x16
     u32 Unk0x1A;                                                            // 0x1A
 
     // TODO

@@ -192,6 +192,7 @@
     <ClCompile Include="ZSysMem.cxx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AllocRefTab.hxx" />
     <ClInclude Include="BlockRefTab.hxx" />
     <ClInclude Include="Common.hxx" />
     <ClInclude Include="CompareRefTab.hxx" />
@@ -208,6 +209,7 @@
     <ClInclude Include="ZDirectPlayModule.hxx" />
     <ClInclude Include="ZException.hxx" />
     <ClInclude Include="ZExceptionRender.hxx" />
+    <ClInclude Include="ZMalloc.hxx" />
     <ClInclude Include="ZModule.hxx" />
     <ClInclude Include="ZRender.hxx" />
     <ClInclude Include="ZRenderModule.hxx" />
