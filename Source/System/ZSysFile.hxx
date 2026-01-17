@@ -22,6 +22,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "LinkRefTab.hxx"
 #include "StringRefTab.hxx"
 
 #pragma pack(push, 1)
@@ -29,6 +30,13 @@ SOFTWARE.
 struct SysFileInfo {
     u32 Size;
     char* Name;
+};
+
+struct ZSysFileModule {
+    HMODULE Module;                                                                         // 0x0
+    u32 Count;                                                                              // 0x4
+    void* Unk0x8;                                                                           // 0x8
+    void* Unk0xC;                                                                           // 0xC
 };
 
 // 0x0ffd3344
@@ -72,13 +80,13 @@ public:
     virtual void Method0x80() = 0;                                                          // 0x80
     virtual void Method0x84() = 0;                                                          // 0x84
     virtual void Method0x88() = 0;                                                          // 0x88
-    virtual void Method0x8C() = 0;                                                          // 0x8C
-    virtual bool Method0x90(HMODULE) = 0;                                                   // 0x90
+    virtual HMODULE LoadModule(const char*) = 0;                                            // 0x8C
+    virtual bool ReleaseModule(HMODULE) = 0;                                                // 0x90
     virtual void Method0x94() = 0;                                                          // 0x94
     virtual ~ZSysFileBase();                                                                // 0x98
 
 protected:
-    void* Unk0x4;                                                                           // 0x4
+    LinkRefTab* Unk0x4;                                                                     // 0x4
     StringRefTab* Unk0x8;                                                                   // 0x8
 };
 
@@ -123,8 +131,8 @@ public:
     virtual void Method0x80();                                                              // 0x80
     virtual void Method0x84();                                                              // 0x84
     virtual void Method0x88();                                                              // 0x88
-    virtual void Method0x8C();                                                              // 0x8C
-    virtual bool Method0x90(HMODULE);                                                       // 0x90
+    virtual HMODULE LoadModule(const char* path);                                           // 0x8C
+    virtual bool ReleaseModule(HMODULE);                                                    // 0x90
     virtual void Method0x94();                                                              // 0x94
     virtual ~ZSysFile();                                                                    // 0x98
     virtual void Method0x9C(const char* path);                                              // 0x9C
@@ -139,7 +147,7 @@ protected:
     const char* FUN_0ffa5730(const char* path);
 
 protected:
-    void* Unk0xC;                                                                           // 0xC
+    LinkRefTab* Modules;                                                                    // 0xC
     RefTab* Files;                                                                          // 0x10
 };
 

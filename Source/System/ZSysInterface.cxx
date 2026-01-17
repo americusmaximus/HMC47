@@ -673,5 +673,5 @@ bool ZSysInterface::ReleaseModule(ZModule* ptr) {
 
     delete ptr;
 
-    return g_pSysFile->Method0x90(module);
+    return g_pSysFile->ReleaseModule(module);
 }

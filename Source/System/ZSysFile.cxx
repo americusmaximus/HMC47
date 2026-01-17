@@ -40,7 +40,7 @@ ZSysFileBase::~ZSysFileBase() {
 // 0x0ffa5310
 ZSysFile::ZSysFile() {
     this->Unk0x4 = nullptr;
-    this->Unk0xC = new ZUnk0x28(32, 0);
+    this->Modules = new LinkRefTab(32, 0);
     this->Files = new RefTab(8, 2);
 
     g_pSysFile = this;
@@ -54,21 +54,31 @@ ZSysFile::~ZSysFile() {
     if (this->Files != nullptr) {
         RefLink link;
         this->Files->GetStart(&link);
+        RefKeyValue* kv = this->Files->GetNext(&link);
 
-        while (RefKeyValue* kv = this->Files->GetNext(&link)) {
-            if (kv != nullptr) {
-                // TODO NOT IMPLEMENTED
-            }
+        while (kv != nullptr) {
+            // TODO NOT IMPLEMENTED
+
+            kv = this->Files->GetNext(&link);
         }
     }
 
     this->Files->Clear();
 
-    if (this->Unk0xC != nullptr) {
-        // TODO NOT IMPLEMENTED
+    if (this->Modules != nullptr) {
+        RefLink link;
+        this->Modules->GetEnd(&link);
+
+        RefKeyValue* kv = this->Modules->GetPrevious(&link);
+
+        if (kv != nullptr) {
+            // TODO NOT IMPLEMENTED
+
+            kv = this->Modules->GetPrevious(&link);
+        }
     }
 
-    delete this->Unk0xC;
+    delete this->Modules;
     delete this->Files;
 
     g_pSysFile = nullptr;
@@ -139,7 +149,17 @@ const char* ZSysFile::FUN_0ffa5730(const char* path) {
         }
 
         if (this->Unk0x8 != nullptr) {
-            // TODO NOT IMPLEMENTED
+            RefLink link;
+            this->Unk0x8->GetStart(&link);
+            char* key = (char*)REFTAB_KEY_TO_PTR(this->Unk0x8->GetNextKey(&link));
+
+            while (link.Next != nullptr) {
+                if (_strcmpi(ext, key) == 0) {
+                    return nullptr;
+                }
+            }
+
+            key = (char*)REFTAB_KEY_TO_PTR(this->Unk0x8->GetNextKey(&link));
         }
     }
 
@@ -431,3 +451,99 @@ void ZSysFile::Method0x4() {}
 
 // 0x0ffc74e0
 void ZSysFile::Method0x8() {}
+
+// 0x0ffa7df0
+void ZSysFile::Method0x0() {
+    RefLink link;
+
+    if (this->Unk0x4 != nullptr) {
+        this->Unk0x4->GetStart(&link);
+        RefKeyValue* kv = this->Unk0x4->GetNext(&link);
+
+        while (kv != nullptr) {
+            // TODO NOT IMPLEMENTED
+
+            kv = this->Unk0x4->GetNext(&link);
+        }
+    }
+}
+
+// 0x0ffa7ed0
+HMODULE ZSysFile::LoadModule(const char* path) {
+    const char* name = strrchr(path, '\\');
+
+    if (name == nullptr) {
+        name = path;
+    }
+    else {
+        name = &name[1]; // \lib.dll -> lib.dll
+    }
+
+    RefLink link;
+    if (this->Modules != nullptr) {
+        this->Modules->GetStart(&link);
+        RefKeyValue* kv = this->Modules->GetNext(&link);
+
+        while (kv != nullptr) {
+            const char* n = (char*)REFTAB_KEY_TO_PTR(kv);
+
+            if (strcmpi(n, name) == 0) {
+                ZSysFileModule* m = (ZSysFileModule*)kv->Value;
+
+                m->Count++;
+
+                return m->Module;
+            }
+
+            kv = this->Modules->GetNext(&link);
+        }
+    }
+
+    HMODULE module = LoadLibraryA(path);
+    char* file = new char[strlen(path) + 1];
+
+    strcpy(file, name);
+
+    ZSysFileModule* result =
+        (ZSysFileModule*)this->Modules->Insert(REFTAB_PTR_TO_KEY(file));
+
+    result->Module = module;
+    result->Count = 1;
+    result->Unk0x8 = nullptr;
+    result->Unk0xC = nullptr;
+
+    return module;
+}
+
+// 0x0ffa7fe0
+bool ZSysFile::ReleaseModule(HMODULE module) {
+    RefLink link;
+
+    if (this->Modules != nullptr) {
+        this->Modules->GetStart(&link);
+        RefKeyValue* kv = this->Modules->GetNext(&link);
+
+        while (kv != nullptr) {
+            ZSysFileModule* value = (ZSysFileModule*)kv->Value;
+
+            if (module == value->Module) {
+                value->Count--;
+
+                if (value->Count != 0) {
+                    return false;
+                }
+
+                // TODO NOT IMPLEMENTED
+
+                this->Modules->Remove(&link);
+                FreeLibrary(module);
+
+                return true;
+            }
+
+            kv = this->Modules->GetNext(&link);
+        }
+    }
+
+    return false;
+}

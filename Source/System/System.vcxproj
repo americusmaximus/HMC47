@@ -171,6 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AllocRefTab.cxx" />
     <ClCompile Include="BlockRefTab.cxx" />
     <ClCompile Include="Common.cxx" />
     <ClCompile Include="CompareRefTab.cxx" />
