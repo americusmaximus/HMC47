@@ -18,39 +18,69 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\SDK\zlib\adler32.c" />
+    <ClCompile Include="..\..\SDK\zlib\compress.c" />
+    <ClCompile Include="..\..\SDK\zlib\crc32.c" />
+    <ClCompile Include="..\..\SDK\zlib\deflate.c" />
+    <ClCompile Include="..\..\SDK\zlib\gzclose.c" />
+    <ClCompile Include="..\..\SDK\zlib\gzlib.c" />
+    <ClCompile Include="..\..\SDK\zlib\gzread.c" />
+    <ClCompile Include="..\..\SDK\zlib\gzwrite.c" />
+    <ClCompile Include="..\..\SDK\zlib\infback.c" />
+    <ClCompile Include="..\..\SDK\zlib\inffast.c" />
+    <ClCompile Include="..\..\SDK\zlib\inflate.c" />
+    <ClCompile Include="..\..\SDK\zlib\inftrees.c" />
+    <ClCompile Include="..\..\SDK\zlib\trees.c" />
+    <ClCompile Include="..\..\SDK\zlib\uncompr.c" />
+    <ClCompile Include="..\..\SDK\zlib\zutil.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\SDK\zlib\crc32.h" />
+    <ClInclude Include="..\..\SDK\zlib\deflate.h" />
+    <ClInclude Include="..\..\SDK\zlib\gzguts.h" />
+    <ClInclude Include="..\..\SDK\zlib\inffast.h" />
+    <ClInclude Include="..\..\SDK\zlib\inffixed.h" />
+    <ClInclude Include="..\..\SDK\zlib\inflate.h" />
+    <ClInclude Include="..\..\SDK\zlib\inftrees.h" />
+    <ClInclude Include="..\..\SDK\zlib\trees.h" />
+    <ClInclude Include="..\..\SDK\zlib\zconf.h" />
+    <ClInclude Include="..\..\SDK\zlib\zlib.h" />
+    <ClInclude Include="..\..\SDK\zlib\zutil.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e123ea86-dcd6-4184-be22-b3ca506ec85d}</ProjectGuid>
-    <RootNamespace>System</RootNamespace>
+    <ProjectGuid>{ddbefc83-ff26-475c-bcfc-8939c73f3c69}</ProjectGuid>
+    <RootNamespace>ZLib</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -70,36 +100,23 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;</ExternalIncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;</ExternalIncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;</ExternalIncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;</ExternalIncludePath>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;SYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNING;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile />
+      <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <DisableSpecificWarnings>4200;26495;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableUAC>false</EnableUAC>
-      <ModuleDefinitionFile>Module.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -108,42 +125,40 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;SYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNING;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile />
+      <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <DisableSpecificWarnings>4200;26495;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableUAC>false</EnableUAC>
-      <ModuleDefinitionFile>Module.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;SYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNING;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile />
+      <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <DisableSpecificWarnings>4200;26495;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableUAC>false</EnableUAC>
-      <ModuleDefinitionFile>Module.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -152,95 +167,23 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;SYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNING;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile />
+      <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <DisableSpecificWarnings>4200;26495;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableUAC>false</EnableUAC>
-      <ModuleDefinitionFile>Module.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="AllocRefTab.cxx" />
-    <ClCompile Include="BlockRefTab.cxx" />
-    <ClCompile Include="Common.cxx" />
-    <ClCompile Include="CompareRefTab.cxx" />
-    <ClCompile Include="LinkRefTab.cxx" />
-    <ClCompile Include="LinkSortRefTab.cxx" />
-    <ClCompile Include="Main.cxx" />
-    <ClCompile Include="RefTab.cxx" />
-    <ClCompile Include="StringRefTab.cxx" />
-    <ClCompile Include="ZConsole.cxx" />
-    <ClCompile Include="ZConsoleAutoCompleteHandler.cxx" />
-    <ClCompile Include="ZConsoleCommand.cxx" />
-    <ClCompile Include="ZConsoleHandler.cxx" />
-    <ClCompile Include="ZHelpConsoleCommand.cxx" />
-    <ClCompile Include="ZipFileSystem.cxx" />
-    <ClCompile Include="ZipFileSystemCache.cxx" />
-    <ClCompile Include="ZipIO.cxx" />
-    <ClCompile Include="ZString.cxx" />
-    <ClCompile Include="ZSysCom.cxx" />
-    <ClCompile Include="ZSysFile.cxx" />
-    <ClCompile Include="ZSysInterface.cxx" />
-    <ClCompile Include="ZSysInterfaceBase.cxx" />
-    <ClCompile Include="ZSysMem.cxx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AllocRefTab.hxx" />
-    <ClInclude Include="BlockRefTab.hxx" />
-    <ClInclude Include="Common.hxx" />
-    <ClInclude Include="CompareRefTab.hxx" />
-    <ClInclude Include="Globals.hxx" />
-    <ClInclude Include="LinkRefTab.hxx" />
-    <ClInclude Include="LinkSortRefTab.hxx" />
-    <ClInclude Include="RefTab.hxx" />
-    <ClInclude Include="StringRefTab.hxx" />
-    <ClInclude Include="Texture.hxx" />
-    <ClInclude Include="ZArray.hxx" />
-    <ClInclude Include="ZConsole.hxx" />
-    <ClInclude Include="ZCounter.hxx" />
-    <ClInclude Include="ZDirectPlay.hxx" />
-    <ClInclude Include="ZDirectPlayModule.hxx" />
-    <ClInclude Include="ZException.hxx" />
-    <ClInclude Include="ZExceptionRender.hxx" />
-    <ClInclude Include="Zip.hxx" />
-    <ClInclude Include="ZipFileSystem.hxx" />
-    <ClInclude Include="ZipIO.hxx" />
-    <ClInclude Include="ZList.hxx" />
-    <ClInclude Include="ZMalloc.hxx" />
-    <ClInclude Include="ZModule.hxx" />
-    <ClInclude Include="ZRender.hxx" />
-    <ClInclude Include="ZRenderModule.hxx" />
-    <ClInclude Include="ZSettings.hxx" />
-    <ClInclude Include="ZSoundModule.hxx" />
-    <ClInclude Include="ZString.hxx" />
-    <ClInclude Include="ZSysCom.hxx" />
-    <ClInclude Include="ZSysFile.hxx" />
-    <ClInclude Include="ZSysInterface.hxx" />
-    <ClInclude Include="ZSysMem.hxx" />
-    <ClInclude Include="ZTextureManager.hxx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Globals\Globals.vcxproj">
-      <Project>{e9aa90cc-2291-4e42-825b-33e6c9ccbd8b}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\ZLib\ZLib.vcxproj">
-      <Project>{ddbefc83-ff26-475c-bcfc-8939c73f3c69}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Module.def" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

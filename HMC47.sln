@@ -11,6 +11,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Globals", "Source\Globals\G
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "System", "Source\System\System.vcxproj", "{E123EA86-DCD6-4184-BE22-B3CA506EC85D}"
 	ProjectSection(ProjectDependencies) = postProject
+		{DDBEFC83-FF26-475C-BCFC-8939C73F3C69} = {DDBEFC83-FF26-475C-BCFC-8939C73F3C69}
 		{E9AA90CC-2291-4E42-825B-33E6C9CCBD8B} = {E9AA90CC-2291-4E42-825B-33E6C9CCBD8B}
 	EndProjectSection
 EndProject
@@ -25,6 +26,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectPlay", "Source\Direct
 	ProjectSection(ProjectDependencies) = postProject
 		{E9AA90CC-2291-4E42-825B-33E6C9CCBD8B} = {E9AA90CC-2291-4E42-825B-33E6C9CCBD8B}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZLib", "Source\ZLib\ZLib.vcxproj", "{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +93,14 @@ Global
 		{18A34743-F839-4CF5-AA4D-AEB533B3171E}.Release|x64.Build.0 = Release|x64
 		{18A34743-F839-4CF5-AA4D-AEB533B3171E}.Release|x86.ActiveCfg = Release|Win32
 		{18A34743-F839-4CF5-AA4D-AEB533B3171E}.Release|x86.Build.0 = Release|Win32
+		{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}.Debug|x64.ActiveCfg = Debug|x64
+		{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}.Debug|x64.Build.0 = Debug|x64
+		{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}.Debug|x86.ActiveCfg = Debug|Win32
+		{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}.Debug|x86.Build.0 = Debug|Win32
+		{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}.Release|x64.ActiveCfg = Release|x64
+		{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}.Release|x64.Build.0 = Release|x64
+		{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}.Release|x86.ActiveCfg = Release|Win32
+		{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

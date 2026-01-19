@@ -65,13 +65,13 @@ public:
         this->Count = 0;
     }
 
-    T Get(s32 index) {
+    T& Get(s32 index) {
         ZArrayNode<T>* node = this->First;
 
         while (node != nullptr) {
             if (index < this->Capacity) {
                 if (node != nullptr) {
-                    return node->Value[index];
+                    return &node->Value[index];
                 }
 
                 break;
@@ -84,7 +84,7 @@ public:
         throw RangeError();
     }
 
-    void Insert(T value) {
+    void Insert(T& value) {
         const s32 index = this->Count % this->Capacity;
 
         if (index == 0) {
@@ -103,7 +103,7 @@ public:
         }
 
         this->Count++;
-        this->Last->Value[index] = value;
+        this->Last->Value[index] = *value;
     }
 
 protected:

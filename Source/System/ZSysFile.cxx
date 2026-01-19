@@ -547,3 +547,8 @@ bool ZSysFile::ReleaseModule(HMODULE module) {
 
     return false;
 }
+
+// 0x0ffa8340
+void ZSysFile::Method0xAC(/* TODO */) {
+    // TODO NOT IMPLEMENTED
+}
