@@ -38,25 +38,30 @@ public:
     virtual void Save();                                                            // 0x4
     virtual void Method0x8();                                                       // 0x8
     virtual void Method0xC();                                                       // 0xC
-    virtual void Method0x10();                                                      // 0x10
+    virtual u32 StreamWrite(void*, void*, u32);                                     // 0x10
     virtual void Method0x14();                                                      // 0x14
     virtual void Method0x18();                                                      // 0x18
-    virtual void Method0x1C();                                                      // 0x1C
-    virtual void Method0x20();                                                      // 0x20
+    virtual bool Compare(const char* a, const char* b);                             // 0x1C
+    virtual void Append(const char* path, LPFILETIME time, void* value, u32 size);  // 0x20
     virtual void Method0x24();                                                      // 0x24
     virtual bool GetDateTime(const char* path, LPFILETIME time);                    // 0x28
-    virtual void Method0x2C();                                                      // 0x2C
-    virtual void Method0x30();                                                      // 0x30
+    virtual void SetCompression(u32 level);                                         // 0x2C
+    virtual void Close();                                                           // 0x30
     virtual bool Reopen();                                                          // 0x34
     virtual void Method0x38();                                                      // 0x38
     virtual void Method0x3C();                                                      // 0x3C
     virtual void Method0x40();                                                      // 0x40
     virtual void Method0x44();                                                      // 0x44
 
+public:
+    void* Unpack(ZIPLFHV* desc, void* value, void*, u32 size);
+    void SaveFile(const char* path, LPFILETIME time, void* value, u32 size);
+
 protected:
     u32 GetDirectoryOffset();
     void ReadZipFile();
     void WriteZipFile();
+    void Pack(ZIPCDHV* dir, void* value);
 
 protected:
     u32 Mode;                                                                       // 0x4

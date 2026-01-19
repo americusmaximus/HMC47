@@ -23,7 +23,12 @@ SOFTWARE.
 #include "Globals.hxx"
 #include "ZipIO.hxx"
 
-#define MAX_ZIP_STRING_LENGTH       65540
+#include <time.h>
+#include <zlib.h>
+
+#define MAX_ZIP_STRING_LENGTH           65540
+#define MAX_ZIP_UNPACK_BUFFER_LENGTH    1024
+#define MAX_ZIP_PACK_BUFFER_LENGTH      0x4000
 
 // 0x0ffc3490
 // 0x0ffd4288
@@ -40,14 +45,14 @@ void ZipIO::WriteZipFile() {
     char name[MAX_ZIP_STRING_LENGTH];
 
     for (u32 i = 0; i < this->ZFS.Unk0x46.Count; i++) {
-        CDFHV& header = this->ZFS.Unk0x46.Get(i);
+        ZIPCDHV& header = this->ZFS.Unk0x46.Get(i);
 
         fwrite(&signature, 1, sizeof(u32), this->ZFS.Handle);
-        fwrite(&header, 1, sizeof(CDFHV), this->ZFS.Handle);
+        fwrite(&header, 1, sizeof(ZIPCDHV), this->ZFS.Handle);
 
         const long offset = ftell(this->ZFS.Handle);
 
-        fseek(this->ZFS.Handle, header.LocalHeaderOffset + sizeof(LFH), SEEK_SET);
+        fseek(this->ZFS.Handle, header.LocalHeaderOffset + sizeof(ZIPLFH), SEEK_SET);
         fread(name, 1, header.FileNameLength, this->ZFS.Handle);
         fseek(this->ZFS.Handle, offset, SEEK_SET);
         fwrite(name, 1, header.FileNameLength, this->ZFS.Handle);
@@ -60,27 +65,203 @@ void ZipIO::WriteZipFile() {
     {
         const long offset = ftell(this->ZFS.Handle);
         this->ZFS.Rune.DirectorySize = offset - this->ZFS.Rune.DirectoryOffset;
-        this->ZFS.Directory.DirectoryOffset = offset;
+        this->ZFS.Central.DirectoryOffset = offset;
     }
 
     for (u32 i = 0; i < this->ZFS.Unk0x3A.Count; i++) {
-        CDFHV& header = this->ZFS.Unk0x3A.Get(i);
+        ZIPCDHV& header = this->ZFS.Unk0x3A.Get(i);
 
         fwrite(&signature, 1, sizeof(u32), this->ZFS.Handle);
-        fwrite(&header, 1, sizeof(CDFHV), this->ZFS.Handle);
+        fwrite(&header, 1, sizeof(ZIPCDHV), this->ZFS.Handle);
 
         const long offset = ftell(this->ZFS.Handle);
 
-        fseek(this->ZFS.Handle, header.LocalHeaderOffset + sizeof(LFH), SEEK_SET);
+        fseek(this->ZFS.Handle, header.LocalHeaderOffset + sizeof(ZIPLFH), SEEK_SET);
         fread(name, 1, header.FileNameLength, this->ZFS.Handle);
         fseek(this->ZFS.Handle, offset, SEEK_SET);
         fwrite(name, 1, header.FileNameLength, this->ZFS.Handle);
 
-        this->ZFS.Directory.EntriesOnDisk++;
+        this->ZFS.Central.EntriesOnDisk++;
     }
 
-    this->ZFS.Directory.TotalEntries = this->ZFS.Directory.EntriesOnDisk;
-    this->ZFS.Directory.DirectorySize = ftell(this->ZFS.Handle) - this->ZFS.Directory.DirectoryOffset;
+    this->ZFS.Central.TotalEntries = this->ZFS.Central.EntriesOnDisk;
+    this->ZFS.Central.DirectorySize = ftell(this->ZFS.Handle) - this->ZFS.Central.DirectoryOffset;
+}
+
+// 0x0ffc1b70
+void ZipIO::Pack(ZIPCDHV* dir, void* value) {
+    if (dir->CompressionMethod == Z_NO_COMPRESSION) {
+        if (fwrite(value, 1, dir->UncompressedSize, this->ZFS.Handle) < dir->UncompressedSize) {
+            printf("ZIPFS: Write error while trying to store file data\n");
+        }
+
+        dir->CompressedSize = dir->UncompressedSize;
+        return;
+    }
+
+    if (dir->CompressionMethod != Z_DEFLATED) {
+        printf("ZIPFS: Unrecognized compression method selected");
+        return;
+    }
+
+    z_stream stream;
+    ZeroMemory(&stream, sizeof(z_stream));
+
+    stream.next_in = (byte*)value;
+    stream.avail_in = dir->UncompressedSize;
+
+    if (deflateInit(&stream, this->ZFS.Compression) != Z_OK) {
+        printf("ZIPFS: Cannot initialize compression library\n");
+        return;
+    }
+
+    s32 err = Z_OK;
+    byte buffer[MAX_ZIP_PACK_BUFFER_LENGTH];
+    u32 offset = 2; // Skip the first 2 bytes of zlib deflate stream.
+
+    do {
+        stream.next_out = buffer;
+        stream.avail_out = MAX_ZIP_PACK_BUFFER_LENGTH;
+
+        err = deflate(&stream, Z_FINISH);
+
+        const u32 size = MAX_ZIP_PACK_BUFFER_LENGTH - stream.avail_out - offset;
+
+        dir->CompressedSize += size;
+
+        if (fwrite(&buffer[offset], 1, size, this->ZFS.Handle) != size) {
+            deflateEnd(&stream);
+            printf("ZIPFS: Write error: Cannot write to archive\n");
+        }
+
+        offset = 0;
+    } while (err != Z_STREAM_END);
+
+    deflateEnd(&stream);
+}
+
+inline void GetLocalTime(u16* date, u16* time) {
+    time_t* ts;
+    ::time(ts);
+    tm* lt = localtime(ts);
+
+    if (date != nullptr) {
+        *date = ((lt->tm_year + 48) << 9) | ((lt->tm_mon + 1) << 5) | (lt->tm_mday);
+    }
+
+    if (time != nullptr) {
+        *time = (lt->tm_hour << 11) | (lt->tm_min << 5) | (lt->tm_sec / 2);
+    }
+}
+
+// 0x0ffc1cd0
+void ZipIO::SaveFile(const char* path, LPFILETIME time, void* value, u32 size) {
+    char name[MAX_ZIP_STRING_LENGTH];
+
+    for (u32 i = 0; path[i] != NULL; i++) {
+        name[i] = path[i] == '\\' ? '/' : path[i];
+    }
+
+    ZIPCDHV& dir = this->ZFS.Unk0x15
+        ? this->ZFS.Unk0x46.Insert() : this->ZFS.Unk0x3A.Insert();
+
+    ZeroMemory(&dir, sizeof(ZIPCDHV));
+
+    dir.UncompressedSize = size;
+    dir.VersionNeeded = ZIP_VERSION_2_0;
+    dir.CompressionMethod = Z_DEFLATED;
+    dir.FileNameLength = strlen(name);
+
+    if (time == nullptr) {
+        GetLocalTime(&dir.LastModifiedDate, &dir.LastModifiedDate);
+    }
+    else {
+        if (!FileTimeToDosDateTime(time, &dir.LastModifiedDate, &dir.LastModifiedTime)) {
+            GetLocalTime(&dir.LastModifiedDate, &dir.LastModifiedDate);
+        }
+    }
+
+    dir.CRC32 = crc32(0, nullptr, 0);
+    dir.CRC32 = crc32(dir.CRC32, (byte*)value, size);
+
+    const u32 start = ftell(this->ZFS.Handle);
+
+    const u32 signature = ZIP_SIGNATURE;
+    fwrite(&signature, 1, sizeof(u32), this->ZFS.Handle);
+    fwrite(&dir.VersionNeeded, 1, sizeof(ZIPLFHV), this->ZFS.Handle);
+    fwrite(name, 1, dir.FileNameLength, this->ZFS.Handle);
+
+    this->Pack(&dir, value);
+
+    if (dir.UncompressedSize <= dir.CompressedSize) {
+        dir.CompressedSize = 0;
+        dir.CompressionMethod = Z_NO_COMPRESSION;
+
+        fseek(this->ZFS.Handle, start + sizeof(u32), SEEK_SET);
+        fwrite(&dir.VersionNeeded, 1, sizeof(ZIPLFHV), this->ZFS.Handle);
+        fwrite(name, 1, dir.FileNameLength, this->ZFS.Handle);
+
+        this->Pack(&dir, value);
+    }
+
+    const u32 end = ftell(this->ZFS.Handle);
+
+    fseek(this->ZFS.Handle, start + sizeof(u32), SEEK_SET);
+    fwrite(&dir.VersionNeeded, 1, sizeof(ZIPLFHV), this->ZFS.Handle);
+    fseek(this->ZFS.Handle, end, SEEK_SET);
+
+    dir.LocalHeaderOffset = start;
+    dir.VersionCreated = ZIP_VERSION_CREATED;
+}
+
+// 0x0ffc2130
+void* ZipIO::Unpack(ZIPLFHV* desc, void* value, void*, u32 size) {
+    if (desc->CompressionMethod == Z_NO_COMPRESSION) {
+        fread(value, 1, size, this->ZFS.Handle);
+    }
+    else {
+        if (desc->CompressionMethod != Z_DEFLATED) {
+            printf("ZIPFS: unsupported compression method\n");
+            return nullptr;
+        }
+
+        u32 bytes = 0;
+        byte buffer[MAX_ZIP_UNPACK_BUFFER_LENGTH];
+
+        z_stream stream;
+        ZeroMemory(&stream, sizeof(z_stream));
+
+        stream.next_out = (byte*)value;
+        stream.avail_out = size;
+
+        this->ZFS.Status = inflateInit2(&stream, -MAX_WBITS);
+
+        if (this->ZFS.Status != Z_OK) {
+            return nullptr;
+        }
+
+        for (u32 i = 0; i < desc->CompressedSize; i += bytes) {
+            stream.next_in = buffer;
+
+            bytes = MAX_ZIP_UNPACK_BUFFER_LENGTH;
+            if (desc->CompressedSize - i < MAX_ZIP_UNPACK_BUFFER_LENGTH) {
+                bytes = desc->CompressedSize - i;
+            }
+
+            stream.avail_in = fread(buffer, 1, bytes, this->ZFS.Handle);
+            this->ZFS.Status = inflate(&stream,
+                bytes < desc->CompressedSize - i ? Z_PARTIAL_FLUSH : Z_FINISH);
+        }
+
+        inflateEnd(&stream);
+
+        if (this->ZFS.Status != Z_STREAM_END
+            && (this->ZFS.Status != Z_BUF_ERROR || stream.avail_out != 0)) {
+            return nullptr;
+        }
+    }
+
+    return value;
 }
 
 // 0x0ffc2270
@@ -90,20 +271,19 @@ void ZipIO::ReadZipFile() {
 
     fseek(this->ZFS.Handle,
         this->ZFS.Rune.DirectorySize == 0
-        ? this->ZFS.Directory.DirectoryOffset : this->ZFS.Rune.DirectoryOffset, SEEK_SET);
+        ? this->ZFS.Central.DirectoryOffset : this->ZFS.Rune.DirectoryOffset, SEEK_SET);
 
     while (feof(this->ZFS.Handle) == 0) {
         bool cache = false;
         u32 signature = 0;
         fread(&signature, 1, sizeof(u32), this->ZFS.Handle);
 
-        if (signature == ZIP_SIGNATURE_CDFH) {
-            CDFHV file;
-
+        if (signature == ZIP_SIGNATURE_CDH) {
+            ZIPCDHV file;
             const long offset = ftell(this->ZFS.Handle);
-            fread(&file, 1, sizeof(CDFHV), this->ZFS.Handle);
+            fread(&file, 1, sizeof(ZIPCDHV), this->ZFS.Handle);
 
-            LFHV desc;
+            ZIPLFHV desc;
             if (file.FileNameLength != 0) {
                 fread(name, 1, file.FileNameLength, this->ZFS.Handle);
                 name[file.FileNameLength] = NULL;
@@ -118,7 +298,7 @@ void ZipIO::ReadZipFile() {
                 }
 
                 if (!found) {
-                    CopyMemory(&desc, &file.VersionNeeded, sizeof(LFHV));
+                    CopyMemory(&desc, &file.VersionNeeded, sizeof(ZIPLFHV));
                     cache = true;
                 }
             }
@@ -133,7 +313,7 @@ void ZipIO::ReadZipFile() {
 
             if (cache) {
                 this->ZFS.Cache->Insert(name, &desc,
-                    file.FileNameLength + sizeof(LFH) + file.LocalHeaderOffset);
+                    file.FileNameLength + sizeof(ZIPLFH) + file.LocalHeaderOffset);
             }
         }
         else {
@@ -151,19 +331,19 @@ void ZipIO::ReadZipFile() {
 u32 ZipIO::GetDirectoryOffset() {
     fseek(this->ZFS.Handle, 0, SEEK_END);
 
-    long offset = fseek(this->ZFS.Handle, offset, SEEK_SET) - sizeof(EOCD);
+    long offset = fseek(this->ZFS.Handle, offset, SEEK_SET) - sizeof(ZIPEOCD);
 
     while (offset >= 0) {
         u32 signature = 0;
         fread(&signature, 1, sizeof(u32), this->ZFS.Handle);
 
         if (signature == ZIP_SIGNATURE_RUNE) {
-            fread(&this->ZFS.Rune, 1, sizeof(EOCDV), this->ZFS.Handle);
-            fseek(this->ZFS.Handle, -sizeof(EOCDV), SEEK_CUR);
+            fread(&this->ZFS.Rune, 1, sizeof(ZIPEOCDV), this->ZFS.Handle);
+            fseek(this->ZFS.Handle, -sizeof(ZIPEOCDV), SEEK_CUR);
         }
         else if (signature == ZIP_SIGNATURE_EOCD) {
             this->ZFS.Offset = ftell(this->ZFS.Handle);
-            fread(&this->ZFS.Directory, 1, sizeof(EOCDV), this->ZFS.Handle);
+            fread(&this->ZFS.Central, 1, sizeof(ZIPEOCDV), this->ZFS.Handle);
             return this->ZFS.Offset;
         }
 
@@ -177,7 +357,7 @@ u32 ZipIO::GetDirectoryOffset() {
 
 // 0x0ffc2960
 bool ZipIO::GetDateTime(const char* path, LPFILETIME time) {
-    LFHV desc;
+    ZIPLFHV desc;
 
     if (this->FindFile(path, &desc, nullptr)) {
         DosDateTimeToFileTime(desc.LastModifiedDate, desc.LastModifiedTime, time);
@@ -185,6 +365,13 @@ bool ZipIO::GetDateTime(const char* path, LPFILETIME time) {
     }
 
     return false;
+}
+
+// 0x0ffc2db0
+u32 ZipIO::StreamWrite(void*, void*, u32) {
+    printf("ZIPFS: Stream write not implemented yet\n");
+
+    return INVALID_FILE_SIZE;
 }
 
 // 0x0ffc2e30
@@ -210,8 +397,8 @@ bool ZipIO::Open(const char* path, u32 mode) {
     this->ZFS.Unk0x3A.Initialize(256); // TODO
     this->ZFS.Unk0x46.Initialize(8); // TODO
 
-    ZeroMemory(&this->ZFS.Directory, sizeof(EOCDV));
-    ZeroMemory(&this->ZFS.Rune, sizeof(EOCDV));
+    ZeroMemory(&this->ZFS.Central, sizeof(ZIPEOCDV));
+    ZeroMemory(&this->ZFS.Rune, sizeof(ZIPEOCDV));
 
     this->GetDirectoryOffset();
 
@@ -231,11 +418,11 @@ void ZipIO::Save() {
 
         u32 signature = ZIP_SIGNATURE_EOCD;
         fwrite(&signature, 1, sizeof(u32), this->ZFS.Handle);
-        fwrite(&this->ZFS.Directory, 1, sizeof(EOCDV), this->ZFS.Handle);
+        fwrite(&this->ZFS.Central, 1, sizeof(ZIPEOCDV), this->ZFS.Handle);
 
         signature = ZIP_SIGNATURE_RUNE;
         fwrite(&signature, 1, sizeof(u32), this->ZFS.Handle);
-        fwrite(&this->ZFS.Rune, 1, sizeof(EOCDV), this->ZFS.Handle);
+        fwrite(&this->ZFS.Rune, 1, sizeof(ZIPEOCDV), this->ZFS.Handle);
 
         this->ZFS.Unk0x3A.Release();
         this->ZFS.Unk0x46.Release();
@@ -252,6 +439,48 @@ void ZipIO::Save() {
             delete this->ZFS.Cache;
             this->ZFS.Cache = nullptr;
         }
+    }
+}
+
+// 0x0ffc32f0
+bool ZipIO::Compare(const char* a, const char* b) {
+    ZIPLFHV da, db;
+
+    if (this->FindFile(a, &da, nullptr)) {
+        if (this->FindFile(b, &da, nullptr)) {
+            if (da.CompressedSize == db.CompressedSize) {
+                return da.CRC32 == db.CRC32;
+            }
+        }
+    }
+
+    return false;
+}
+
+// 0x0ffc3580
+void ZipIO::Append(const char* path, LPFILETIME time, void* value, u32 size) {
+    this->SaveFile(path, time, value, size);
+}
+
+// 0x0ffc3760
+void ZipIO::SetCompression(u32 level) {
+    this->ZFS.Compression = level;
+}
+
+// 0x0ffc3770
+void ZipIO::Close() {
+    this->ZFS.Unk0x3A.Release();
+    this->ZFS.Unk0x46.Release();
+    
+    this->ZFS.Offsets.Release();
+
+    fclose(this->ZFS.Handle);
+
+    this->ZFS.Init = false;
+
+    if (this->ZFS.Cache != nullptr) {
+        delete this->ZFS.Cache;
+        this->ZFS.Cache = nullptr;
     }
 }
 

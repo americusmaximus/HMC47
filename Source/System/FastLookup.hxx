@@ -23,7 +23,7 @@ SOFTWARE.
 #include "ZValueTree.hxx"
 
 struct FastLookupNode {
-    LFHV Header;                                                                        // 0x0
+    ZIPLFHV Header;                                                                     // 0x0
     u32 Offset;                                                                         // 0x1A
 };
 

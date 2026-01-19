@@ -31,30 +31,16 @@ SOFTWARE.
 
 #pragma pack(push, 1)
 
-class FileSystem {
-public:
-    FileSystem();
-
-public:
-    virtual void PrintStatus() = 0;                                                 // 0x0
-    virtual bool Open(const char*, void*) = 0;                                      // 0x4
-    virtual void Save(const char*) = 0;                                             // 0x8
-    virtual u32 GetSize(const char*) = 0;                                           // 0xC
-    virtual bool Exists(const char*) = 0;                                           // 0x10
-    virtual u32 Method0x14(const char*) = 0;                                        // 0x14
-    virtual void Method0x18() = 0;                                                  // 0x18
-};
-
 class FileSystemCache {
 public:
     FileSystemCache();
 
 public:
     virtual ~FileSystemCache();                                                     // 0x0
-    virtual void Insert(const char*, LFHV*, u32) = 0;                               // 0x4
-    virtual bool Find(const char*, LFHV*, u32*) = 0;                                // 0x8
+    virtual void Insert(const char*, ZIPLFHV*, u32) = 0;                            // 0x4
+    virtual bool Find(const char*, ZIPLFHV*, u32*) = 0;                             // 0x8
     virtual void Method0xC() = 0;                                                   // 0xC
-    virtual void Method0x10() = 0;                                                  // 0x10
+    virtual void Clear() = 0;                                                       // 0x10
 };
 
 class ZipFileSystemCache : public FileSystemCache {
@@ -63,8 +49,8 @@ public:
 
 public:
     virtual ~ZipFileSystemCache();                                                  // 0x0
-    virtual void Insert(const char* path, LFHV* desc, u32 offset);                  // 0x4
-    virtual bool Find(const char* path, LFHV* desc, u32* offset);                   // 0x8
+    virtual void Insert(const char* path, ZIPLFHV* desc, u32 offset);               // 0x4
+    virtual bool Find(const char* path, ZIPLFHV* desc, u32* offset);                // 0x8
     virtual void Method0xC();                                                       // 0xC
     virtual void Clear();                                                           // 0x10
 
@@ -73,30 +59,44 @@ protected:
     BlockRefTab Items;                                                              // 0x8
 };
 
+class FileSystem {
+public:
+    FileSystem();
+
+public:
+    virtual void PrintStatus() = 0;                                                 // 0x0
+    virtual bool Copy(const char*, const char*) = 0;                                // 0x4
+    virtual void Save(const char*) = 0;                                             // 0x8
+    virtual u32 GetSize(const char*) = 0;                                           // 0xC
+    virtual bool Exists(const char*) = 0;                                           // 0x10
+    virtual u32 Unpack(const char*, void*, u32) = 0;                                // 0x14
+    virtual void Method0x18() = 0;                                                  // 0x18
+};
+
 class ZipFileSystem : public FileSystem {
 public:
     ZipFileSystem();
 
 public:
     virtual void PrintStatus();                                                     // 0x0
-    virtual bool Open(const char* path, void* todo);                                // 0x4
+    virtual bool Copy(const char* src, const char* dst);                            // 0x4
     virtual void Save(const char* path);                                            // 0x8
     virtual u32 GetSize(const char* path);                                          // 0xC
     virtual bool Exists(const char* path);                                          // 0x10
-    virtual u32 Method0x14(const char* path);                                       // 0x14
+    virtual u32 Unpack(const char* path, void* value, u32 size);                    // 0x14
     virtual void Method0x18();                                                      // 0x18
 
 public:
-    u32 Status;                                                                     // 0x4
+    s32 Status;                                                                     // 0x4
     bool Init;                                                                      // 0x5
     FILE* Handle;                                                                   // 0x9
     u32 Offset;                                                                     // 0xD
-    s32 Unk0x11;                                                                    // 0x11
+    u32 Compression;                                                                // 0x11
     bool Unk0x15;                                                                   // 0x15
-    EOCDV Directory;                                                                // 0x16
-    EOCDV Rune;                                                                     // 0x28
-    ZList<CDFHV> Unk0x3A;                                                           // 0x3A
-    ZList<CDFHV> Unk0x46;                                                           // 0x46
+    ZIPEOCDV Central;                                                               // 0x16
+    ZIPEOCDV Rune;                                                                  // 0x28
+    ZList<ZIPCDHV> Unk0x3A;                                                         // 0x3A
+    ZList<ZIPCDHV> Unk0x46;                                                         // 0x46
     ZList<u32> Offsets;                                                             // 0x52
     ZipFileSystemCache* Cache;                                                      // 0x5E
 };

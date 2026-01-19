@@ -24,13 +24,17 @@ SOFTWARE.
 
 #include "Common.hxx"
 
-#define ZIP_SIGNATURE_CDFH      0x02014B50
+#define ZIP_SIGNATURE           0x04034B50
+#define ZIP_SIGNATURE_CDH       0x02014B50
 #define ZIP_SIGNATURE_EOCD      0x06054B50
 #define ZIP_SIGNATURE_RUNE      0x52756E65
 
+#define ZIP_VERSION_2_0         0x14
+#define ZIP_VERSION_CREATED     0x616
+
 #pragma pack(push, 1)
 
-struct LFHV {
+struct ZIPLFHV {
     u16 VersionNeeded;
     u16 Flags;
     u16 CompressionMethod;
@@ -45,12 +49,12 @@ struct LFHV {
     // u8 ExtraField[ExtraFieldLength]
 };
 
-struct LFH {
+struct ZIPLFH {
     u32 Signature;
-    LFHV Value;
+    ZIPLFHV Value;
 };
 
-struct CDFHV {
+struct ZIPCDHV {
     u16 VersionCreated;
     u16 VersionNeeded;
     u16 Flags;
@@ -72,12 +76,12 @@ struct CDFHV {
     // char Comment[CommentLength]
 };
 
-struct CDFH {
+struct ZIPCDH {
     u32 Signature;
-    CDFHV Value;
+    ZIPCDHV Value;
 };
 
-struct EOCDV {
+struct ZIPEOCDV {
     u16 DiskNumber;
     u16 StartDiskNumber;
     u16 EntriesOnDisk;
@@ -88,17 +92,17 @@ struct EOCDV {
     //char Comment[CommentLength];
 };
 
-struct EOCD {
+struct ZIPEOCD {
     u32 Signature;
-    EOCDV Value;
+    ZIPEOCDV Value;
 };
 
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(CDFH)  == 0x2E, "CDFH size mismatch.");
-static_assert(sizeof(CDFHV) == 0x2A, "CDFHV size mismatch.");
-static_assert(sizeof(EOCD)  == 0x16, "EOCD size mismatch.");
-static_assert(sizeof(LFH)   == 0x1E, "LFH size mismatch.");
-static_assert(sizeof(LFHV)  == 0x1A, "LFHV size mismatch.");
+static_assert(sizeof(ZIPCDH)    == 0x2E,    "ZIPCDH size mismatch.");
+static_assert(sizeof(ZIPCDHV)   == 0x2A,    "ZIPCDHV size mismatch.");
+static_assert(sizeof(ZIPEOCD)   == 0x16,    "ZIPEOCD size mismatch.");
+static_assert(sizeof(ZIPLFH)    == 0x1E,    "ZIPLFH size mismatch.");
+static_assert(sizeof(ZIPLFHV)   == 0x1A,    "ZIPLFHV size mismatch.");
 #endif

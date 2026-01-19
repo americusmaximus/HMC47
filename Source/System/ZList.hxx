@@ -64,6 +64,30 @@ public:
         return &this->Value[index];
     }
 
+    inline T& Insert() {
+        if (this->Capacity <= this->Count) {
+            this->Grow();
+        }
+
+        return &this->Value[this->Count++];
+    }
+
+    inline void Grow() {
+        T* items = new T[this->Capacity * 2];
+
+        if (items == nullptr) {
+            printf("ERROR: Cannot expand array structure");
+        }
+
+        CopyMemory(items, this->Value, this->Count * sizeof(T));
+
+        this->Capacity = 2 * this->Capacity;
+
+        delete[] this->Value;
+
+        this->Value = items;
+    }
+
 protected:
 public:
     T* Value;                                                                       // 0x0

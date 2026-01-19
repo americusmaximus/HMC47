@@ -22,6 +22,8 @@ SOFTWARE.
 
 #include "ZipIO.hxx"
 
+#include <zlib.h>
+
 #define GET_ZIPIO()             ((ZipIO*)((size_t)this - sizeof(char*) - sizeof(u32) - sizeof(void*)))
 #define GET_ZIPIO_MODE()        (*(u32*)((size_t)this - sizeof(char*) - sizeof(u32)))
 #define GET_ZIPIO_FILE_NAME()   ((char*)((size_t)this - sizeof(char*)))
@@ -32,7 +34,7 @@ SOFTWARE.
 ZipFileSystem::ZipFileSystem() {
     this->Init = false;
 
-    this->Unk0x11 = -1; // TODO
+    this->Compression = Z_DEFAULT_COMPRESSION;
     this->Unk0x15 = 0;
 
     this->Offsets.Initialize(256); // TODO
@@ -50,13 +52,13 @@ void ZipFileSystem::PrintStatus() {
 }
 
 // 0x0ffc2810
-bool ZipFileSystem::Open(const char* path, void* todo) {
+bool ZipFileSystem::Copy(const char* src, const char* dst) {
     if (GET_ZIPIO_MODE() != ZIPIO_MODE_READ_WRITE) {
         printf("IOZIP: Cannot add file - filesystem not writable\n");
         return false;
     }
 
-    FILE* f = fopen(path, "rb");
+    FILE* f = fopen(src, "rb");
 
     if (f == nullptr) {
         return false;
@@ -69,14 +71,14 @@ bool ZipFileSystem::Open(const char* path, void* todo) {
         void* buffer = new byte[size];
 
         if (buffer == nullptr) {
-            printf("ZIPFS: Cannot allocate buffer space for file '%s'\n", path);
+            printf("ZIPFS: Cannot allocate buffer space for file '%s'\n", src);
             return false;
         }
 
         fseek(f, 0, SEEK_SET);
         fread(buffer, 1, size, f);
-        
-        GET_ZIPIO()->FUN_0ffc1cd0(todo, nullptr, buffer, size);
+
+        GET_ZIPIO()->SaveFile(dst, nullptr, buffer, size);
 
         delete[] buffer;
     }
@@ -91,7 +93,7 @@ void ZipFileSystem::Save(const char*) {
 
 // 0x0ffc2930
 u32 ZipFileSystem::GetSize(const char* path) {
-    LFHV desc;
+    ZIPLFHV desc;
 
     if (GET_ZIPIO()->FindFile(path, &desc, nullptr)) {
         return desc.UncompressedSize;
@@ -102,14 +104,25 @@ u32 ZipFileSystem::GetSize(const char* path) {
 
 // 0x0ffc2ac0
 bool ZipFileSystem::Exists(const char* path) {
-    LFHV desc;
-
+    ZIPLFHV desc;
     return GET_ZIPIO()->FindFile(path, &desc, nullptr);
 }
 
 // 0x0ffc2ae0
-u32 ZipFileSystem::Method0x14(const char* path) {
-    // TODO NOT IMPLEMENTED
+u32 ZipFileSystem::Unpack(const char* path, void* value, u32 size) {
+    ZIPLFHV desc;
+
+    if (GET_ZIPIO()->FindFile(path, &desc, nullptr)) {
+        if (size == 0) {
+            size = desc.UncompressedSize;
+        }
+
+        if (GET_ZIPIO()->Unpack(&desc, value, nullptr, size) != nullptr) {
+            return size;
+        }
+    }
+
+    return INVALID_FILE_SIZE;
 }
 
 // 0x0ffc29a0

@@ -32,9 +32,9 @@ ZipFileSystemCache::~ZipFileSystemCache() {
 }
 
 // 0x0ffc1800
-void ZipFileSystemCache::Insert(const char* path, LFHV* desc, u32 offset) {
+void ZipFileSystemCache::Insert(const char* path, ZIPLFHV* desc, u32 offset) {
     FastLookupNode* node = new FastLookupNode();
-    CopyMemory(&node->Header, desc, sizeof(LFHV));
+    CopyMemory(&node->Header, desc, sizeof(ZIPLFHV));
     node->Offset = offset;
 
     this->Lookup.Insert(path);
@@ -42,12 +42,12 @@ void ZipFileSystemCache::Insert(const char* path, LFHV* desc, u32 offset) {
 }
 
 // 0x0ffc1860
-bool ZipFileSystemCache::Find(const char* path, LFHV* desc, u32* offset) {
+bool ZipFileSystemCache::Find(const char* path, ZIPLFHV* desc, u32* offset) {
     FastLookupNode* node = this->Lookup.Get(path);
 
     if (node != nullptr) {
         *offset = node->Offset;
-        CopyMemory(desc, &node->Header, sizeof(LFHV));
+        CopyMemory(desc, &node->Header, sizeof(ZIPLFHV));
         return true;
     }
 

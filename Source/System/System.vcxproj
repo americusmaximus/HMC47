@@ -71,16 +71,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -175,6 +175,7 @@
     <ClCompile Include="BlockRefTab.cxx" />
     <ClCompile Include="Common.cxx" />
     <ClCompile Include="CompareRefTab.cxx" />
+    <ClCompile Include="FastLookup.cxx" />
     <ClCompile Include="LinkRefTab.cxx" />
     <ClCompile Include="LinkSortRefTab.cxx" />
     <ClCompile Include="Main.cxx" />
@@ -200,6 +201,7 @@
     <ClInclude Include="BlockRefTab.hxx" />
     <ClInclude Include="Common.hxx" />
     <ClInclude Include="CompareRefTab.hxx" />
+    <ClInclude Include="FastLookup.hxx" />
     <ClInclude Include="Globals.hxx" />
     <ClInclude Include="LinkRefTab.hxx" />
     <ClInclude Include="LinkSortRefTab.hxx" />
@@ -229,6 +231,7 @@
     <ClInclude Include="ZSysInterface.hxx" />
     <ClInclude Include="ZSysMem.hxx" />
     <ClInclude Include="ZTextureManager.hxx" />
+    <ClInclude Include="ZValueTree.hxx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Globals\Globals.vcxproj">
