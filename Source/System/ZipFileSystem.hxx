@@ -23,6 +23,7 @@ SOFTWARE.
 #pragma once
 
 #include "BlockRefTab.hxx"
+#include "FastLookup.hxx"
 #include "Zip.hxx"
 #include "ZList.hxx"
 
@@ -50,8 +51,8 @@ public:
 
 public:
     virtual ~FileSystemCache();                                                     // 0x0
-    virtual void Method0x4() = 0;                                                   // 0x4
-    virtual void Method0x8() = 0;                                                   // 0x8
+    virtual void Insert(const char*, LFHV*, u32) = 0;                               // 0x4
+    virtual bool Find(const char*, LFHV*, u32*) = 0;                                // 0x8
     virtual void Method0xC() = 0;                                                   // 0xC
     virtual void Method0x10() = 0;                                                  // 0x10
 };
@@ -62,14 +63,14 @@ public:
 
 public:
     virtual ~ZipFileSystemCache();                                                  // 0x0
-    virtual void Method0x4();                                                       // 0x4
-    virtual void Method0x8();                                                       // 0x8
+    virtual void Insert(const char* path, LFHV* desc, u32 offset);                  // 0x4
+    virtual bool Find(const char* path, LFHV* desc, u32* offset);                   // 0x8
     virtual void Method0xC();                                                       // 0xC
-    virtual void Method0x10();                                                      // 0x10
+    virtual void Clear();                                                           // 0x10
 
 protected:
-    u32 Unk0x4;                                                                     // 0x4
-    BlockRefTab Unk0x8;                                                             // 0x8
+    FastLookup Lookup;                                                              // 0x4
+    BlockRefTab Items;                                                              // 0x8
 };
 
 class ZipFileSystem : public FileSystem {

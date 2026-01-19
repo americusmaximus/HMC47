@@ -132,7 +132,7 @@ void ZipIO::ReadZipFile() {
             }
 
             if (cache) {
-                this->ZFS.Cache->Method0x4(name, &desc,
+                this->ZFS.Cache->Insert(name, &desc,
                     file.FileNameLength + sizeof(LFH) + file.LocalHeaderOffset);
             }
         }
