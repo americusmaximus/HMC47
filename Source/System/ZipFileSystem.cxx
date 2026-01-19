@@ -91,10 +91,10 @@ void ZipFileSystem::Save(const char*) {
 
 // 0x0ffc2930
 u32 ZipFileSystem::GetSize(const char* path) {
-    AAA todo;
+    LFHV desc;
 
-    if (GET_ZIPIO()->FindFile(path, &todo, 0 /* TODO*/)) {
-        return todo.Size;
+    if (GET_ZIPIO()->FindFile(path, &desc, nullptr)) {
+        return desc.UncompressedSize;
     }
 
     return INVALID_FILE_SIZE;
@@ -102,8 +102,9 @@ u32 ZipFileSystem::GetSize(const char* path) {
 
 // 0x0ffc2ac0
 bool ZipFileSystem::Exists(const char* path) {
-    AAA todo;
-    return GET_ZIPIO()->FindFile(path, &todo, 0 /* TODO*/);
+    LFHV desc;
+
+    return GET_ZIPIO()->FindFile(path, &desc, nullptr);
 }
 
 // 0x0ffc2ae0

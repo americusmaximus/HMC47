@@ -44,10 +44,10 @@ public:
     virtual void Method0x1C();                                                      // 0x1C
     virtual void Method0x20();                                                      // 0x20
     virtual void Method0x24();                                                      // 0x24
-    virtual void Method0x28();                                                      // 0x28
+    virtual bool GetDateTime(const char* path, LPFILETIME time);                    // 0x28
     virtual void Method0x2C();                                                      // 0x2C
     virtual void Method0x30();                                                      // 0x30
-    virtual void Method0x34();                                                      // 0x34
+    virtual bool Reopen();                                                          // 0x34
     virtual void Method0x38();                                                      // 0x38
     virtual void Method0x3C();                                                      // 0x3C
     virtual void Method0x40();                                                      // 0x40
@@ -56,6 +56,7 @@ public:
 protected:
     u32 GetDirectoryOffset();
     void ReadZipFile();
+    void WriteZipFile();
 
 protected:
     u32 Mode;                                                                       // 0x4

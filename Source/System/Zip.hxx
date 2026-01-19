@@ -97,6 +97,8 @@ struct EOCD {
 
 #if defined(_DEBUG) && !defined(_WIN64)
 static_assert(sizeof(CDFH)  == 0x2E, "CDFH size mismatch.");
+static_assert(sizeof(CDFHV) == 0x2A, "CDFHV size mismatch.");
 static_assert(sizeof(EOCD)  == 0x16, "EOCD size mismatch.");
 static_assert(sizeof(LFH)   == 0x1E, "LFH size mismatch.");
+static_assert(sizeof(LFHV)  == 0x1A, "LFHV size mismatch.");
 #endif
