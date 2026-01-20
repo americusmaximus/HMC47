@@ -379,7 +379,7 @@ ZipIOContext* ZipIO::OpenFile(const char* path, u32 mode) {
                 const u32 offset = ftell(this->ZFS.Handle);
 
                 result->CurrentOffset = offset;
-                result->Unk0x22 = offset;
+                result->InitialOffset = offset;
                 
                 result->Size = result->Header.CompressedSize;
 

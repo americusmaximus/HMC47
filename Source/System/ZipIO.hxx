@@ -35,7 +35,7 @@ struct ZipIOContext {
     u32 Mode;                                                                       // 0x0
     ZIPLFHV Header;                                                                 // 0x4
     u32 CurrentOffset;                                                              // 0x1E
-    u32 Unk0x22;                                                                    // 0x22
+    u32 InitialOffset;                                                              // 0x22
     z_stream Stream;                                                                // 0x26
     u32 Size;                                                                       // 0x5E
     u8 Value[ZIPIO_CONTEXT_BUFFER_LENGTH];                                          // 0x62

@@ -20,34 +20,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-
 #include "ZValueTree.hxx"
-#include "Zip.hxx"
 
-struct FastLookupNode {
-    ZIPLFHV Header;                                                                     // 0x0
-    u32 Offset;                                                                         // 0x1A
-};
-
-#pragma pack(push, 1)
-
-class FastLookup {
-public:
-    FastLookup(u32 count = 32);
-    ~FastLookup();
-
-public:
-    void Insert(const char* path);
-    FastLookupNode* Get(const char* path);
-    void Clear();
-
-protected:
-    ZValueTree* Nodes;                                                                      // 0x0
-};
-
-#pragma pack(pop)
-
-#if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(FastLookup)    == 0x4,     "FastLookup size mismatch.");
-#endif
+// 0x0ffc8580
+// 0x0ffd4458
+ZValueTree::ZValueTree(u32 count) {
+TODO
+}

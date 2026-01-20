@@ -22,32 +22,22 @@ SOFTWARE.
 
 #pragma once
 
-#include "ZValueTree.hxx"
-#include "Zip.hxx"
-
-struct FastLookupNode {
-    ZIPLFHV Header;                                                                     // 0x0
-    u32 Offset;                                                                         // 0x1A
-};
+#include "Common.hxx"
 
 #pragma pack(push, 1)
 
-class FastLookup {
+class ZBinTree {
 public:
-    FastLookup(u32 count = 32);
-    ~FastLookup();
+    ZBinTree();
 
 public:
-    void Insert(const char* path);
-    FastLookupNode* Get(const char* path);
-    void Clear();
 
 protected:
-    ZValueTree* Nodes;                                                                      // 0x0
+
 };
 
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(FastLookup)    == 0x4,     "FastLookup size mismatch.");
+static_assert(sizeof(ZBinTree)  == 0x1D,    "ZBinTree size mismatch.");
 #endif
