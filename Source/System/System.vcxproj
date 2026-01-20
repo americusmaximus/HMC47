@@ -181,6 +181,7 @@
     <ClCompile Include="Main.cxx" />
     <ClCompile Include="RefTab.cxx" />
     <ClCompile Include="StringRefTab.cxx" />
+    <ClCompile Include="ZBinTree.cxx" />
     <ClCompile Include="ZConsole.cxx" />
     <ClCompile Include="ZConsoleAutoCompleteHandler.cxx" />
     <ClCompile Include="ZConsoleCommand.cxx" />
@@ -195,6 +196,7 @@
     <ClCompile Include="ZSysInterface.cxx" />
     <ClCompile Include="ZSysInterfaceBase.cxx" />
     <ClCompile Include="ZSysMem.cxx" />
+    <ClCompile Include="ZValueTree.cxx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllocRefTab.hxx" />
@@ -209,6 +211,7 @@
     <ClInclude Include="StringRefTab.hxx" />
     <ClInclude Include="Texture.hxx" />
     <ClInclude Include="ZArray.hxx" />
+    <ClInclude Include="ZBinTree.hxx" />
     <ClInclude Include="ZConsole.hxx" />
     <ClInclude Include="ZCounter.hxx" />
     <ClInclude Include="ZDirectPlay.hxx" />
