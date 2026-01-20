@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include "ZValueTree.hxx"
+#include "Zip.hxx"
 
 struct FastLookupNode {
     ZIPLFHV Header;                                                                     // 0x0

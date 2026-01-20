@@ -24,7 +24,6 @@ SOFTWARE.
 #include "ZipIO.hxx"
 
 #include <time.h>
-#include <zlib.h>
 
 #define MAX_ZIP_STRING_LENGTH           65540
 #define MAX_ZIP_UNPACK_BUFFER_LENGTH    1024
@@ -367,17 +366,113 @@ bool ZipIO::GetDateTime(const char* path, LPFILETIME time) {
     return false;
 }
 
+// 0x0ffc2b40
+ZipIOContext* ZipIO::OpenFile(const char* path, u32 mode) {
+    ZipIOContext* result = new ZipIOContext();
+
+    if (result != nullptr) {
+        result->CurrentOffset = 0;
+        result->Mode = mode;
+
+        if (mode == 3 /* TODO */) {
+            if (this->FindFile(path, &result->Header, nullptr)) {
+                const u32 offset = ftell(this->ZFS.Handle);
+
+                result->CurrentOffset = offset;
+                result->Unk0x22 = offset;
+                
+                result->Size = result->Header.CompressedSize;
+
+                ZeroMemory(&result->Status, sizeof(z_stream));
+                
+                result->Stream.next_in = result->Value;
+                result->Status = inflateInit2(&result->Stream, -MAX_WBITS);
+
+                if (result->Status == Z_OK) {
+                    return result;
+                }
+            }
+        }
+
+        delete result;
+    }
+
+    return nullptr;
+}
+
+// 0x0ffc2c30
+u32 ZipIO::ReadFile(ZipIOContext* context, void* value, u32 size) {
+    fseek(this->ZFS.Handle, context->CurrentOffset, SEEK_SET);
+
+    if (context->Header.CompressionMethod == Z_NO_COMPRESSION) {
+        fseek(this->ZFS.Handle, context->CurrentOffset, SEEK_SET);
+        return fread(value, 1, size, this->ZFS.Handle);
+    }
+
+    if (context->Header.CompressionMethod != Z_DEFLATED) {
+        printf("ZIPFS: unsupported compression method\n");
+        return size - context->Stream.avail_out;
+    }
+
+    if (context->Status != Z_OK) {
+        return context->Status != Z_STREAM_END ? INVALID_FILE_SIZE : 0;
+    }
+
+    context->Stream.next_out = (byte*)value;
+    context->Stream.avail_out = size;
+
+    if (size != 0) {
+        do {
+            if (context->Status != Z_OK) {
+                break;
+            }
+
+            u32 offset =
+                ZIPIO_CONTEXT_BUFFER_LENGTH - context->Stream.avail_in;
+
+            CopyMemory(context->Value, &context->Value[offset], ZIPIO_CONTEXT_BUFFER_LENGTH - offset);
+
+            const u32 length = context->Header.CompressedSize - context->CurrentOffset;
+
+            if (length < offset) {
+                offset = length;
+            }
+
+            if (offset != 0) {
+                context->Stream.avail_in = fread(context->Value, 1, offset, this->ZFS.Handle);
+            }
+
+            context->Stream.next_in = context->Value;
+            context->Status = inflate(&context->Stream, Z_FULL_FLUSH);
+
+            if (context->Status != Z_OK && context->Status != Z_STREAM_END) {
+                printf("dut");
+            }
+        } while (context->Stream.avail_out != 0);
+    }
+
+    context->CurrentOffset = ftell(this->ZFS.Handle);
+
+    return size - context->Stream.avail_out;
+}
+
 // 0x0ffc2db0
-u32 ZipIO::StreamWrite(void*, void*, u32) {
+u32 ZipIO::WriteFile(ZipIOContext*, void*, u32) {
     printf("ZIPFS: Stream write not implemented yet\n");
 
     return INVALID_FILE_SIZE;
 }
 
+// 0x0ffc2dd0
+void ZipIO::CloseFile(ZipIOContext* context) {
+    inflateEnd(&context->Stream);
+    delete context;
+}
+
 // 0x0ffc2e30
-bool ZipIO::Open(const char* path, u32 mode) {
+bool ZipIO::Initialize(const char* path, u32 mode) {
     if (this->Name != nullptr) {
-        this->Save();
+        this->Release();
     }
 
     this->ZFS.Handle = fopen(path, mode != ZIPIO_MODE_READ_WRITE ? "rb" : "wb+");
@@ -412,7 +507,7 @@ bool ZipIO::Open(const char* path, u32 mode) {
 }
 
 // 0x0ffc31d0
-void ZipIO::Save() {
+void ZipIO::Release() {
     if (this->Name != nullptr) {
         this->WriteZipFile();
 
@@ -485,7 +580,7 @@ void ZipIO::Close() {
 }
 
 // 0x0ffc3820
-bool ZipIO::Reopen() {
+bool ZipIO::ReInitialize() {
     char name[MAX_PATH + 1];
 
     strncpy(name, this->Name, MAX_PATH);
@@ -493,5 +588,5 @@ bool ZipIO::Reopen() {
     delete[] this->Name;
     this->Name = nullptr;
 
-    return this->Open(name, this->Mode);
+    return this->Initialize(name, this->Mode);
 }

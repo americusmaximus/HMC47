@@ -22,8 +22,6 @@ SOFTWARE.
 
 #include "ZipIO.hxx"
 
-#include <zlib.h>
-
 #define GET_ZIPIO()             ((ZipIO*)((size_t)this - sizeof(char*) - sizeof(u32) - sizeof(void*)))
 #define GET_ZIPIO_MODE()        (*(u32*)((size_t)this - sizeof(char*) - sizeof(u32)))
 #define GET_ZIPIO_FILE_NAME()   ((char*)((size_t)this - sizeof(char*)))
