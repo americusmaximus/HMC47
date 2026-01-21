@@ -43,8 +43,8 @@ Where:
 #define REFTAB_LOCK         0x7FFFFFFF
 #define REFTAB_UNLOCK       0x80000000
 
-#define REFTAB_KEY_TO_PTR(X)           ((void*)X)
-#define REFTAB_PTR_TO_KEY(X)           ((u32)X)    /* X64 */
+#define REFTAB_KEY_TO_PTR(X)           ((void*)X)   /* X64 */
+#define REFTAB_PTR_TO_KEY(X)           ((u32)X)     /* X64 */
 
 #pragma pack(push, 1)
 

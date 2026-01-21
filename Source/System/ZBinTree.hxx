@@ -24,19 +24,51 @@ SOFTWARE.
 
 #include "Common.hxx"
 
+#define BINTREE_KEY_TO_PTR(X)           ((void*)X)   /* X64 */
+#define BINTREE_PTR_TO_KEY(X)           ((u32)X)     /* X64 */
+
 #pragma pack(push, 1)
+
+struct ZBinTreeNode {
+    ZBinTreeNode* Parent;                                                       // 0x0
+    ZBinTreeNode* Left;                                                         // 0x4
+    ZBinTreeNode* Right;                                                        // 0x8
+    u32 Key;                                                                    // 0xC
+    bool Color;                                                                 // 0x10
+    u8 Value[0];
+};
 
 class ZBinTree {
 public:
     ZBinTree();
 
 public:
+    virtual void Insert(ZBinTreeNode* node);                                    // 0x0
+    virtual ZBinTreeNode* Remove(ZBinTreeNode* node);                           // 0x4
+    virtual ZBinTreeNode* GetMatch(u32 value, ZBinTreeNode* node);              // 0x8
+    virtual ZBinTreeNode* GetClose(u32 value, ZBinTreeNode* node);              // 0xC
+    virtual ZBinTreeNode* GetMinimum(ZBinTreeNode* node);                       // 0x10
+    virtual ZBinTreeNode* GetMaximum(ZBinTreeNode* node);                       // 0x14
+    virtual ZBinTreeNode* GetSuccessor(ZBinTreeNode* node);                     // 0x18
+    virtual u32 GetDepth(ZBinTreeNode* node);                                   // 0x1C
+    virtual void Validate(ZBinTreeNode* node);                                  // 0x20
+    virtual void CopyValue(ZBinTreeNode* a, ZBinTreeNode* b);                   // 0x24
 
 protected:
+    void InsertNode(ZBinTreeNode* node);
+    void BalanceNode(ZBinTreeNode* node);
 
+protected:
+    ZBinTreeNode* Nodes;                                                        // 0x4
+    ZBinTreeNode* Null;                                                         // 0x8
+    ZBinTreeNode Value;                                                         // 0xC
 };
 
 #pragma pack(pop)
+
+#ifdef _WIN64
+#error ZBinTree is incompatible with x64.
+#endif
 
 #if defined(_DEBUG) && !defined(_WIN64)
 static_assert(sizeof(ZBinTree)  == 0x1D,    "ZBinTree size mismatch.");
