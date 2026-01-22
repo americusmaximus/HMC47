@@ -22,62 +22,20 @@ SOFTWARE.
 
 #pragma once
 
-#include "Common.hxx"
-
-/*
-RefTab Block Structure:
-
-|_______|_______..._______|......|_______|_______..._______|
-|  Key  |      Value      |      |  Key  |      Value      |
-
-Where:
-    Key is the unsigned integer,
-    Value is amout of bytes needed for storing of each value.
-
-*/
-
-#define REFTAB_TRAVERSE_FORWARD     1
-#define REFTAB_TRAVERSE_BACKWARD    (-1)
-
-#define REFTAB_COPY         0x3FFFFFFF
-#define REFTAB_UNLOCK       0x7FFFFFFF
-#define REFTAB_LOCK         0x80000000
-
-#define REFTAB_KEY_TO_PTR(X)           ((void*)X)   /* X64 */
-#define REFTAB_PTR_TO_KEY(X)           ((u32)X)     /* X64 */
+#include "RefTab.hxx"
 
 #pragma pack(push, 1)
 
-struct Ref {
-    Ref* Previous;                                                              // 0x0
-    Ref* Next;                                                                  // 0x4
-    u32 Size;                                                                   // 0xC
-    void* Value[0];
-};
-
-struct RefLink {
-    Ref* Next;                                                                  // 0x0
-    u32 Size;                                                                   // 0x4
-    s32 Direction;                                                              // 0x8
-};
-
-struct RefKeyValue {
-    u32 Key;                                                                    // 0x0
-    u8 Value[0];
-};
-
-class RefTab {
+class StaticRefTab : public RefTab {
 public:
-    RefTab(u32 count, u32 size);
-    RefTab(u32 count, u32 max, u32 size);
+    StaticRefTab(u32 count, u32 size);
 
 public:
-    virtual ~RefTab();                                                          // 0x0
+    virtual ~StaticRefTab();                                                    // 0x0
     virtual void* Insert(u32 key);                                              // 0x4
     virtual void* TryInsert(u32 key);                                           // 0x8
     virtual void Clear();                                                       // 0xC
     virtual void Clear2();                                                      // 0x10
-    virtual u32 GetCount();                                                     // 0x14
     virtual void RemoveKeyValue(RefKeyValue* kv);                               // 0x18
     virtual bool ContainsKey(u32 key);                                          // 0x1C
     virtual void* GetByKey(u32 key);                                            // 0x20
@@ -93,25 +51,17 @@ public:
     virtual RefKeyValue* GetNext(RefLink* link);                                // 0x48
     virtual u32 GetPreviousKey(RefLink* link);                                  // 0x4C
     virtual RefKeyValue* GetPrevious(RefLink* link);                            // 0x50
-    virtual RefKeyValue* GetCurrent(RefLink* link);                             // 0x54
-    virtual void DeleteRef(Ref* ref);                                           // 0x58
-    virtual Ref* NewRef();                                                      // 0x5C
 
 protected:
-    Ref* Head;                                                                  // 0x4
-    Ref* Tail;                                                                  // 0x8
-    u32 BlockCount;                                                             // 0xC
-    u32 MaxBlockSize;                                                           // 0x10
-    u32 Count;                                                                  // 0x14
-    u32 BlockSize;                                                              // 0x18
+    RefTab* Items;                                                              // 0x1C
 };
 
 #pragma pack(pop)
 
 #ifdef _WIN64
-#error RefTab is incompatible with x64.
+#error StaticRefTab is incompatible with x64.
 #endif
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(RefTab)    == 0x1C,    "RefTab size mismatch.");
+static_assert(sizeof(StaticRefTab)  == 0x20,    "StaticRefTab size mismatch.");
 #endif

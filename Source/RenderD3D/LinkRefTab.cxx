@@ -318,7 +318,7 @@ void LinkRefTab::GetStart(RefLink* link) {
     link->Direction = REFTAB_TRAVERSE_FORWARD;
     link->Next = nullptr;
 
-    this->BlockCount = this->BlockCount & REFTAB_LOCK;
+    this->BlockCount = this->BlockCount & REFTAB_UNLOCK;
 }
 
 // 0x0fbafe20
@@ -327,12 +327,12 @@ void LinkRefTab::GetEnd(RefLink* link) {
     link->Direction = REFTAB_TRAVERSE_BACKWARD;
     link->Next = nullptr;
 
-    this->BlockCount = this->BlockCount & REFTAB_LOCK;
+    this->BlockCount = this->BlockCount & REFTAB_UNLOCK;
 }
 
 // 0x0fbafe40
 RefKeyValue* LinkRefTab::GetNext(RefLink* link) {
-    if (this->BlockCount & REFTAB_UNLOCK) {
+    if (this->BlockCount & REFTAB_LOCK) {
         g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\RefTab.cpp", 1007)
             ->LogMessage("ERROR: Illegal operation inside LINKREFTAB loop");
     }
@@ -349,7 +349,7 @@ RefKeyValue* LinkRefTab::GetNext(RefLink* link) {
 
 // 0x0fbafeb0
 RefKeyValue* LinkRefTab::GetPrevious(RefLink* link) {
-    if (this->BlockCount & REFTAB_UNLOCK) {
+    if (this->BlockCount & REFTAB_LOCK) {
         g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\RefTab.cpp", 1025)
             ->LogMessage("ERROR: Illegal operation inside LINKREFTAB loop");
     }
@@ -391,7 +391,7 @@ void LinkRefTab::RemoveKeyValue(RefKeyValue* kv) {
     ref->Next = nullptr;
     ref->Previous = nullptr;
 
-    this->BlockCount = this->BlockCount | REFTAB_UNLOCK;
+    this->BlockCount = this->BlockCount | REFTAB_LOCK;
 }
 
 // 0x0fbaffc0

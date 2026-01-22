@@ -27,6 +27,8 @@ SOFTWARE.
 #define BINTREE_KEY_TO_PTR(X)           ((void*)X)   /* X64 */
 #define BINTREE_PTR_TO_KEY(X)           ((u32)X)     /* X64 */
 
+// ZBinTree is a red black tree implementation.
+
 #pragma pack(push, 1)
 
 struct ZBinTreeNode {
@@ -35,7 +37,7 @@ struct ZBinTreeNode {
     ZBinTreeNode* Right;                                                        // 0x8
     u32 Key;                                                                    // 0xC
     bool Color;                                                                 // 0x10
-    u8 Value[0];
+    void* Value[0];
 };
 
 class ZBinTree {
@@ -52,7 +54,7 @@ public:
     virtual ZBinTreeNode* GetSuccessor(ZBinTreeNode* node);                     // 0x18
     virtual u32 GetDepth(ZBinTreeNode* node);                                   // 0x1C
     virtual void Validate(ZBinTreeNode* node);                                  // 0x20
-    virtual void CopyValue(ZBinTreeNode* a, ZBinTreeNode* b);                   // 0x24
+    virtual void CopyValue(ZBinTreeNode* dst, ZBinTreeNode* src);               // 0x24
 
 protected:
     void InsertNode(ZBinTreeNode* node);

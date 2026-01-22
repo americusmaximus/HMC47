@@ -33,7 +33,7 @@ BlockRefTab::BlockRefTab() : RefTab(32, 0) {
 // 0x0fbaf740
 // 0x0fbaf780
 BlockRefTab::~BlockRefTab() {
-    this->BlockCount = this->BlockCount | REFTAB_UNLOCK;
+    this->BlockCount = this->BlockCount | REFTAB_LOCK;
 
     Ref* ref = this->Head;
 

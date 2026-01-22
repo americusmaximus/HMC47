@@ -53,7 +53,7 @@ RefTab::RefTab(u32 count, u32 max, u32 size) {
 // 0x0fbaeea0
 // 0x0fbaef10
 RefTab::~RefTab() {
-    this->BlockCount = this->BlockCount | REFTAB_UNLOCK;
+    this->BlockCount = this->BlockCount | REFTAB_LOCK;
 
     Ref* ref = this->Head;
 
@@ -110,7 +110,7 @@ void* RefTab::TryInsert(u32 key) {
 
 // 0x0fbaeff0
 void RefTab::Clear() {
-    this->BlockCount = this->BlockCount | REFTAB_UNLOCK;
+    this->BlockCount = this->BlockCount | REFTAB_LOCK;
 
     Ref* ref = this->Head;
 
@@ -128,7 +128,7 @@ void RefTab::Clear() {
 
 // 0x0fbaeff0
 void RefTab::Clear2() {
-    this->BlockCount = this->BlockCount | REFTAB_UNLOCK;
+    this->BlockCount = this->BlockCount | REFTAB_LOCK;
 
     Ref* ref = this->Head;
 
@@ -181,7 +181,7 @@ void RefTab::RemoveKeyValue(RefKeyValue* kv) {
             }
 
             this->Remove(&link);
-            this->BlockCount = this->BlockCount | REFTAB_UNLOCK;
+            this->BlockCount = this->BlockCount | REFTAB_LOCK;
         }
     }
 }
@@ -232,7 +232,7 @@ u32 RefTab::GetKeyByIndex(u32 i) {
 
     Ref* ref = this->Head;
 
-    for (u32 count = this->BlockCount & REFTAB_LOCK; count <= i; i -= count) {
+    for (u32 count = this->BlockCount & REFTAB_UNLOCK; count <= i; i -= count) {
         ref = ref->Next;
     }
 
@@ -245,10 +245,10 @@ RefKeyValue* RefTab::GetByIndex(u32 i) {
         return 0;
     }
 
-    u32 count = this->BlockCount & REFTAB_LOCK;
+    u32 count = this->BlockCount & REFTAB_UNLOCK;
     Ref* ref = this->Head;
 
-    for (u32 count = this->BlockCount & REFTAB_LOCK; count <= i; i -= count) {
+    for (u32 count = this->BlockCount & REFTAB_UNLOCK; count <= i; i -= count) {
         ref = ref->Next;
     }
 
@@ -274,7 +274,7 @@ bool RefTab::TryRemoveByKey(u32 key) {
         while (link.Next != nullptr) {
             if (value == key) {
                 this->Remove(&link);
-                this->BlockCount = this->BlockCount | REFTAB_UNLOCK;
+                this->BlockCount = this->BlockCount | REFTAB_LOCK;
                 return true;
             }
 
@@ -291,7 +291,7 @@ void RefTab::GetStart(RefLink* link) {
     link->Direction = REFTAB_TRAVERSE_FORWARD;
     link->Next = this->Head;
 
-    this->BlockCount = this->BlockCount & REFTAB_LOCK;
+    this->BlockCount = this->BlockCount & REFTAB_UNLOCK;
 }
 
 // 0x0fbaf310
@@ -303,7 +303,7 @@ void RefTab::GetEnd(RefLink* link) {
         link->Size = this->Tail->Size;
     }
 
-    this->BlockCount = this->BlockCount & REFTAB_LOCK;
+    this->BlockCount = this->BlockCount & REFTAB_UNLOCK;
 }
 
 // 0x0fbaf340
@@ -315,7 +315,7 @@ u32 RefTab::GetNextKey(RefLink* link) {
 
 // 0x0fbaf360
 RefKeyValue* RefTab::GetNext(RefLink* link) {
-    if (this->BlockCount & REFTAB_UNLOCK) {
+    if (this->BlockCount & REFTAB_LOCK) {
         g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\RefTab.cpp", 373)
             ->LogMessage("ERROR: Illegal operation inside REFTAB loop");
 
@@ -357,7 +357,7 @@ u32 RefTab::GetPreviousKey(RefLink* link) {
 
 // 0x0fbaf440
 RefKeyValue* RefTab::GetPrevious(RefLink* link) {
-    if (this->BlockCount & REFTAB_UNLOCK) {
+    if (this->BlockCount & REFTAB_LOCK) {
         g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\RefTab.cpp", 424)
             ->LogMessage("ERROR: Illegal operation inside REFTAB loop");
 

@@ -67,7 +67,7 @@ void StringRefTab::Clear2() {
         }
     }
 
-    this->BlockCount = this->BlockCount | REFTAB_UNLOCK;
+    this->BlockCount = this->BlockCount | REFTAB_LOCK;
 }
 
 // 0x0ffc0f30
@@ -98,7 +98,7 @@ void StringRefTab::RemoveString(const char* value) {
         while (link.Next != nullptr) {
             if (_strcmpi(key, value) == 0) {
                 this->Remove(&link);
-                this->BlockCount = this->BlockCount | REFTAB_UNLOCK;
+                this->BlockCount = this->BlockCount | REFTAB_LOCK;
                 return;
             }
 
@@ -209,7 +209,7 @@ void StringRefTab::SortStrings() {
 
     qsort(values, count, sizeof(char*), StringRefTabStringCompareCallback);
 
-    this->BlockCount = this->BlockCount | REFTAB_UNLOCK;
+    this->BlockCount = this->BlockCount | REFTAB_LOCK;
 
     {
         Ref* ref = this->Head;

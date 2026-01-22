@@ -22,20 +22,33 @@ SOFTWARE.
 
 #pragma once
 
-#include "Common.hxx"
+#include "StaticRefTab.hxx"
+#include "ZBinTree.hxx"
 
 #pragma pack(push, 1)
 
-class ZValueTree {
+struct ZValueTreeItem {
+    u32 Unk0x0;
+    u32 Unk0x4;
+    u32 Unk0x8;
+    bool Unk0xC;
+    u32 Unk0xD;
+};
+
+class ZValueTree : public ZBinTree {
 public:
     ZValueTree(u32 count);
     ~ZValueTree();
 
 public:
-    // TODO
+    virtual ZBinTreeNode* Remove(ZBinTreeNode* node);                           // 0x4
+    virtual void CopyValue(ZBinTreeNode* dst, ZBinTreeNode* src);               // 0x24
+    virtual void InsertItem(u32 key, void* value);                              // 0x28
+    virtual void RemoveItem(u32 key);                                           // 0x2C
+    virtual void* GetItemValue(u32 key);                                        // 0x30
 
 protected:
-    // TODO
+    StaticRefTab* Items;                                                        // 0x1D
 };
 
 #pragma pack(pop)
