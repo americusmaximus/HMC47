@@ -22,7 +22,6 @@ SOFTWARE.
 
 #include "Globals.hxx"
 #include "StaticRefTab.hxx"
-#include "ZBinTree.hxx" // TODO
 
 #define STATICREFTAB_REF(X)     \
             (*(Ref**)((size_t)X + (this->BlockSize - 1) * 4))
@@ -32,10 +31,7 @@ SOFTWARE.
 
 #define STATICREFTAB_COUNT(X)   (*(u32*)((size_t)((void**)X)[this->BlockSize - 1] + 8))
 #define STATICREFTAB_KEY(X)     (*(u32*)X)
-#define STATICREFTAB_NEXT(X)    ((void*)((size_t)X + 4))
-
-#define STATICREFTAB_NODE(X)    \
-            ((ZBinTreeNode*)((size_t)X + (this->BlockSize - 1) * 4 - 4))
+#define STATICREFTAB_NEXT(X)    ((Ref*)((size_t)X + 4))
 
 // 0x0ffbf710
 // 0x0ffd3fe0
@@ -126,36 +122,34 @@ void StaticRefTab::Clear2() {
 void StaticRefTab::RemoveKeyValue(RefKeyValue* kv) {
     this->Count--;
 
-    // TODO NOT TESTED
+    STATICREFTAB_COUNT(kv) = STATICREFTAB_COUNT(kv) - 1;
 
-    ZBinTreeNode* node = STATICREFTAB_NODE(kv);
+    Ref* ref = STATICREFTAB_REF(kv);
 
-    node->Key--;
-
-    if (node->Key == 0) {
-        if (node->Left == nullptr) {
-            this->Head = (Ref*)node->Right;
+    if (STATICREFTAB_COUNT(kv) == 0) {
+        if (ref->Previous == nullptr) {
+            this->Head = ref->Next;
         }
         else {
-            node->Left = node->Right;
+            ref->Previous->Next = ref->Next;
         }
 
-        if (node->Right != nullptr) {
-            node->Right = node->Left;
+        if (ref->Next != nullptr) {
+            ref->Next = ref->Previous;
         }
 
         if (this->Items != nullptr) {
             RefLink link;
 
             this->Items->GetStart(&link);
-            ZBinTreeNode* result = STATICREFTAB_NODE(this->Items->GetNextKey(&link));
+            void* result = REFTAB_KEY_TO_PTR(this->Items->GetNextKey(&link));
 
             while (link.Next != nullptr) {
-                if (result == node) {
+                if (ref == STATICREFTAB_REF(result)) {
                     this->Items->Remove(&link);
                 }
 
-                result = STATICREFTAB_NODE(this->Items->GetNextKey(&link));
+                result = REFTAB_KEY_TO_PTR(this->Items->GetNextKey(&link));
             }
         }
 
