@@ -59,9 +59,11 @@ protected:
     void InsertNode(ZBinTreeNode* node);
     void BalanceNode(ZBinTreeNode* node);
 
-protected:
+public:
     ZBinTreeNode* Nodes;                                                        // 0x4
     ZBinTreeNode* Null;                                                         // 0x8
+
+protected:
     ZBinTreeNode Value;                                                         // 0xC
 };
 

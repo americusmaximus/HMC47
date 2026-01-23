@@ -44,7 +44,7 @@ FastLookup::~FastLookup() {
 // 0x0ffbe5a0
 void FastLookup::Clear() {
     RefLink link;
-    ZBinTreeNode* node = this->Nodes->Nodes;
+    ZValueTreeNode* node = (ZValueTreeNode*)this->Nodes->Nodes;
 
     while (node != this->Nodes->Null && node != nullptr) {
         LinkRefTab* items = (LinkRefTab*)node->Value;
@@ -62,7 +62,7 @@ void FastLookup::Clear() {
 
         while (item != nullptr) {
             if (item->Taken) {
-                delete item;
+                delete item->Item;
             }
 
             item = (FastLookupItem*)items->GetNext(&link);
@@ -72,7 +72,7 @@ void FastLookup::Clear() {
 
         this->Nodes->Remove(node);
 
-        node = this->Nodes->Nodes;
+        node = (ZValueTreeNode*)this->Nodes->Nodes;
     }
 }
 
