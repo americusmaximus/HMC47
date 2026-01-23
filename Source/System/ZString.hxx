@@ -45,6 +45,21 @@ public:
         return this->Ptr;
     }
 
+    inline size_t GetLength() {
+        return strlen(this->Ptr);
+    }
+
+    inline ZString& ToLower() {
+        const u32 length = strlen(this->Ptr);
+
+        for (u32 i = 0; this->Ptr[i] != NULL; i++) {
+            const char c = this->Ptr[i];
+            if ('A' <= c && c <= 'Z') {
+                this->Ptr[i] = c + ' ';
+            }
+        }
+    }
+
     inline ZString& operator=(const ZString& value) {
         if (this != &value) {
             this->Set(value.Ptr);

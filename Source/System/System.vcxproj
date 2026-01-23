@@ -180,6 +180,7 @@
     <ClCompile Include="LinkSortRefTab.cxx" />
     <ClCompile Include="Main.cxx" />
     <ClCompile Include="RefTab.cxx" />
+    <ClCompile Include="StaticRefTab.cxx" />
     <ClCompile Include="StringRefTab.cxx" />
     <ClCompile Include="ZBinTree.cxx" />
     <ClCompile Include="ZConsole.cxx" />
@@ -208,6 +209,7 @@
     <ClInclude Include="LinkRefTab.hxx" />
     <ClInclude Include="LinkSortRefTab.hxx" />
     <ClInclude Include="RefTab.hxx" />
+    <ClInclude Include="StaticRefTab.hxx" />
     <ClInclude Include="StringRefTab.hxx" />
     <ClInclude Include="Texture.hxx" />
     <ClInclude Include="ZArray.hxx" />

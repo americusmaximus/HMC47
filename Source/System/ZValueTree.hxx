@@ -27,12 +27,8 @@ SOFTWARE.
 
 #pragma pack(push, 1)
 
-struct ZValueTreeItem {
-    u32 Unk0x0;
-    u32 Unk0x4;
-    u32 Unk0x8;
-    bool Unk0xC;
-    u32 Unk0xD;
+struct ZValueTreeNode : ZBinTreeNode {
+    void* Value;
 };
 
 class ZValueTree : public ZBinTree {
@@ -52,6 +48,10 @@ protected:
 };
 
 #pragma pack(pop)
+
+#ifdef _WIN64
+#error ZValueTree is incompatible with x64.
+#endif
 
 #if defined(_DEBUG) && !defined(_WIN64)
 static_assert(sizeof(ZValueTree) == 0x21, "ZValueTree size mismatch.");

@@ -37,7 +37,6 @@ struct ZBinTreeNode {
     ZBinTreeNode* Right;                                                        // 0x8
     u32 Key;                                                                    // 0xC
     bool Color;                                                                 // 0x10
-    void* Value[0];
 };
 
 class ZBinTree {

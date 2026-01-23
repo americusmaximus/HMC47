@@ -22,31 +22,38 @@ SOFTWARE.
 
 #pragma once
 
+#include "LinkRefTab.hxx"
 #include "ZValueTree.hxx"
-#include "Zip.hxx"
 
-struct FastLookupNode {
-    ZIPLFHV Header;                                                                     // 0x0
-    u32 Offset;                                                                         // 0x1A
+struct FastLookupItem {
+    char* Item;                                                                     // 0x0
+    u32 Length;                                                                     // 0x4
+    void* Value;                                                                    // 0x8
+    bool Taken;                                                                     // 0xC
 };
-
-#pragma pack(push, 1)
 
 class FastLookup {
 public:
-    FastLookup(u32 count = 32);
+    FastLookup(u32 count);
     ~FastLookup();
 
 public:
-    void Insert(const char* path);
-    FastLookupNode* Get(const char* path);
+    void Insert(const char* value, void* content);
     void Clear();
+    void* Get(const char* value);
 
 protected:
-    ZValueTree* Nodes;                                                                      // 0x0
+    FastLookupItem* Match(LinkRefTab* links, const char* value, u32 length);
+
+protected:
+    ZValueTree* Nodes;                                                              // 0x0
 };
 
 #pragma pack(pop)
+
+#ifdef _WIN64
+#error FastLookup is incompatible with x64.
+#endif
 
 #if defined(_DEBUG) && !defined(_WIN64)
 static_assert(sizeof(FastLookup)    == 0x4,     "FastLookup size mismatch.");

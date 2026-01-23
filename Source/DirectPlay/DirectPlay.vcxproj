@@ -93,6 +93,7 @@
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile />
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <DisableSpecificWarnings>4200;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -115,6 +116,7 @@
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile />
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <DisableSpecificWarnings>4200;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,6 +139,7 @@
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile />
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <DisableSpecificWarnings>4200;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +162,7 @@
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile />
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <DisableSpecificWarnings>4200;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
