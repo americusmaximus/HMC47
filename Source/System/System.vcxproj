@@ -191,6 +191,7 @@
     <ClCompile Include="ZipFileSystem.cxx" />
     <ClCompile Include="ZipFileSystemCache.cxx" />
     <ClCompile Include="ZipIO.cxx" />
+    <ClCompile Include="ZMalloc.cxx" />
     <ClCompile Include="ZString.cxx" />
     <ClCompile Include="ZSysCom.cxx" />
     <ClCompile Include="ZSysFile.cxx" />
@@ -225,6 +226,7 @@
     <ClInclude Include="ZipIO.hxx" />
     <ClInclude Include="ZList.hxx" />
     <ClInclude Include="ZMalloc.hxx" />
+    <ClInclude Include="ZMem.hxx" />
     <ClInclude Include="ZModule.hxx" />
     <ClInclude Include="ZRender.hxx" />
     <ClInclude Include="ZRenderModule.hxx" />

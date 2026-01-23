@@ -22,27 +22,23 @@ SOFTWARE.
 
 #pragma once
 
-#include "ZBinTree.hxx"
-#include "ZMem.hxx"
+#include "Common.hxx"
 
 #pragma pack(push, 1)
 
-class ZMalloc : public ZMem, public ZBinTree {
-public:
-    ZMalloc();
-    ~ZMalloc();
-
+class ZMem {
 protected:
-    virtual void CopyValue(ZBinTreeNode* a, ZBinTreeNode* b);                   // 0x24
+    u32 Unk0x0;                                                                 // 0x0
+    u32 Unk0x4;                                                                 // 0x4
 
-protected:
-    bool Unk0x1FD;                                                              // 0x1FD
-    ZBinTree Unk0x1FE;                                                          // 0x1FE
-    bool Unk0x21B;                                                              // 0x21B
+    // TODO
+
+    u32 Unk0x1D8;                                                               // 0x1D8
+    u32 Unk0x1DC;                                                               // 0x1DC
 };
 
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZMalloc)   == 0x21C,   "ZMalloc size mismatch.");
+static_assert(sizeof(ZMem)      == 0x1E0,   "ZMem size mismatch.");
 #endif

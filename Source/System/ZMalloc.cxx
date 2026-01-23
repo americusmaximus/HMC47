@@ -20,29 +20,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#include "ZMalloc.hxx"
 
-#include "ZBinTree.hxx"
-#include "ZMem.hxx"
+// 0x0ffc7530
+// 0x0ffd4408
+ZMalloc::ZMalloc() {
+    this->Unk0x0 = 0;
+    this->Unk0x4 = 0;
+    this->Unk0x1D8 = 0;
+    this->Unk0x1DC = 0;
+    this->Unk0x1FD = false;
+}
 
-#pragma pack(push, 1)
+// 0x0ffc7570
+ZMalloc::~ZMalloc() {
+    ZBinTreeNode* node = this->Unk0x1FE.Nodes;
 
-class ZMalloc : public ZMem, public ZBinTree {
-public:
-    ZMalloc();
-    ~ZMalloc();
-
-protected:
-    virtual void CopyValue(ZBinTreeNode* a, ZBinTreeNode* b);                   // 0x24
-
-protected:
-    bool Unk0x1FD;                                                              // 0x1FD
-    ZBinTree Unk0x1FE;                                                          // 0x1FE
-    bool Unk0x21B;                                                              // 0x21B
-};
-
-#pragma pack(pop)
-
-#if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZMalloc)   == 0x21C,   "ZMalloc size mismatch.");
-#endif
+    while (node != this->Unk0x1FE.Null && node != nullptr) {
+        // TODO NOT IMPLEMENTED
+    }
+}
