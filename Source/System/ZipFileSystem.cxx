@@ -66,7 +66,7 @@ bool ZipFileSystem::Copy(const char* src, const char* dst) {
     const long size = ftell(f);
 
     if (size != 0) {
-        void* buffer = new byte[size];
+        void* buffer = new u8[size];
 
         if (buffer == nullptr) {
             printf("ZIPFS: Cannot allocate buffer space for file '%s'\n", src);

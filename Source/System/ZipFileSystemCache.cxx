@@ -22,6 +22,11 @@ SOFTWARE.
 
 #include "ZipFileSystem.hxx"
 
+struct ZipNode {
+    ZIPLFHV Header;                                                                     // 0x0
+    u32 Offset;                                                                         // 0x1A
+};
+
 // 0x0ffc2e30
 ZipFileSystemCache::ZipFileSystemCache() {}
 
@@ -33,17 +38,17 @@ ZipFileSystemCache::~ZipFileSystemCache() {
 
 // 0x0ffc1800
 void ZipFileSystemCache::Insert(const char* path, ZIPLFHV* desc, u32 offset) {
-    FastLookupNode* node = new FastLookupNode();
+    ZipNode* node = new ZipNode();
     CopyMemory(&node->Header, desc, sizeof(ZIPLFHV));
     node->Offset = offset;
 
-    this->Lookup.Insert(path);
+    this->Lookup.Insert(path, node);
     this->Items.Insert(REFTAB_PTR_TO_KEY(node));
 }
 
 // 0x0ffc1860
 bool ZipFileSystemCache::Find(const char* path, ZIPLFHV* desc, u32* offset) {
-    FastLookupNode* node = this->Lookup.Get(path);
+    ZipNode* node = (ZipNode*)this->Lookup.Get(path);
 
     if (node != nullptr) {
         *offset = node->Offset;
@@ -54,6 +59,11 @@ bool ZipFileSystemCache::Find(const char* path, ZIPLFHV* desc, u32* offset) {
     return false;
 }
 
+// 0x0ffc18a0
+void ZipFileSystemCache::Method0xC() {
+    // TODO NOT IMPLEMENTED
+}
+
 // 0x0ffc18c0
 void ZipFileSystemCache::Clear() {
     RefLink link;
@@ -61,12 +71,11 @@ void ZipFileSystemCache::Clear() {
     this->Lookup.Clear();
 
     this->Items.GetStart(&link);
-    FastLookupNode* node =
-        (FastLookupNode*)REFTAB_KEY_TO_PTR(this->Items.GetNextKey(&link));
+    ZipNode* node = (ZipNode*)REFTAB_KEY_TO_PTR(this->Items.GetNextKey(&link));
 
     if (link.Next != nullptr) {
         delete node;
-        node = (FastLookupNode*)REFTAB_KEY_TO_PTR(this->Items.GetNextKey(&link));
+        node = (ZipNode*)REFTAB_KEY_TO_PTR(this->Items.GetNextKey(&link));
     }
 }
 

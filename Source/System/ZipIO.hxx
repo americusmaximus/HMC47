@@ -31,6 +31,8 @@ SOFTWARE.
 
 #define ZIPIO_CONTEXT_BUFFER_LENGTH 1024
 
+#pragma pack(push, 1)
+
 struct ZipIOContext {
     u32 Mode;                                                                       // 0x0
     ZIPLFHV Header;                                                                 // 0x4
@@ -41,8 +43,6 @@ struct ZipIOContext {
     u8 Value[ZIPIO_CONTEXT_BUFFER_LENGTH];                                          // 0x62
     s32 Status;                                                                     // 0x462
 };
-
-#pragma pack(push, 1)
 
 class ZipIO {
 public:
@@ -71,6 +71,7 @@ public:
 public:
     void* Unpack(ZIPLFHV* desc, void* value, void*, u32 size);
     void SaveFile(const char* path, LPFILETIME time, void* value, u32 size);
+    bool FindFile(const char* path, ZIPLFHV* desc, u32* offset);
 
 protected:
     u32 GetDirectoryOffset();

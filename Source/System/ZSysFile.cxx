@@ -396,7 +396,7 @@ u32 ZSysFile::Method0x54(const char* path, u32* token) {
     char* name = new char[strlen(path) + 1];
     strcpy(name, path);
 
-    void* value = new byte[length];
+    void* value = new u8[length];
     this->ReadAt(path, value, length, 0, false);
 
 

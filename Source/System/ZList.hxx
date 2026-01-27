@@ -60,11 +60,11 @@ public:
         }
     }
 
-    inline T& Get(s32 index) {
+    inline T* Get(s32 index) {
         return &this->Value[index];
     }
 
-    inline T& Insert() {
+    inline T* Insert() {
         if (this->Capacity <= this->Count) {
             this->Grow();
         }

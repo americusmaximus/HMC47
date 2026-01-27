@@ -29,6 +29,8 @@ SOFTWARE.
 #define MAX_ZIP_UNPACK_BUFFER_LENGTH    1024
 #define MAX_ZIP_PACK_BUFFER_LENGTH      0x4000
 
+s32 GetFileNameMatch(const char* path, const char* criterion);
+
 // 0x0ffc3490
 // 0x0ffd4288
 ZipIO::ZipIO() {
@@ -44,17 +46,17 @@ void ZipIO::WriteZipFile() {
     char name[MAX_ZIP_STRING_LENGTH];
 
     for (u32 i = 0; i < this->ZFS.Unk0x46.Count; i++) {
-        ZIPCDHV& header = this->ZFS.Unk0x46.Get(i);
+        ZIPCDHV* header = this->ZFS.Unk0x46.Get(i);
 
         fwrite(&signature, 1, sizeof(u32), this->ZFS.Handle);
         fwrite(&header, 1, sizeof(ZIPCDHV), this->ZFS.Handle);
 
         const long offset = ftell(this->ZFS.Handle);
 
-        fseek(this->ZFS.Handle, header.LocalHeaderOffset + sizeof(ZIPLFH), SEEK_SET);
-        fread(name, 1, header.FileNameLength, this->ZFS.Handle);
+        fseek(this->ZFS.Handle, header->LocalHeaderOffset + sizeof(ZIPLFH), SEEK_SET);
+        fread(name, 1, header->FileNameLength, this->ZFS.Handle);
         fseek(this->ZFS.Handle, offset, SEEK_SET);
-        fwrite(name, 1, header.FileNameLength, this->ZFS.Handle);
+        fwrite(name, 1, header->FileNameLength, this->ZFS.Handle);
 
         this->ZFS.Rune.EntriesOnDisk++;
     }
@@ -68,17 +70,17 @@ void ZipIO::WriteZipFile() {
     }
 
     for (u32 i = 0; i < this->ZFS.Unk0x3A.Count; i++) {
-        ZIPCDHV& header = this->ZFS.Unk0x3A.Get(i);
+        ZIPCDHV* header = this->ZFS.Unk0x3A.Get(i);
 
         fwrite(&signature, 1, sizeof(u32), this->ZFS.Handle);
         fwrite(&header, 1, sizeof(ZIPCDHV), this->ZFS.Handle);
 
         const long offset = ftell(this->ZFS.Handle);
 
-        fseek(this->ZFS.Handle, header.LocalHeaderOffset + sizeof(ZIPLFH), SEEK_SET);
-        fread(name, 1, header.FileNameLength, this->ZFS.Handle);
+        fseek(this->ZFS.Handle, header->LocalHeaderOffset + sizeof(ZIPLFH), SEEK_SET);
+        fread(name, 1, header->FileNameLength, this->ZFS.Handle);
         fseek(this->ZFS.Handle, offset, SEEK_SET);
-        fwrite(name, 1, header.FileNameLength, this->ZFS.Handle);
+        fwrite(name, 1, header->FileNameLength, this->ZFS.Handle);
 
         this->ZFS.Central.EntriesOnDisk++;
     }
@@ -106,7 +108,7 @@ void ZipIO::Pack(ZIPCDHV* dir, void* value) {
     z_stream stream;
     ZeroMemory(&stream, sizeof(z_stream));
 
-    stream.next_in = (byte*)value;
+    stream.next_in = (u8*)value;
     stream.avail_in = dir->UncompressedSize;
 
     if (deflateInit(&stream, this->ZFS.Compression) != Z_OK) {
@@ -115,7 +117,7 @@ void ZipIO::Pack(ZIPCDHV* dir, void* value) {
     }
 
     s32 err = Z_OK;
-    byte buffer[MAX_ZIP_PACK_BUFFER_LENGTH];
+    u8 buffer[MAX_ZIP_PACK_BUFFER_LENGTH];
     u32 offset = 2; // Skip the first 2 bytes of zlib deflate stream.
 
     do {
@@ -161,56 +163,56 @@ void ZipIO::SaveFile(const char* path, LPFILETIME time, void* value, u32 size) {
         name[i] = path[i] == '\\' ? '/' : path[i];
     }
 
-    ZIPCDHV& dir = this->ZFS.Unk0x15
+    ZIPCDHV* file = this->ZFS.Unk0x15
         ? this->ZFS.Unk0x46.Insert() : this->ZFS.Unk0x3A.Insert();
 
-    ZeroMemory(&dir, sizeof(ZIPCDHV));
+    ZeroMemory(file, sizeof(ZIPCDHV));
 
-    dir.UncompressedSize = size;
-    dir.VersionNeeded = ZIP_VERSION_2_0;
-    dir.CompressionMethod = Z_DEFLATED;
-    dir.FileNameLength = strlen(name);
+    file->UncompressedSize = size;
+    file->VersionNeeded = ZIP_VERSION_2_0;
+    file->CompressionMethod = Z_DEFLATED;
+    file->FileNameLength = strlen(name);
 
     if (time == nullptr) {
-        GetLocalTime(&dir.LastModifiedDate, &dir.LastModifiedDate);
+        GetLocalTime(&file->LastModifiedDate, &file->LastModifiedDate);
     }
     else {
-        if (!FileTimeToDosDateTime(time, &dir.LastModifiedDate, &dir.LastModifiedTime)) {
-            GetLocalTime(&dir.LastModifiedDate, &dir.LastModifiedDate);
+        if (!FileTimeToDosDateTime(time, &file->LastModifiedDate, &file->LastModifiedTime)) {
+            GetLocalTime(&file->LastModifiedDate, &file->LastModifiedDate);
         }
     }
 
-    dir.CRC32 = crc32(0, nullptr, 0);
-    dir.CRC32 = crc32(dir.CRC32, (byte*)value, size);
+    file->CRC32 = crc32(0, nullptr, 0);
+    file->CRC32 = crc32(file->CRC32, (u8*)value, size);
 
     const u32 start = ftell(this->ZFS.Handle);
 
     const u32 signature = ZIP_SIGNATURE;
     fwrite(&signature, 1, sizeof(u32), this->ZFS.Handle);
-    fwrite(&dir.VersionNeeded, 1, sizeof(ZIPLFHV), this->ZFS.Handle);
-    fwrite(name, 1, dir.FileNameLength, this->ZFS.Handle);
+    fwrite(&file->VersionNeeded, 1, sizeof(ZIPLFHV), this->ZFS.Handle);
+    fwrite(name, 1, file->FileNameLength, this->ZFS.Handle);
 
-    this->Pack(&dir, value);
+    this->Pack(file, value);
 
-    if (dir.UncompressedSize <= dir.CompressedSize) {
-        dir.CompressedSize = 0;
-        dir.CompressionMethod = Z_NO_COMPRESSION;
+    if (file->UncompressedSize <= file->CompressedSize) {
+        file->CompressedSize = 0;
+        file->CompressionMethod = Z_NO_COMPRESSION;
 
         fseek(this->ZFS.Handle, start + sizeof(u32), SEEK_SET);
-        fwrite(&dir.VersionNeeded, 1, sizeof(ZIPLFHV), this->ZFS.Handle);
-        fwrite(name, 1, dir.FileNameLength, this->ZFS.Handle);
+        fwrite(&file->VersionNeeded, 1, sizeof(ZIPLFHV), this->ZFS.Handle);
+        fwrite(name, 1, file->FileNameLength, this->ZFS.Handle);
 
-        this->Pack(&dir, value);
+        this->Pack(file, value);
     }
 
     const u32 end = ftell(this->ZFS.Handle);
 
     fseek(this->ZFS.Handle, start + sizeof(u32), SEEK_SET);
-    fwrite(&dir.VersionNeeded, 1, sizeof(ZIPLFHV), this->ZFS.Handle);
+    fwrite(&file->VersionNeeded, 1, sizeof(ZIPLFHV), this->ZFS.Handle);
     fseek(this->ZFS.Handle, end, SEEK_SET);
 
-    dir.LocalHeaderOffset = start;
-    dir.VersionCreated = ZIP_VERSION_CREATED;
+    file->LocalHeaderOffset = start;
+    file->VersionCreated = ZIP_VERSION_CREATED;
 }
 
 // 0x0ffc2130
@@ -225,12 +227,12 @@ void* ZipIO::Unpack(ZIPLFHV* desc, void* value, void*, u32 size) {
         }
 
         u32 bytes = 0;
-        byte buffer[MAX_ZIP_UNPACK_BUFFER_LENGTH];
+        u8 buffer[MAX_ZIP_UNPACK_BUFFER_LENGTH];
 
         z_stream stream;
         ZeroMemory(&stream, sizeof(z_stream));
 
-        stream.next_out = (byte*)value;
+        stream.next_out = (u8*)value;
         stream.avail_out = size;
 
         this->ZFS.Status = inflateInit2(&stream, -MAX_WBITS);
@@ -290,7 +292,7 @@ void ZipIO::ReadZipFile() {
                 bool found = false;
 
                 for (u32 i = 0; i < this->ZFS.Offsets.Count; i++) {
-                    if (offset == this->ZFS.Offsets.Get(i)) {
+                    if (offset == *this->ZFS.Offsets.Get(i)) {
                         found = true;
                         break;
                     }
@@ -324,6 +326,109 @@ void ZipIO::ReadZipFile() {
                 ->LogMessage("ZIPFS: Broken .zip archive\n");
         }
     }
+}
+
+// 0x0ffc2420
+bool ZipIO::FindFile(const char* path, ZIPLFHV* desc, u32* offset) {
+    char name[MAX_ZIP_STRING_LENGTH];
+    char search[MAX_ZIP_STRING_LENGTH];
+    char extras[MAX_ZIP_STRING_LENGTH];
+
+    for (u32 i = 0; path[i] != NULL; i++) {
+        search[i] = path[i] == '\\' ? '/' : path[i];
+        search[i + 1] = NULL;
+    }
+
+    const char* star = strchr(path, '*');
+
+    if (star == nullptr && this->ZFS.Cache != nullptr && offset == nullptr) {
+        u32 position = INVALID_FILE_SIZE;
+        if (this->ZFS.Cache->Find(search, desc, &position)) {
+            fseek(this->ZFS.Handle, position, SEEK_SET);
+            return true;
+        }
+    }
+    else {
+        bool match = false;
+        u32 position = this->ZFS.Rune.DirectorySize == 0
+            ? this->ZFS.Central.DirectoryOffset : this->ZFS.Rune.DirectoryOffset;
+
+        fseek(this->ZFS.Handle, position, SEEK_SET);
+
+        while (!feof(this->ZFS.Handle)) {
+            u32 signature = 0;
+            fread(&signature, 1, sizeof(u32), this->ZFS.Handle);
+
+            if (signature == ZIP_SIGNATURE_CDH) {
+                ZIPCDHV file;
+                const u32 pos = ftell(this->ZFS.Handle);
+
+                fread(&file, 1, sizeof(ZIPCDHV), this->ZFS.Handle);
+
+                if (file.FileNameLength != 0) {
+                    fread(name, 1, file.FileNameLength, this->ZFS.Handle);
+                    name[file.FileNameLength] = NULL;
+
+                    for (u32 i = 0; i < this->ZFS.Offsets.Count; i++) {
+                        if (this->ZFS.Offsets.Value[i] == pos) {
+                            goto exit;
+                        }
+                    }
+
+                    s32 found = 0;
+
+                    if (star == nullptr) {
+                        if (strlen(search) != file.FileNameLength) {
+                            goto exit;
+                        }
+
+                        found = _strcmpi(name, search);
+                    }
+                    else {
+                        found = GetFileNameMatch(name, search);
+                    }
+
+                    if (found == 0) {
+                        CopyMemory(desc, &file.VersionNeeded, sizeof(ZIPLFHV));
+                        match = true;
+                    }
+                }
+
+            exit:
+                if (file.ExtraFieldLength != 0) {
+                    fread(extras, 1, file.ExtraFieldLength, this->ZFS.Handle);
+                }
+
+                if (file.CommentLength != 0) {
+                    fread(extras, 1, file.CommentLength, this->ZFS.Handle);
+                }
+
+                if (match) {
+                    if (offset != nullptr) {
+                        *offset = pos;
+                    }
+
+                    fseek(this->ZFS.Handle,
+                        file.FileNameLength + sizeof(ZIPLFH) + file.LocalHeaderOffset, SEEK_SET);
+
+                    if (this->ZFS.Cache != nullptr) {
+                        this->ZFS.Cache->Insert(search, desc, ftell(this->ZFS.Handle));
+                    }
+
+                    return true;
+                }
+            }
+            else {
+                if (signature == ZIP_SIGNATURE_EOCD || signature == ZIP_SIGNATURE_RUNE) {
+                    return false;
+                }
+
+                printf("ZIPFS: Broken .zip archive\n");
+            }
+        }
+    }
+
+    return false;
 }
 
 // 0x0ffc2710
@@ -418,7 +523,7 @@ u32 ZipIO::ReadFile(ZipIOContext* context, void* value, u32 size) {
         return context->Status != Z_STREAM_END ? INVALID_FILE_SIZE : 0;
     }
 
-    context->Stream.next_out = (byte*)value;
+    context->Stream.next_out = (u8*)value;
     context->Stream.avail_out = size;
 
     if (size != 0) {
@@ -542,7 +647,7 @@ bool ZipIO::Compare(const char* a, const char* b) {
     ZIPLFHV da, db;
 
     if (this->FindFile(a, &da, nullptr)) {
-        if (this->FindFile(b, &da, nullptr)) {
+        if (this->FindFile(b, &db, nullptr)) {
             if (da.CompressedSize == db.CompressedSize) {
                 return da.CRC32 == db.CRC32;
             }
@@ -589,4 +694,89 @@ bool ZipIO::ReInitialize() {
     this->Name = nullptr;
 
     return this->Initialize(name, this->Mode);
+}
+
+// 0x0ffc8710
+s32 GetFileNameMatch(const char* path, const char* criterion) {
+    const char* name = path;
+    const char* search = criterion;
+
+    for (u32 i = 0; search[0] != NULL; i++) {
+        // Check if the current first character of the criterion is *
+        if (search[0] == '*') {
+            // Check if there are additional * in the search criterion.
+            const char* result = strchr(&search[1], '*');
+
+            // Adjust search criterion to skip *
+            search = &search[1];
+
+            // In case when there are no additional *
+            if (result == nullptr) {
+                const size_t nl = strlen(name);
+                const size_t sl = strlen(search);
+
+                if (nl < sl) {
+                    return 1;
+                }
+
+                // Compare the last N characters of both strings,
+                // where N is the length of the remainder of the search criterion, case-insensitive.
+                return _strcmpi(name + nl - sl, search);
+            }
+
+            // Calcualte the distance between the two *
+            size_t distance = result - search;
+
+            // In cases of **
+            // Treat the ramainder of the values as a match.
+            if (distance == 0) {
+                return 0;
+            }
+
+            const size_t length = strlen(name);
+
+            if (length < distance) {
+                return -1;
+            }
+
+            const size_t available = length - distance;
+
+            // Skip the input values until it matches the search criterion again.
+            u32 skip = 0;
+            while (_strnicmp(search, name, distance) != 0) {
+                name = &name[1];
+
+                if (available == skip) {
+                    return -1;
+                }
+
+                skip++;
+            }
+        }
+
+        // Check if the criterion contains *
+        const char* result = strchr(search, '*');
+
+        // In case the criterion does not contain *
+        // compare the remainders of the strings, case-insensitive.
+        if (result == nullptr) {
+            return _stricmp(search, name);
+        }
+
+        // In case the criterion contains another *
+        // then calculate the distance between the next *
+        // and the current search criterion.
+        const size_t distance = result - search;
+
+        // Compare strings up to the calculated distace for equality, case-insenstitive.
+        if (_strnicmp(search, name, distance) != 0) {
+            return -1;
+        }
+
+        // Adjust both values.
+        name = name + distance;
+        search = result;
+    }
+
+    return 0;
 }
