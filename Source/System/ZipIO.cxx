@@ -35,7 +35,7 @@ s32 GetFileNameMatch(const char* path, const char* criterion);
 // 0x0ffd4288
 ZipIO::ZipIO() {
     this->Name = nullptr;
-    this->Mode = ZIPIO_MODE_READ_ONLY;
+    this->Mode = ZIPIO_MODE_READ;
 }
 
 // 0x0ffc1990
@@ -580,11 +580,11 @@ bool ZipIO::Initialize(const char* path, u32 mode) {
         this->Release();
     }
 
-    this->ZFS.Handle = fopen(path, mode != ZIPIO_MODE_READ_WRITE ? "rb" : "wb+");
+    this->ZFS.Handle = fopen(path, mode != ZIPIO_MODE_WRITE ? "rb" : "wb+");
 
     if (this->ZFS.Handle == nullptr) {
         printf("ZIPFS: Cannot initialize archive\n");
-        this->Mode = ZIPIO_MODE_READ_ONLY;
+        this->Mode = ZIPIO_MODE_READ;
         return false;
     }
 
@@ -604,7 +604,7 @@ bool ZipIO::Initialize(const char* path, u32 mode) {
 
     this->ZFS.Cache = new ZipFileSystemCache();
 
-    if (mode != ZIPIO_MODE_READ_WRITE) {
+    if (mode != ZIPIO_MODE_WRITE) {
         this->ReadZipFile();
     }
 
@@ -633,7 +633,7 @@ void ZipIO::Release() {
         fclose(this->ZFS.Handle);
         
         this->ZFS.Init = false;
-        this->Mode = ZIPIO_MODE_READ_ONLY;
+        this->Mode = ZIPIO_MODE_READ;
 
         if (this->ZFS.Cache != nullptr) {
             delete this->ZFS.Cache;
@@ -663,7 +663,7 @@ void ZipIO::Append(const char* path, LPFILETIME time, void* value, u32 size) {
 }
 
 // 0x0ffc3760
-void ZipIO::SetCompression(u32 level) {
+void ZipIO::SetCompression(s32 level) {
     this->ZFS.Compression = level;
 }
 

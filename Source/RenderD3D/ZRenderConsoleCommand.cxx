@@ -36,7 +36,7 @@ ZRenderConsoleCommand::~ZRenderConsoleCommand() {}
 void ZRenderConsoleCommand::Execute(const char* value) {
     if (_strcmpi(this->Command, "r_font_size") == 0) {
         if (value != nullptr) {
-            this->Instance->SetFontSize(atof(value));
+            this->Instance->SetFontSize((f32)atof(value));
 
             return;
         }

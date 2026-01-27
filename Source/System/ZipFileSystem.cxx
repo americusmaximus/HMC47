@@ -51,7 +51,7 @@ void ZipFileSystem::PrintStatus() {
 
 // 0x0ffc2810
 bool ZipFileSystem::Copy(const char* src, const char* dst) {
-    if (GET_ZIPIO_MODE() != ZIPIO_MODE_READ_WRITE) {
+    if (GET_ZIPIO_MODE() != ZIPIO_MODE_WRITE) {
         printf("IOZIP: Cannot add file - filesystem not writable\n");
         return false;
     }

@@ -26,8 +26,8 @@ SOFTWARE.
 
 #include <zlib.h>
 
-#define ZIPIO_MODE_READ_ONLY    0x0
-#define ZIPIO_MODE_READ_WRITE   0x1
+#define ZIPIO_MODE_READ     0x0
+#define ZIPIO_MODE_WRITE    0x1
 
 #define ZIPIO_CONTEXT_BUFFER_LENGTH 1024
 
@@ -60,7 +60,7 @@ public:
     virtual void Append(const char* path, LPFILETIME time, void* value, u32 size);  // 0x20
     virtual void Method0x24();                                                      // 0x24
     virtual bool GetDateTime(const char* path, LPFILETIME time);                    // 0x28
-    virtual void SetCompression(u32 level);                                         // 0x2C
+    virtual void SetCompression(s32 level);                                         // 0x2C
     virtual void Close();                                                           // 0x30
     virtual bool ReInitialize();                                                    // 0x34
     virtual void Method0x38();                                                      // 0x38

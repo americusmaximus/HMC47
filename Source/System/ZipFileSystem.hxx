@@ -91,7 +91,7 @@ public:
     bool Init;                                                                      // 0x5
     FILE* Handle;                                                                   // 0x9
     u32 Offset;                                                                     // 0xD
-    u32 Compression;                                                                // 0x11
+    s32 Compression;                                                                // 0x11
     bool Unk0x15;                                                                   // 0x15
     ZIPEOCDV Central;                                                               // 0x16
     ZIPEOCDV Rune;                                                                  // 0x28
