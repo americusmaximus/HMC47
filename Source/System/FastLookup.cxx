@@ -109,16 +109,7 @@ void FastLookup::Insert(const char* value, void* content) {
     strcpy(str, input);
     strtolower(str);
 
-    u32 hash = length;
-
-    {
-        const u32 size = length / 4;
-        const u32* values = (u32*)str;
-
-        for (u32 i = 0; i < size; i++) {
-            hash += values[i];
-        }
-    }
+    const u32 hash = strtohash(str, length);
 
     FastLookupItem* item = nullptr;
     LinkRefTab* items = (LinkRefTab*)this->Nodes->GetItemValue(hash);
@@ -190,14 +181,16 @@ void FastLookup::RemoveItem(const char* path, u32 length) {
                 if (memcmp(item->Item, path, length) == 0) {
                     if (item->Taken) {
                         delete[] item->Item;
-                        items->RemoveKeyValue((RefKeyValue*)item);
-
-                        if (items->GetCount() == 0) {
-                            delete items;
-                            this->Nodes->Remove(node);
-                            return;
-                        }
                     }
+
+                    items->RemoveKeyValue((RefKeyValue*)item);
+
+                    if (items->GetCount() == 0) {
+                        delete items;
+                        this->Nodes->Remove(node);
+                    }
+
+                    return;
                 }
             }
 
@@ -214,7 +207,7 @@ void FastLookup::Remove(const char* path, u32 length) {
 
     char* str = new char[length + 1];
 
-    strcpy(str, path);
+    strncpy(str, path, length);
     strtolower(str);
 
     this->RemoveItem(str, length);
