@@ -20,7 +20,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "BigIO.hxx"
 #include "Globals.hxx"
+#include "ZipIO.hxx"
 
 #include <stdio.h>
 
@@ -565,28 +567,25 @@ void ZSysFile::PrintStatus() {
 
     if (this->Archives != nullptr) {
         this->Archives->GetStart(&link);
-        RefKeyValue* kv = this->Archives->GetNext(&link);
+        ZipIO* file = (ZipIO*)this->Archives->GetNext(&link);
 
-        while (kv != nullptr) {
-
-            if (TODO) {
-
-
-                g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 850)
-                    ->LogMessage("Big file \"%s\"", );
-            }
-            else {
-                if (TODO->("Pack.*")) {
+        while (file != nullptr) {
+            if (file->Mode & ZIPIO_MODE_WRITE) {
+                if (file->ZFS.Exists("Pack.*")) {
                     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 844)
-                        ->LogMessage("Zip file \"%s\" pack info", );
+                        ->LogMessage("Zip file \"%s\" pack info", file->Name);
                 }
                 else {
                     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 846)
-                        ->LogMessage("Zip file \"%s\"", );
+                        ->LogMessage("Zip file \"%s\"", file->Name);
                 }
             }
+            else {
+                g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 850)
+                    ->LogMessage("Big file \"%s\"", ((BigIO*)file)->Name);
+            }
 
-            kv = this->Archives->GetNext(&link);
+            file = (ZipIO*)this->Archives->GetNext(&link);
         }
     }
 }

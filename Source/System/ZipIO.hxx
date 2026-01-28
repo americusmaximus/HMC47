@@ -45,6 +45,14 @@ struct ZipIOContext {
     s32 Status;                                                                     // 0x462
 };
 
+/*
+The ZipIO class in the original code seems to be inherited
+from a few classes, ZipFileSystem, and another, unknown, class.
+
+The correct inheritance order and data types is something to think about
+in the future alongside with BigIO class inheritance.
+*/
+
 class ZipIO {
 public:
     ZipIO();
@@ -81,7 +89,7 @@ protected:
     void WriteZipFile();
     void Pack(ZIPCDHV* dir, void* value);
 
-protected:
+public:
     u32 Mode;                                                                       // 0x4
     char* Name;                                                                     // 0x8
     ZipFileSystem ZFS;                                                              // 0xC
