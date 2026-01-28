@@ -45,7 +45,7 @@ public:
     ZSysFileBase();
 
 public:
-    virtual void Method0x0() = 0;                                                           // 0x0
+    virtual void PrintStatus() = 0;                                                         // 0x0
     virtual void Method0x4() = 0;                                                           // 0x4
     virtual void Method0x8() = 0;                                                           // 0x8
     virtual HANDLE Open(const char*) = 0;                                                   // 0xC
@@ -78,7 +78,7 @@ public:
     virtual void Method0x78() = 0;                                                          // 0x78
     virtual void Method0x7C() = 0;                                                          // 0x7C
     virtual void Method0x80() = 0;                                                          // 0x80
-    virtual void Method0x84() = 0;                                                          // 0x84
+    virtual bool Method0x84(const char*) = 0;                                               // 0x84
     virtual void Method0x88() = 0;                                                          // 0x88
     virtual HMODULE LoadModule(const char*) = 0;                                            // 0x8C
     virtual bool ReleaseModule(HMODULE) = 0;                                                // 0x90
@@ -86,7 +86,7 @@ public:
     virtual ~ZSysFileBase();                                                                // 0x98
 
 protected:
-    LinkRefTab* Unk0x4;                                                                     // 0x4
+    LinkRefTab* Archives;                                                                   // 0x4
     StringRefTab* Blocked;                                                                  // 0x8
 };
 
@@ -96,7 +96,7 @@ public:
     ZSysFile();
 
 public:
-    virtual void Method0x0();                                                               // 0x0
+    virtual void PrintStatus();                                                             // 0x0
     virtual void Method0x4();                                                               // 0x4
     virtual void Method0x8();                                                               // 0x8
     virtual HANDLE Open(const char* path);                                                  // 0xC
@@ -129,7 +129,7 @@ public:
     virtual void Method0x78();                                                              // 0x78
     virtual void Method0x7C();                                                              // 0x7C
     virtual void Method0x80();                                                              // 0x80
-    virtual void Method0x84();                                                              // 0x84
+    virtual bool Method0x84(const char* path);                                              // 0x84
     virtual void Method0x88();                                                              // 0x88
     virtual HMODULE LoadModule(const char* path);                                           // 0x8C
     virtual bool ReleaseModule(HMODULE);                                                    // 0x90
@@ -140,7 +140,7 @@ public:
     virtual void Method0xA4();                                                              // 0xA4
     virtual void Method0xA8();                                                              // 0xA8
     virtual void Method0xAC();                                                              // 0xAC
-    virtual void Method0xB0();                                                              // 0xB0
+    virtual void* Method0xB0(const char* path);                                             // 0xB0
 
 protected:
     void FUN_0ffa7d20(bool todo);

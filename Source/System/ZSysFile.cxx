@@ -39,7 +39,7 @@ ZSysFileBase::~ZSysFileBase() {
 
 // 0x0ffa5310
 ZSysFile::ZSysFile() {
-    this->Unk0x4 = nullptr;
+    this->Archives = nullptr;
     this->Modules = new LinkRefTab(32, 0);
     this->Files = new RefTab(8, 2);
 
@@ -183,14 +183,14 @@ const char* ZSysFile::GetFileName(const char* path) {
 void* ZSysFile::Method0x9C(const char* path) {
     RefLink link;
 
-    if (path != nullptr && this->Unk0x4 != nullptr) {
-        this->Unk0x4->GetStart(&link);
-        RefKeyValue* kv = this->Unk0x4->GetNext(&link);
+    if (path != nullptr && this->Archives != nullptr) {
+        this->Archives->GetStart(&link);
+        RefKeyValue* kv = this->Archives->GetNext(&link);
 
         while (kv != nullptr) {
             // TODO NOT IMPLEMENTED
 
-            kv = this->Unk0x4->GetNext(&link);
+            kv = this->Archives->GetNext(&link);
         }
     }
 
@@ -536,18 +536,57 @@ LinkRefTab* ZSysFile::Method0x68(/* TODO*/) {
     return nullptr;
 }
 
+// 0x0ffa7750
+void* ZSysFile::Method0xB0(const char* path) {
+    const char* input = path == nullptr ? "" : path;
+    char* name = new char[strlen(input) + 1];
+
+    for (u32 i = 0; path[i] != NULL; i++) {
+        name[i] = path[i] == '\\' ? '/' : path[i];
+        name[i + 1] = NULL;
+    }
+
+    char* ext = strrchr(name, '.');
+
+    if (ext != nullptr) {
+
+        // TODO NOT IMPLEMENTED
+
+    }
+
+    delete[] name;
+
+    return nullptr;
+}
+
 // 0x0ffa7df0
-void ZSysFile::Method0x0() {
+void ZSysFile::PrintStatus() {
     RefLink link;
 
-    if (this->Unk0x4 != nullptr) {
-        this->Unk0x4->GetStart(&link);
-        RefKeyValue* kv = this->Unk0x4->GetNext(&link);
+    if (this->Archives != nullptr) {
+        this->Archives->GetStart(&link);
+        RefKeyValue* kv = this->Archives->GetNext(&link);
 
         while (kv != nullptr) {
-            // TODO NOT IMPLEMENTED
 
-            kv = this->Unk0x4->GetNext(&link);
+            if (TODO) {
+
+
+                g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 850)
+                    ->LogMessage("Big file \"%s\"", );
+            }
+            else {
+                if (TODO->("Pack.*")) {
+                    g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 844)
+                        ->LogMessage("Zip file \"%s\" pack info", );
+                }
+                else {
+                    g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 846)
+                        ->LogMessage("Zip file \"%s\"", );
+                }
+            }
+
+            kv = this->Archives->GetNext(&link);
         }
     }
 }
