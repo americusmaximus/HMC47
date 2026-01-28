@@ -25,6 +25,30 @@ SOFTWARE.
 
 #define FASTLOOKUP_REFKEYVALUE_ITEM(X)  ((FastLookupItem*)((size_t)X - 4))
 
+inline void strtolower(char* value) {
+    for (u32 i = 0; value[i] != NULL; i++) {
+        const char c = value[i];
+        if ('A' <= c && c <= 'Z') {
+            value[i] = c + ' '; // To Lower
+        }
+    }
+}
+
+inline u32 strtohash(const char* str, u32 length) {
+    u32 hash = length;
+
+    {
+        const u32 size = length / 4;
+        const u32* values = (u32*)str;
+
+        for (u32 i = 0; i < size; i++) {
+            hash += values[i];
+        }
+    }
+
+    return hash;
+}
+
 // 0x0ffbe420
 FastLookup::FastLookup(u32 count) {
     this->Nodes = new ZValueTree(count);
@@ -80,22 +104,16 @@ void FastLookup::Insert(const char* value, void* content) {
     const char* input = value == nullptr ? "" : value;
 
     const u32 length = strlen(input);
-    char* string = new char[length + 1];
+    char* str = new char[length + 1];
 
-    strcpy(string, input);
-
-    for (u32 i = 0; i <= length; i++) {
-        const char c = string[i];
-        if ('A' <= c && c <= 'Z') {
-            string[i] = c + ' '; // To Lower
-        }
-    }
+    strcpy(str, input);
+    strtolower(str);
 
     u32 hash = length;
 
     {
         const u32 size = length / 4;
-        const u32* values = (u32*)string;
+        const u32* values = (u32*)str;
 
         for (u32 i = 0; i < size; i++) {
             hash += values[i];
@@ -111,7 +129,7 @@ void FastLookup::Insert(const char* value, void* content) {
         item = FASTLOOKUP_REFKEYVALUE_ITEM(links->Insert(0));
     }
     else {
-        item = this->Match(items, string, length);
+        item = this->Match(items, str, length);
 
         if (item == nullptr) {
             item = FASTLOOKUP_REFKEYVALUE_ITEM(items->Insert(0));
@@ -123,7 +141,7 @@ void FastLookup::Insert(const char* value, void* content) {
     }
 
     item->Length = length;
-    item->Item = string;
+    item->Item = str;
     item->Value = content;
     item->Taken = true;
 }
@@ -150,34 +168,72 @@ FastLookupItem* FastLookup::Match(LinkRefTab* links, const char* value, u32 leng
     return nullptr;
 }
 
+// 0x0ffbe8a0
+void FastLookup::RemoveItem(const char* path, u32 length) {
+    if (length == 0) {
+        length = strlen(path);
+    }
+
+    const u32 hash = strtohash(path, length);
+
+    ZValueTreeNode* node = (ZValueTreeNode*)this->Nodes->GetMatch(hash, nullptr);
+
+    if (node != nullptr && node->Value != nullptr) {
+        LinkRefTab* items = (LinkRefTab*)node->Value;
+
+        RefLink link;
+        items->GetStart(&link);
+        FastLookupItem* item = (FastLookupItem*)items->GetNext(&link);
+
+        while (item != nullptr) {
+            if (item->Length == length) {
+                if (memcmp(item->Item, path, length) == 0) {
+                    if (item->Taken) {
+                        delete[] item->Item;
+                        items->RemoveKeyValue((RefKeyValue*)item);
+
+                        if (items->GetCount() == 0) {
+                            delete items;
+                            this->Nodes->Remove(node);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            item = (FastLookupItem*)items->GetNext(&link);
+        }
+    }
+}
+
+// 0x0ffbe9d0
+void FastLookup::Remove(const char* path, u32 length) {
+    if (length == 0) {
+        length = strlen(path);
+    }
+
+    char* str = new char[length + 1];
+
+    strcpy(str, path);
+    strtolower(str);
+
+    this->RemoveItem(str, length);
+
+    delete[] str;
+}
+
 // 0x0ffbeb80
 void* FastLookup::Get(const char* value) {
     const char* input = value == nullptr ? "" : value;
 
     const u32 length = strlen(input);
-    char* string = new char[length + 1];
+    char* str = new char[length + 1];
 
-    strcpy(string, input);
+    strcpy(str, input);
+    strtolower(str);
 
-    for (u32 i = 0; i <= length; i++) {
-        const char c = string[i];
-        if ('A' <= c && c <= 'Z') {
-            string[i] = c + ' '; // To Lower
-        }
-    }
+    const u32 hash = strtohash(str, length);
 
-    u32 hash = length;
-
-    {
-        const u32 size = length / 4;
-        const u32* values = (u32*)string;
-
-        for (u32 i = 0; i < size; i++) {
-            hash += values[i];
-        }
-    }
-
-    FastLookupItem* item = nullptr;
     LinkRefTab* items = (LinkRefTab*)this->Nodes->GetItemValue(hash);
 
     if (items != nullptr) {
@@ -187,15 +243,17 @@ void* FastLookup::Get(const char* value) {
 
         while (item != nullptr) {
             if (item->Length == length) {
-                if (memcmp(item->Item, string, length) == 0) {
+                if (memcmp(item->Item, str, length) == 0) {
+                    delete[] str;
                     return item->Value;
                 }
             }
 
-
             item = (FastLookupItem*)items->GetNext(&link);
         }
     }
+
+    delete[] str;
 
     return nullptr;
 }

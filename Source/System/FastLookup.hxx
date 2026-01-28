@@ -43,9 +43,11 @@ public:
     void Insert(const char* value, void* content);
     void Clear();
     void* Get(const char* value);
+    void Remove(const char* path, u32 length);
 
 protected:
     FastLookupItem* Match(LinkRefTab* links, const char* value, u32 length);
+    void RemoveItem(const char* path, u32 length);
 
 protected:
     ZValueTree* Nodes;                                                              // 0x0

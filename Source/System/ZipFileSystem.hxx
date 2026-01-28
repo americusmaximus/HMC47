@@ -39,7 +39,7 @@ public:
     virtual ~FileSystemCache();                                                     // 0x0
     virtual void Insert(const char*, ZIPLFHV*, u32) = 0;                            // 0x4
     virtual bool Find(const char*, ZIPLFHV*, u32*) = 0;                             // 0x8
-    virtual void Method0xC() = 0;                                                   // 0xC
+    virtual void Remove(const char*) = 0;                                           // 0xC
     virtual void Clear() = 0;                                                       // 0x10
 };
 
@@ -51,7 +51,7 @@ public:
     virtual ~ZipFileSystemCache();                                                  // 0x0
     virtual void Insert(const char* path, ZIPLFHV* desc, u32 offset);               // 0x4
     virtual bool Find(const char* path, ZIPLFHV* desc, u32* offset);                // 0x8
-    virtual void Method0xC();                                                       // 0xC
+    virtual void Remove(const char* path);                                          // 0xC
     virtual void Clear();                                                           // 0x10
 
 protected:

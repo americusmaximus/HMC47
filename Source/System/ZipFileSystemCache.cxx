@@ -60,8 +60,8 @@ bool ZipFileSystemCache::Find(const char* path, ZIPLFHV* desc, u32* offset) {
 }
 
 // 0x0ffc18a0
-void ZipFileSystemCache::Method0xC() {
-    // TODO NOT IMPLEMENTED
+void ZipFileSystemCache::Remove(const char* path) {
+    this->Lookup.Remove(path, 0);
 }
 
 // 0x0ffc18c0

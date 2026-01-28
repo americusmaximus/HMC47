@@ -58,7 +58,7 @@ public:
     virtual void CloseFile(ZipIOContext* context);                                  // 0x14
     virtual bool IsEndOfFile(ZipIOContext* context);                                // 0x18
     virtual bool Compare(const char* a, const char* b);                             // 0x1C
-    virtual bool Method0x20(const char* path);                                      // 0x20
+    virtual bool Remove(const char* path);                                          // 0x20
     virtual void Append(const char* path, LPFILETIME time, void* value, u32 size);  // 0x24
     virtual bool GetDateTime(const char* path, LPFILETIME time);                    // 0x28
     virtual void SetCompression(s32 level);                                         // 0x2C

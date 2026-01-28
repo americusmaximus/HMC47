@@ -669,6 +669,33 @@ bool ZipIO::Compare(const char* a, const char* b) {
     return false;
 }
 
+// 0x0ffc3350
+bool ZipIO::Remove(const char* path) {
+    u32 offset = 0;
+
+    ZIPLFHV desc;
+    ZeroMemory(&desc, sizeof(ZIPLFHV));
+
+    if (this->FindFile(path, &desc, &offset)) {
+        *this->ZFS.Offsets.Insert() = offset;
+
+        if (this->ZFS.Cache != nullptr) {
+            char name[MAX_ZIP_STRING_LENGTH];
+
+            for (u32 i = 0; path[i] != NULL; i++) {
+                name[i] = path[i] == '\\' ? '/' : path[i];
+                name[i + 1] = NULL;
+            }
+
+            this->ZFS.Cache->Remove(name);
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 // 0x0ffc3580
 void ZipIO::Append(const char* path, LPFILETIME time, void* value, u32 size) {
     this->SaveFile(path, time, value, size);
