@@ -22,6 +22,8 @@ SOFTWARE.
 
 #include "ZipIO.hxx"
 
+#define MAX_ZIPFS_OFFSET_COUNT  256
+
 #define GET_ZIPIO()             ((ZipIO*)((size_t)this - sizeof(char*) - sizeof(u32) - sizeof(void*)))
 #define GET_ZIPIO_MODE()        (*(u32*)((size_t)this - sizeof(char*) - sizeof(u32)))
 #define GET_ZIPIO_FILE_NAME()   ((char*)((size_t)this - sizeof(char*)))
@@ -33,9 +35,9 @@ ZipFileSystem::ZipFileSystem() {
     this->Init = false;
 
     this->Compression = Z_DEFAULT_COMPRESSION;
-    this->Unk0x15 = 0;
+    this->IsCentral = false;
 
-    this->Offsets.Initialize(256); // TODO
+    this->Offsets.Initialize(MAX_ZIPFS_OFFSET_COUNT);
 }
 
 // 0x0ffc27d0

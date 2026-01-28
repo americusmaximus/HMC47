@@ -55,6 +55,8 @@ public:
     inline void Release() {
         if (this->Value != nullptr) {
             delete[] this->Value;
+
+            this->Value = nullptr;
             this->Count = 0;
             this->Capacity = 0;
         }

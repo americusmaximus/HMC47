@@ -92,11 +92,11 @@ public:
     FILE* Handle;                                                                   // 0x9
     u32 Offset;                                                                     // 0xD
     s32 Compression;                                                                // 0x11
-    bool Unk0x15;                                                                   // 0x15
+    bool IsCentral;                                                                 // 0x15
     ZIPEOCDV Central;                                                               // 0x16
     ZIPEOCDV Rune;                                                                  // 0x28
-    ZList<ZIPCDHV> Unk0x3A;                                                         // 0x3A
-    ZList<ZIPCDHV> Unk0x46;                                                         // 0x46
+    ZList<ZIPCDHV> Runes;                                                           // 0x3A
+    ZList<ZIPCDHV> Files;                                                           // 0x46
     ZList<u32> Offsets;                                                             // 0x52
     ZipFileSystemCache* Cache;                                                      // 0x5E
 };

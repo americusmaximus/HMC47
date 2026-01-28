@@ -25,6 +25,8 @@ SOFTWARE.
 #include "LinkRefTab.hxx"
 #include "ZValueTree.hxx"
 
+#pragma pack(push, 1)
+
 struct FastLookupItem {
     char* Item;                                                                     // 0x0
     u32 Length;                                                                     // 0x4

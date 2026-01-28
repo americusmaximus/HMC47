@@ -28,7 +28,7 @@ struct ZipNode {
 };
 
 // 0x0ffc2e30
-ZipFileSystemCache::ZipFileSystemCache() {}
+ZipFileSystemCache::ZipFileSystemCache() : Lookup(32) {}
 
 // 0x0ffc30c0
 // 0x0ffc3100

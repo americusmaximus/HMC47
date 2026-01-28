@@ -22,7 +22,6 @@ SOFTWARE.
 
 #include "Globals.hxx"
 #include "FastLookup.hxx"
-#include "ZString.hxx"
 
 #define FASTLOOKUP_REFKEYVALUE_ITEM(X)  ((FastLookupItem*)((size_t)X - 4))
 
@@ -166,7 +165,6 @@ void* FastLookup::Get(const char* value) {
             string[i] = c + ' '; // To Lower
         }
     }
-    // End TODO
 
     u32 hash = length;
 

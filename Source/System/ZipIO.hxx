@@ -56,16 +56,16 @@ public:
     virtual u32 ReadFile(ZipIOContext* context, void* value, u32 size);             // 0xC
     virtual u32 WriteFile(ZipIOContext* context, void* value, u32 size);            // 0x10
     virtual void CloseFile(ZipIOContext* context);                                  // 0x14
-    virtual void Method0x18();                                                      // 0x18
+    virtual bool IsEndOfFile(ZipIOContext* context);                                // 0x18
     virtual bool Compare(const char* a, const char* b);                             // 0x1C
-    virtual void Append(const char* path, LPFILETIME time, void* value, u32 size);  // 0x20
-    virtual void Method0x24();                                                      // 0x24
+    virtual bool Method0x20(const char* path);                                      // 0x20
+    virtual void Append(const char* path, LPFILETIME time, void* value, u32 size);  // 0x24
     virtual bool GetDateTime(const char* path, LPFILETIME time);                    // 0x28
     virtual void SetCompression(s32 level);                                         // 0x2C
     virtual void Close();                                                           // 0x30
     virtual bool ReInitialize();                                                    // 0x34
-    virtual void Method0x38();                                                      // 0x38
-    virtual void Method0x3C();                                                      // 0x3C
+    virtual void SetIsRune();                                                       // 0x38
+    virtual void SetIsCentral();                                                    // 0x3C
     virtual void Method0x40();                                                      // 0x40
     virtual void Method0x44();                                                      // 0x44
 

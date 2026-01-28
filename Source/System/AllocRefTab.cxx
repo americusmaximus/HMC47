@@ -23,8 +23,9 @@ SOFTWARE.
 #include "AllocRefTab.hxx"
 #include "Globals.hxx"
 
-#define ALLOCREFTAB_CAPACITY        0x40000
+#define ALLOCREFTAB_CAPACITY        0x00040000
 #define ALLOCREFTAB_MASK            0xFFFC0000
+
 #define ALLOCREFTAB_POWER           18          /* 1 << 18 == 0x40000 */
 
 // 0x0ffc1350
