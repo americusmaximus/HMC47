@@ -479,7 +479,7 @@ ZipIOContext* ZipIO::OpenFile(const char* path, u32 mode) {
         result->CurrentOffset = 0;
         result->Mode = mode;
 
-        if (mode == 3 /* TODO */) {
+        if (mode == ZIPIO_MODE_OPENFILE) {
             if (this->FindFile(path, &result->Header, nullptr)) {
                 const u32 offset = ftell(this->ZFS.Handle);
 
@@ -488,7 +488,7 @@ ZipIOContext* ZipIO::OpenFile(const char* path, u32 mode) {
                 
                 result->Size = result->Header.CompressedSize;
 
-                ZeroMemory(&result->Status, sizeof(z_stream));
+                ZeroMemory(&result->Stream, sizeof(z_stream));
                 
                 result->Stream.next_in = result->Value;
                 result->Status = inflateInit2(&result->Stream, -MAX_WBITS);

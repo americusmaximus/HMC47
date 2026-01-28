@@ -26,8 +26,9 @@ SOFTWARE.
 
 #include <zlib.h>
 
-#define ZIPIO_MODE_READ     0x0
-#define ZIPIO_MODE_WRITE    0x1
+#define ZIPIO_MODE_READ         0x0
+#define ZIPIO_MODE_WRITE        0x1
+#define ZIPIO_MODE_OPENFILE     0x3
 
 #define ZIPIO_CONTEXT_BUFFER_LENGTH 1024
 
