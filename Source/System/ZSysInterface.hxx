@@ -181,7 +181,7 @@ public:
     void* Unk0x59;                                                              // 0x59
     u32 Unk0x5D;                                                                // 0x5D
     ZString ModulePath;                                                         // 0x61
-    ZString Unk0xE1;                                                            // 0xE1
+    ZString BasePath;                                                           // 0xE1
     ZString Unk0x161;                                                           // 0x161
     ZString Unk0x1E1;                                                           // 0x1E1
     ZString Unk0x261;                                                           // 0x261

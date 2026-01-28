@@ -26,14 +26,14 @@ SOFTWARE.
 
 // 0x0ffa5290
 ZSysFileBase::ZSysFileBase() {
-    this->Unk0x8 = nullptr;
+    this->Blocked = nullptr;
 }
 
 // 0x0ffa52a0
 // 0x0ffa52f0
 ZSysFileBase::~ZSysFileBase() {
-    if (this->Unk0x8 != nullptr) {
-        delete this->Unk0x8;
+    if (this->Blocked != nullptr) {
+        delete this->Blocked;
     }
 }
 
@@ -136,8 +136,8 @@ void ZSysFile::Close(HANDLE file) {
 }
 
 // 0x0ffa5730
-const char* ZSysFile::FUN_0ffa5730(const char* path) {
-    if (this->Unk0x8 != nullptr) {
+const char* ZSysFile::GetFileName(const char* path) {
+    if (this->Blocked != nullptr) {
         const char* ext = strrchr(path, '.');
 
         if (ext == nullptr) {
@@ -148,24 +148,53 @@ const char* ZSysFile::FUN_0ffa5730(const char* path) {
             ext = ".anm";
         }
 
-        if (this->Unk0x8 != nullptr) {
+        if (this->Blocked != nullptr) {
             RefLink link;
-            this->Unk0x8->GetStart(&link);
-            char* key = (char*)REFTAB_KEY_TO_PTR(this->Unk0x8->GetNextKey(&link));
+            this->Blocked->GetStart(&link);
+            char* key = (char*)REFTAB_KEY_TO_PTR(this->Blocked->GetNextKey(&link));
 
             while (link.Next != nullptr) {
-                if (_strcmpi(ext, key) == 0) {
+                if (_stricmp(ext, key) == 0) {
                     return nullptr;
                 }
-            }
 
-            key = (char*)REFTAB_KEY_TO_PTR(this->Unk0x8->GetNextKey(&link));
+                key = (char*)REFTAB_KEY_TO_PTR(this->Blocked->GetNextKey(&link));
+            }
         }
     }
 
-    g_pSysInterface->Unk0xE1 = path;
+    const char* result = path;
+    const u32 length = g_pSysInterface->BasePath.GetLength();
 
-    // TODO NOT IMPLEMENTED
+    if (length <= strlen(path)) {
+        if (_strnicmp(g_pSysInterface->BasePath.AsString(), result, length) == 0) {
+            result += length;
+
+            if (result[0] == '\\') {
+                result++;
+            }
+        }
+    }
+
+    return result;
+}
+
+// 0x0ffa5ea0
+void* ZSysFile::Method0x9C(const char* path) {
+    RefLink link;
+
+    if (path != nullptr && this->Unk0x4 != nullptr) {
+        this->Unk0x4->GetStart(&link);
+        RefKeyValue* kv = this->Unk0x4->GetNext(&link);
+
+        while (kv != nullptr) {
+            // TODO NOT IMPLEMENTED
+
+            kv = this->Unk0x4->GetNext(&link);
+        }
+    }
+
+    return nullptr;
 }
 
 // 0x0ffa5f20
@@ -185,6 +214,8 @@ bool ZSysFile::GetTime(const char* path, LPFILETIME time, bool real) {
         return result;
     }
     else {
+        const char* name = this->GetFileName(path);
+
         // TODO NOT IMPLEMENTED
     }
 }
@@ -210,8 +241,7 @@ u32 ZSysFile::GetSize(const char* path, bool real) {
         return size;
     }
     else {
-        pbVar1 = this->FUN_0ffa5730(path);
-
+        const char* name = this->GetFileName(path);
 
         // TODO NOT IMPLEMENTED
     }
@@ -261,6 +291,8 @@ bool ZSysFile::Exists(const char* path, bool real) {
         return false;
     }
     else {
+        const char* name = this->GetFileName(path);
+
         // TODO NOT IMPLEMENTED
     }
 }
@@ -373,6 +405,8 @@ u32 ZSysFile::ReadAt(const char* path, void* ptr, u32 size, u32 offset, bool rea
         }
     }
     else {
+        const char* name = this->GetFileName(path);
+
         // TODO NOT IMPLEMENTED
     }
 
@@ -452,6 +486,56 @@ void ZSysFile::Method0x4() {}
 // 0x0ffc74e0
 void ZSysFile::Method0x8() {}
 
+// 0x0ffa7020
+void ZSysFile::BlockExtensions(const char* value) {
+    if (this->Blocked = nullptr) {
+        this->Blocked = new StringRefTab(8, 0);
+    }
+
+    const char* input = value == nullptr ? "" : value;
+
+    const u32 length = strlen(input);
+    char* extensions = new char[length + 1];
+
+    strcpy(extensions, input);
+
+    char* csv = extensions;
+
+    while (true) {
+        char* separator = strchr(csv, ';');
+
+        // Depending on the separator search result do either or:
+        // 1. Separator was found:
+        //      1. Set the first character of separator to NULL.
+        //          Value:      .abc;.xyz;.exe
+        //          Separator:      ;.xyz;.exe
+        //          Separator:       .xyz;.exe
+        //      2. Insert string from the beginning to the beginning of the separator
+        //              ->Insert(.abc)
+        //      3. Set the string to the next character after the separator.
+        //          Value:      .xyz;.exe
+        // 2. Separator was not found - insert the whole string as it has only one element. Done.
+
+        if (separator == nullptr) {
+            this->Blocked->TryInsertString(csv);
+            break;
+        }
+        else {
+            separator[0] = NULL;
+            this->Blocked->TryInsertString(csv);
+            csv = &separator[1];
+        }
+    }
+
+    delete[] extensions;
+}
+
+// 0x0ffa7500
+LinkRefTab* ZSysFile::Method0x68(/* TODO*/) {
+    // TODO NOT IMPLEMENTED
+    return nullptr;
+}
+
 // 0x0ffa7df0
 void ZSysFile::Method0x0() {
     RefLink link;
@@ -471,13 +555,7 @@ void ZSysFile::Method0x0() {
 // 0x0ffa7ed0
 HMODULE ZSysFile::LoadModule(const char* path) {
     const char* name = strrchr(path, '\\');
-
-    if (name == nullptr) {
-        name = path;
-    }
-    else {
-        name = &name[1]; // \lib.dll -> lib.dll
-    }
+    name = name == nullptr ? path : &name[1]; // \lib.dll -> lib.dll
 
     RefLink link;
     if (this->Modules != nullptr) {

@@ -711,6 +711,14 @@ void ZipIO::SetIsCentral() {
     this->ZFS.IsCentral = true;
 }
 
+// 0x0ffc35c0
+ZipIO::~ZipIO() {
+    this->Release();
+    this->ZFS.Offsets.Release();
+    this->ZFS.Files.Release();
+    this->ZFS.Runes.Release();
+}
+
 // 0x0ffc3760
 void ZipIO::SetCompression(s32 level) {
     this->ZFS.Compression = level;

@@ -69,9 +69,9 @@ public:
     virtual u32 Method0x54(const char*, u32*) = 0;                                          // 0x54
     virtual void Method0x58(const char*, const void*, u32, u32) = 0;                        // 0x58
     virtual void Append(const char*, const void*, u32) = 0;                                 // 0x5C
-    virtual void Method0x60() = 0;                                                          // 0x60
+    virtual void BlockExtensions(const char*) = 0;                                          // 0x60
     virtual void Method0x64() = 0;                                                          // 0x64
-    virtual void Method0x68() = 0;                                                          // 0x68
+    virtual LinkRefTab* Method0x68() = 0;                                                   // 0x68
     virtual void Method0x6C() = 0;                                                          // 0x6C
     virtual void Method0x70() = 0;                                                          // 0x70
     virtual void Method0x74() = 0;                                                          // 0x74
@@ -87,7 +87,7 @@ public:
 
 protected:
     LinkRefTab* Unk0x4;                                                                     // 0x4
-    StringRefTab* Unk0x8;                                                                   // 0x8
+    StringRefTab* Blocked;                                                                  // 0x8
 };
 
 // 0x0ffd33e0
@@ -120,9 +120,9 @@ public:
     virtual u32 Method0x54(const char* path, u32* token);                                   // 0x54
     virtual void Method0x58(const char* path, const void* ptr, u32 size, u32 offset);       // 0x58
     virtual void Append(const char* path, const void* ptr, u32 size);                       // 0x5C
-    virtual void Method0x60();                                                              // 0x60
+    virtual void BlockExtensions(const char* value);                                        // 0x60
     virtual void Method0x64();                                                              // 0x64
-    virtual void Method0x68();                                                              // 0x68
+    virtual LinkRefTab* Method0x68();                                                       // 0x68
     virtual void Method0x6C();                                                              // 0x6C
     virtual void Method0x70();                                                              // 0x70
     virtual void Method0x74();                                                              // 0x74
@@ -135,7 +135,7 @@ public:
     virtual bool ReleaseModule(HMODULE);                                                    // 0x90
     virtual void Method0x94();                                                              // 0x94
     virtual ~ZSysFile();                                                                    // 0x98
-    virtual void Method0x9C(const char* path);                                              // 0x9C
+    virtual void* Method0x9C(const char* path);                                             // 0x9C
     virtual void Method0xA0();                                                              // 0xA0
     virtual void Method0xA4();                                                              // 0xA4
     virtual void Method0xA8();                                                              // 0xA8
@@ -144,7 +144,7 @@ public:
 
 protected:
     void FUN_0ffa7d20(bool todo);
-    const char* FUN_0ffa5730(const char* path);
+    const char* GetFileName(const char* path);
 
 protected:
     LinkRefTab* Modules;                                                                    // 0xC

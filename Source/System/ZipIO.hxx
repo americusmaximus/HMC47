@@ -48,6 +48,7 @@ struct ZipIOContext {
 class ZipIO {
 public:
     ZipIO();
+    ~ZipIO();
 
 public:
     virtual bool Initialize(const char* path, u32 mode);                            // 0x0

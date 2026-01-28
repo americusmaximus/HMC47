@@ -52,6 +52,7 @@ public:
         this->Capacity = capacity;
     }
 
+    // 0x0ffc3f60
     inline void Release() {
         if (this->Value != nullptr) {
             delete[] this->Value;
