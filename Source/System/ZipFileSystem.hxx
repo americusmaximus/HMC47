@@ -69,7 +69,7 @@ public:
     virtual void Save(const char*) = 0;                                             // 0x8
     virtual u32 GetSize(const char*) = 0;                                           // 0xC
     virtual bool Exists(const char*) = 0;                                           // 0x10
-    virtual u32 Unpack(const char*, void*, u32) = 0;                                // 0x14
+    virtual u32 Unpack(const char*, void*, u32, u32) = 0;                           // 0x14
     virtual void Method0x18() = 0;                                                  // 0x18
 };
 
@@ -83,7 +83,7 @@ public:
     virtual void Save(const char* path);                                            // 0x8
     virtual u32 GetSize(const char* path);                                          // 0xC
     virtual bool Exists(const char* path);                                          // 0x10
-    virtual u32 Unpack(const char* path, void* value, u32 size);                    // 0x14
+    virtual u32 Unpack(const char* path, void* value, u32 size, u32 offset);        // 0x14
     virtual void Method0x18();                                                      // 0x18
 
 public:

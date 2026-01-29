@@ -24,15 +24,17 @@ SOFTWARE.
 
 #include "Common.hxx"
 
+#define BIGIO_NONE                  0x0
+
 #pragma pack(push, 1)
 
 /*
 It seems that BigIO and ZipIO should have somewhat similar inheritance structures.
 */
 
-class BigIO {
+class BigIO /* TODO FileSystem */ {
 public:
-    BigIO();
+    BigIO(const char* path, u32 options);
 
 public:
     virtual void Method0x0();                                                       // 0x0

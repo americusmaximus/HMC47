@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include "LinkRefTab.hxx"
 #include "StringRefTab.hxx"
+#include "ZipIO.hxx"
 
 #pragma pack(push, 1)
 
@@ -108,18 +109,18 @@ public:
     virtual bool GetTime(const char* path, LPFILETIME time, bool real);                     // 0x24
     virtual u32 GetSize(const char* path, bool real);                                       // 0x28
     virtual bool Exists(const char* path, bool real);                                       // 0x2C
-    virtual bool WriteTo(HANDLE file, const void* ptr, u32 size);                           // 0x30
-    virtual u32 ReadFrom(HANDLE file, void* ptr, u32 size);                                 // 0x34
+    virtual bool WriteTo(HANDLE file, const void* value, u32 size);                         // 0x30
+    virtual u32 ReadFrom(HANDLE file, void* value, u32 size);                               // 0x34
     virtual void CD(const char* path);                                                      // 0x38
     virtual void MakeDir(const char* path);                                                 // 0x3C
     virtual void Rename(const char* src, const char* dst);                                  // 0x40
     virtual void Copy(const char* src, const char* dst);                                    // 0x44
     virtual bool Delete(const char* path);                                                  // 0x48
-    virtual u32 ReadAt(const char* path, void* ptr, u32 size, u32 offset, bool real);       // 0x4C
+    virtual u32 ReadAt(const char* path, void* value, u32 size, u32 offset, bool real);     // 0x4C
     virtual void Method0x50();                                                              // 0x50
     virtual u32 Method0x54(const char* path, u32* token);                                   // 0x54
-    virtual void Method0x58(const char* path, const void* ptr, u32 size, u32 offset);       // 0x58
-    virtual void Append(const char* path, const void* ptr, u32 size);                       // 0x5C
+    virtual void Method0x58(const char* path, const void* value, u32 size, u32 offset);     // 0x58
+    virtual void Append(const char* path, const void* value, u32 size);                     // 0x5C
     virtual void BlockExtensions(const char* value);                                        // 0x60
     virtual void Method0x64();                                                              // 0x64
     virtual LinkRefTab* Method0x68();                                                       // 0x68
@@ -129,18 +130,18 @@ public:
     virtual void Method0x78();                                                              // 0x78
     virtual void Method0x7C();                                                              // 0x7C
     virtual void Method0x80();                                                              // 0x80
-    virtual bool Method0x84(const char* path);                                              // 0x84
+    virtual bool ContainsArchive(const char* path);                                         // 0x84
     virtual void Method0x88();                                                              // 0x88
     virtual HMODULE LoadModule(const char* path);                                           // 0x8C
     virtual bool ReleaseModule(HMODULE);                                                    // 0x90
     virtual void Method0x94();                                                              // 0x94
     virtual ~ZSysFile();                                                                    // 0x98
-    virtual void* Method0x9C(const char* path);                                             // 0x9C
-    virtual void Method0xA0();                                                              // 0xA0
-    virtual void Method0xA4();                                                              // 0xA4
+    virtual ZipIO* GetArchive(const char* path);                                            // 0x9C
+    virtual u32 Method0xA0(ZipIO* zip, const char* path);                                   // 0xA0
+    virtual bool Method0xA4(ZipIO* zip, const char* path);                                  // 0xA4
     virtual void Method0xA8();                                                              // 0xA8
     virtual void Method0xAC();                                                              // 0xAC
-    virtual void* Method0xB0(const char* path);                                             // 0xB0
+    virtual u32* OpenArchive(const char* path);                                             // 0xB0
 
 protected:
     void FUN_0ffa7d20(bool todo);

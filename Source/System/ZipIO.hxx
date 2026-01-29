@@ -26,9 +26,10 @@ SOFTWARE.
 
 #include <zlib.h>
 
-#define ZIPIO_MODE_READ         0x0
-#define ZIPIO_MODE_WRITE        0x1
-#define ZIPIO_MODE_OPENFILE     0x3
+#define ZIPIO_MODE_READ         0x0 /* TODO */
+#define ZIPIO_MODE_WRITE        0x1 /* TODO */
+#define ZIPIO_MODE_0x2          0x2 /* TODO */
+#define ZIPIO_MODE_OPENFILE     0x3 /* TODO */
 
 #define ZIPIO_CONTEXT_BUFFER_LENGTH 1024
 
@@ -75,7 +76,7 @@ public:
     virtual bool ReInitialize();                                                    // 0x34
     virtual void SetIsRune();                                                       // 0x38
     virtual void SetIsCentral();                                                    // 0x3C
-    virtual void Method0x40();                                                      // 0x40
+    virtual void Method0x40(ZipIO* zip);                                            // 0x40
     virtual void Method0x44();                                                      // 0x44
 
 public:

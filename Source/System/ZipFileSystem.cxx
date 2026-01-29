@@ -109,7 +109,7 @@ bool ZipFileSystem::Exists(const char* path) {
 }
 
 // 0x0ffc2ae0
-u32 ZipFileSystem::Unpack(const char* path, void* value, u32 size) {
+u32 ZipFileSystem::Unpack(const char* path, void* value, u32 size, u32) {
     ZIPLFHV desc;
 
     if (GET_ZIPIO()->FindFile(path, &desc, nullptr)) {

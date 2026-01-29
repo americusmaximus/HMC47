@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "BigIO.hxx"
 #include "Globals.hxx"
-#include "ZipIO.hxx"
+#include "ZArchive.hxx"
 
 #include <stdio.h>
 
@@ -182,17 +182,23 @@ const char* ZSysFile::GetFileName(const char* path) {
 }
 
 // 0x0ffa5ea0
-void* ZSysFile::Method0x9C(const char* path) {
+ZipIO* ZSysFile::GetArchive(const char* path) {
     RefLink link;
 
     if (path != nullptr && this->Archives != nullptr) {
         this->Archives->GetStart(&link);
-        RefKeyValue* kv = this->Archives->GetNext(&link);
+        ZArchiveNode* node = (ZArchiveNode*)this->Archives->GetNext(&link);
 
-        while (kv != nullptr) {
-            // TODO NOT IMPLEMENTED
+        while (node != nullptr) {
+            if (node->ArchiveType & ZARCHIVETYPE_ZIP) {
+                ZipIO* zip = (ZipIO*)node->Archive;
 
-            kv = this->Archives->GetNext(&link);
+                if (zip->ZFS.Exists(path) || this->Method0xA4(zip, path)) {
+                    return zip;
+                }
+            }
+
+            node = (ZArchiveNode*)this->Archives->GetNext(&link);
         }
     }
 
@@ -201,52 +207,71 @@ void* ZSysFile::Method0x9C(const char* path) {
 
 // 0x0ffa5f20
 bool ZSysFile::GetTime(const char* path, LPFILETIME time, bool real) {
-    if (real) {
-        HANDLE file = this->Open(path);
+    if (!real) {
+        const char* name = this->GetFileName(path);
 
-        if (file == NULL) {
-            return false;
+        ZipIO* zip = this->GetArchive(name);
+
+        if (zip != nullptr) {
+            if (zip->GetDateTime(name, time)) {
+                return true;
+            }
         }
+    }
 
-        FILETIME create, access;
-        BOOL result = GetFileTime(file, &create, &access, time);
+    HANDLE handle = this->Open(path);
 
-        this->Close(file);
+    if (handle != NULL) {
+        FILETIME access, create;
+
+        const BOOL result = GetFileTime(handle, &create, &access, time);
+
+        this->Close(handle);
 
         return result;
     }
-    else {
-        const char* name = this->GetFileName(path);
 
-        // TODO NOT IMPLEMENTED
-    }
+    return false;
 }
 
 // 0x0ffa5fb0
 u32 ZSysFile::GetSize(const char* path, bool real) {
-    if (real) {
-        HANDLE file = this->Open(path);
+    if (!real) {
+        const char* name = this->GetFileName(path);
 
-        if (file == NULL) {
-            return INVALID_FILE_SIZE;
+        ZipIO* zip = this->GetArchive(name);
+
+        if (zip != nullptr) {
+            u32 size = this->Method0xA0(zip, name);
+
+            if (size != INVALID_FILE_SIZE) {
+                return size;
+            }
+
+            size = zip->ZFS.GetSize(name);
+
+            if (size != INVALID_FILE_SIZE) {
+                return size;
+            }
         }
+    }
 
-        const u32 size = GetFileSize(file, nullptr);
+    HANDLE handle = this->Open(path);
+
+    if (handle != NULL) {
+        const u32 size = GetFileSize(handle, nullptr);
 
         if (size == INVALID_FILE_SIZE) {
             g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 212)
                 ->LogMessage("ZSysFileWintel::GetSize failed");
         }
 
-        this->Close(file);
+        this->Close(handle);
 
         return size;
     }
-    else {
-        const char* name = this->GetFileName(path);
 
-        // TODO NOT IMPLEMENTED
-    }
+    return INVALID_FILE_SIZE;
 }
 
 // 0x0ffa6060
@@ -281,29 +306,39 @@ bool ZSysFile::Touch(const char* path) {
 
 // 0x0ffa6120
 bool ZSysFile::Exists(const char* path, bool real) {
-    if (real) {
-        WIN32_FIND_DATA find;
-        HANDLE file = FindFirstFileA(path, &find);
-
-        if (file != INVALID_HANDLE_VALUE) {
-            FindClose(file);
-            return true;
-        }
-
-        return false;
-    }
-    else {
+    if (!real) {
         const char* name = this->GetFileName(path);
 
-        // TODO NOT IMPLEMENTED
+        ZipIO* zip = this->GetArchive(name);
+
+        if (zip != nullptr) {
+            if (zip->ZFS.Exists((name))) {
+                return true;
+            }
+
+            if (this->Method0xA4(zip, name)) {
+                return;
+            }
+        }
     }
+
+
+    WIN32_FIND_DATA ffd;
+    HANDLE handle = FindFirstFileA(path, &ffd);
+
+    if (handle != INVALID_HANDLE_VALUE) {
+        FindClose(handle);
+        return true;
+    }
+
+    return false;
 }
 
 // 0x0ffa61b0
-bool ZSysFile::WriteTo(HANDLE file, const void* ptr, u32 size) {
+bool ZSysFile::WriteTo(HANDLE file, const void* value, u32 size) {
     DWORD bytes = 0;
 
-    if (!WriteFile(file, ptr, size, &bytes, NULL)) {
+    if (!WriteFile(file, value, size, &bytes, NULL)) {
         g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 277)
             ->LogMessage("ZSysFileWintel::WriteTo failed");
 
@@ -314,10 +349,10 @@ bool ZSysFile::WriteTo(HANDLE file, const void* ptr, u32 size) {
 }
 
 // 0x0ffa6200
-u32 ZSysFile::ReadFrom(HANDLE file, void* ptr, u32 size) {
+u32 ZSysFile::ReadFrom(HANDLE file, void* value, u32 size) {
     DWORD bytes = 0;
 
-    if (!ReadFile(file, ptr, size, &bytes, NULL)) {
+    if (!ReadFile(file, value, size, &bytes, NULL)) {
         char* buffer = nullptr;
         FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM
             | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ALLOCATE_BUFFER,
@@ -382,34 +417,50 @@ bool ZSysFile::Delete(const char* path) {
 }
 
 // 0x0ffa6480
-u32 ZSysFile::ReadAt(const char* path, void* ptr, u32 size, u32 offset, bool real) {
-    if (real) {
-        if (offset == 0) {
-            HANDLE file = this->Open(path);
+u32 ZSysFile::ReadAt(const char* path, void* value, u32 size, u32 offset, bool real) {
+    if (!real) {
+        const char* name = this->GetFileName(path);
 
-            if (file != NULL) {
-                const u32 result = this->ReadFrom(file, ptr, size);
-                this->Close(file);
+        ZipIO* zip = this->GetArchive(name);
 
-                return result;
+        if (zip != nullptr) {
+            u32 bytes = zip->FUN_0ffa66d0(name, value);
+
+            if (bytes != INVALID_FILE_SIZE) {
+                return bytes;
             }
-        }
-        else {
-            FILE* file = fopen(path, "rb");
 
-            if (file != nullptr) {
-                fseek(file, offset, SEEK_SET);
-                const u32 result = fread(ptr, 1, size, file);
-                fclose(file);
+            bytes = zip->ZFS.Unpack(name, value, size, offset);
 
-                return result;
+            if (bytes != INVALID_FILE_SIZE) {
+                return bytes;
             }
         }
     }
-    else {
-        const char* name = this->GetFileName(path);
 
-        // TODO NOT IMPLEMENTED
+    if (offset == 0) {
+        HANDLE handle = this->Open(path);
+
+        if (handle != NULL) {
+            const u32 bytes = this->ReadFrom(handle, value, size);
+
+            this->Close(handle);
+
+            return bytes;
+        }
+    }
+    else {
+        FILE* file = fopen(path, "rb");
+
+        if (file != nullptr) {
+            fseek(file, offset, SEEK_SET);
+
+            const u32 bytes = fread(value, 1, size, file);
+
+            fclose(file);
+
+            return bytes;
+        }
     }
 
     return INVALID_FILE_SIZE;
@@ -450,12 +501,12 @@ u32 ZSysFile::Method0x54(const char* path, u32* token) {
 }
 
 // 0x0ffa6e20
-void ZSysFile::Method0x58(const char* path, const void* ptr, u32 size, u32 offset /* TODO */) {
+void ZSysFile::Method0x58(const char* path, const void* value, u32 size, u32 offset /* TODO */) {
     HANDLE file = this->Create(path);
 
     if (file != NULL) {
         if (offset != 0 && offset < size) {
-            this->WriteTo(file, ptr, offset);
+            this->WriteTo(file, value, offset);
             this->Close(file);
 
             HANDLE append = this->OpenForAppend(path);
@@ -467,17 +518,17 @@ void ZSysFile::Method0x58(const char* path, const void* ptr, u32 size, u32 offse
             return;
         }
 
-        this->WriteTo(file, ptr, size);
+        this->WriteTo(file, value, size);
         this->Close(file);
     }
 }
 
 // 0x0ffa6f00
-void ZSysFile::Append(const char* path, const void* ptr, u32 size) {
+void ZSysFile::Append(const char* path, const void* value, u32 size) {
     HANDLE file = this->OpenForAppend(path);
 
     if (file != NULL) {
-        this->WriteTo(file, ptr, size);
+        this->WriteTo(file, value, size);
         this->Close(file);
     }
 }
@@ -538,8 +589,31 @@ LinkRefTab* ZSysFile::Method0x68(/* TODO*/) {
     return nullptr;
 }
 
+// 0x0ffa7660
+bool ZSysFile::ContainsArchive(const char* path) {
+    RefLink link;
+
+    if (this->Archives != nullptr) {
+        this->Archives->GetStart(&link);
+        ZArchiveNode* node = (ZArchiveNode*)this->Archives->GetNext(&link);
+
+        while (node != nullptr) {
+            const char* name = (node->ArchiveType & ZARCHIVETYPE_ZIP)
+                ? ((ZipIO*)node->Archive)->Name : ((BigIO*)node->Archive)->Name;
+
+            if (stricmp(path, name) == 0) {
+                return true;
+            }
+
+            node = (ZArchiveNode*)this->Archives->GetNext(&link);
+        }
+    }
+
+    return false;
+}
+
 // 0x0ffa7750
-void* ZSysFile::Method0xB0(const char* path) {
+u32* ZSysFile::OpenArchive(const char* path) {
     const char* input = path == nullptr ? "" : path;
     char* name = new char[strlen(input) + 1];
 
@@ -551,9 +625,71 @@ void* ZSysFile::Method0xB0(const char* path) {
     char* ext = strrchr(name, '.');
 
     if (ext != nullptr) {
+        if (!this->ContainsArchive(name)) {
+            RefLink link;
 
-        // TODO NOT IMPLEMENTED
+            // TODO ZIP
 
+            if (this->Exists(name, true)) {
+                if (this->Archives == nullptr) {
+                    this->Archives = new LinkRefTab(4, 1);
+                }
+
+                ZipIO* file = new ZipIO();
+                file->Initialize(name, ZIPIO_MODE_0x2);
+
+                if (this->Archives != nullptr) {
+                    this->Archives->GetStart(&link);
+                    ZArchiveNode* node = (ZArchiveNode*)this->Archives->GetNext(&link);
+
+                    while (node != nullptr) {
+                        if (node->ArchiveType & ZARCHIVETYPE_ZIP) {
+                            ((ZipIO*)node)->Method0x40(file);
+                        }
+
+                        node = (ZArchiveNode*)this->Archives->GetNext(&link);
+                    }
+                }
+
+                u32* type =
+                    (u32*)this->Archives->InsertAtStart(REFTAB_PTR_TO_KEY(file));
+                *type = ZARCHIVETYPE_ZIP;
+
+                delete[] name;
+
+                return type;
+            }
+        }
+        else {
+            if (!this->ContainsArchive(name)) {
+                // TODO BIG
+
+                if (this->Exists(name, true)) {
+                    BigIO* file = new BigIO(name, BIGIO_NONE);
+
+                    if (file->Init) {
+                        if (this->Archives == nullptr) {
+                            this->Archives = new LinkRefTab(4, 1);
+                        }
+
+                        u32* type =
+                            (u32*)this->Archives->InsertAtStart(REFTAB_PTR_TO_KEY(file));
+                        *type = ZARCHIVETYPE_NONE;
+
+                        delete[] name;
+
+                        return type;
+                    }
+
+                    if (file != nullptr) {
+                        delete file;
+                    }
+
+                    g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 781)
+                        ->LogMessage("ERROR: unable to load big file \"%s\"", path);
+                }
+            }
+        }
     }
 
     delete[] name;

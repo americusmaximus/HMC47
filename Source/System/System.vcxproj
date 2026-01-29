@@ -172,6 +172,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AllocRefTab.cxx" />
+    <ClCompile Include="BigIO.cxx" />
     <ClCompile Include="BlockRefTab.cxx" />
     <ClCompile Include="Common.cxx" />
     <ClCompile Include="CompareRefTab.cxx" />
@@ -202,6 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllocRefTab.hxx" />
+    <ClInclude Include="BigIO.hxx" />
     <ClInclude Include="BlockRefTab.hxx" />
     <ClInclude Include="Common.hxx" />
     <ClInclude Include="CompareRefTab.hxx" />
@@ -213,6 +215,7 @@
     <ClInclude Include="StaticRefTab.hxx" />
     <ClInclude Include="StringRefTab.hxx" />
     <ClInclude Include="Texture.hxx" />
+    <ClInclude Include="ZArchive.hxx" />
     <ClInclude Include="ZArray.hxx" />
     <ClInclude Include="ZBinTree.hxx" />
     <ClInclude Include="ZConsole.hxx" />

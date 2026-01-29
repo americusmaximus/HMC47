@@ -20,37 +20,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "BigIO.hxx"
-#include "Globals.hxx"
+#pragma once
 
-// 0x0ffc16b0
-BigIO::BigIO(const char*, u32) {}
+#include "Common.hxx"
 
-// 0x0ffc1670
-BigIO::~BigIO() {}
+#define ZARCHIVETYPE_NONE   0x0
+#define ZARCHIVETYPE_ZIP    0x1
 
-// 0x0ffc16c0
-bool BigIO::Exists(const char* path) {
-    return g_pSysFile->Exists(path, false);
-}
-
-// 0x0ffc16e0
-u32 BigIO::Method0xC(u32) {
-    return 0;
-}
-
-// 0x0ffc16f0
-u32 BigIO::Method0x14(u32, u32, u32, u32) {
-    return 0;
-}
-
-// 0x0ffc1700
-void BigIO::Method0x4(u32, u32) {
-    // NOT IMPLEMENTED
-}
-
-// 0x0ffc74e0
-void BigIO::Method0x0() {}
-
-// 0x0ffc74f0
-void BigIO::Method0x8(u32) {}
+struct ZArchiveNode {
+    void* Archive;
+    u32 ArchiveType;
+};
