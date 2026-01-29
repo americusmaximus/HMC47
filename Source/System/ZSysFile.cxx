@@ -424,7 +424,7 @@ u32 ZSysFile::ReadAt(const char* path, void* value, u32 size, u32 offset, bool r
         ZipIO* zip = this->GetArchive(name);
 
         if (zip != nullptr) {
-            u32 bytes = zip->FUN_0ffa66d0(name, value);
+            u32 bytes = zip->FUN_0ffa66d0(name, value, size);
 
             if (bytes != INVALID_FILE_SIZE) {
                 return bytes;
@@ -583,10 +583,41 @@ void ZSysFile::BlockExtensions(const char* value) {
     delete[] extensions;
 }
 
+// 0x0ffa7220
+bool ZSysFile::Method0x74(const char* path) {
+    u32* type = this->OpenArchive(path);
+
+    if (type == nullptr) {
+        return false;
+    }
+
+    *type |= ZARCHIVETYPE_0x2;
+
+    return true;
+}
+
 // 0x0ffa7500
-LinkRefTab* ZSysFile::Method0x68(/* TODO*/) {
-    // TODO NOT IMPLEMENTED
-    return nullptr;
+LinkRefTab* ZSysFile::Method0x68() {
+    LinkRefTab* previous = this->Archives;
+
+    this->Archives = new LinkRefTab(4, 1);
+
+    RefLink link;
+    if (previous != nullptr) {
+        previous->GetStart(&link);
+        ZArchiveNode* node = (ZArchiveNode*)this->Archives->GetNext(&link);
+
+        while (node != nullptr && (node->ArchiveType & ZARCHIVETYPE_0x2)) {
+            const char* name = (node->ArchiveType & ZARCHIVETYPE_ZIP)
+                ? ((ZipIO*)node->Archive)->Name : ((BigIO*)node->Archive)->Name;
+
+            this->Method0x74(name);
+
+            node = (ZArchiveNode*)this->Archives->GetNext(&link);
+        }
+    }
+
+    return previous;
 }
 
 // 0x0ffa7660

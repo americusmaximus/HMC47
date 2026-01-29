@@ -26,6 +26,7 @@ SOFTWARE.
 
 #define ZARCHIVETYPE_NONE   0x0
 #define ZARCHIVETYPE_ZIP    0x1
+#define ZARCHIVETYPE_0x2    0x2     /* TODO */
 
 struct ZArchiveNode {
     void* Archive;

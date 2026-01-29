@@ -75,7 +75,7 @@ public:
     virtual LinkRefTab* Method0x68() = 0;                                                   // 0x68
     virtual void Method0x6C() = 0;                                                          // 0x6C
     virtual void Method0x70() = 0;                                                          // 0x70
-    virtual void Method0x74() = 0;                                                          // 0x74
+    virtual bool Method0x74(const char*) = 0;                                               // 0x74
     virtual void Method0x78() = 0;                                                          // 0x78
     virtual void Method0x7C() = 0;                                                          // 0x7C
     virtual void Method0x80() = 0;                                                          // 0x80
@@ -126,7 +126,7 @@ public:
     virtual LinkRefTab* Method0x68();                                                       // 0x68
     virtual void Method0x6C();                                                              // 0x6C
     virtual void Method0x70();                                                              // 0x70
-    virtual void Method0x74();                                                              // 0x74
+    virtual bool Method0x74(const char* path);                                              // 0x74
     virtual void Method0x78();                                                              // 0x78
     virtual void Method0x7C();                                                              // 0x7C
     virtual void Method0x80();                                                              // 0x80
