@@ -753,6 +753,83 @@ bool ZipIO::ReInitialize() {
     return this->Initialize(name, this->Mode);
 }
 
+// 0x0ffc3d30
+void ZipIO::RemoveDuplicates(ZipIO* zip) {
+    char name[MAX_ZIP_STRING_LENGTH];
+    char extras[MAX_ZIP_STRING_LENGTH];
+
+    bool stop = false;
+    fseek(zip->ZFS.Handle, zip->ZFS.Central.DirectoryOffset, SEEK_SET);
+
+    while (!feof(zip->ZFS.Handle) && !stop) {
+        u32 signature = 0;
+        fread(&signature, 1, sizeof(u32), zip->ZFS.Handle);
+
+        if (signature == ZIP_SIGNATURE_CDH) {
+            ZIPCDHV file;
+            fread(&file, sizeof(ZIPCDHV), 1, zip->ZFS.Handle);
+
+            if (file.FileNameLength != 0) {
+                fread(name, 1, file.FileNameLength, zip->ZFS.Handle);
+                name[file.FileNameLength] = NULL;
+
+                const u32 offset = ftell(zip->ZFS.Handle);
+
+                ZIPLFHV desc;
+                if (this->FindFile(name, &desc, nullptr)) {
+                    ZipIO* target = zip;
+
+                    if ((desc.LastModifiedDate & 0xFE00) < (file.LastModifiedDate & 0xFE00)) {
+                        target = this;
+                    }
+                    else if ((desc.LastModifiedDate & 0xFE00) <= (file.LastModifiedDate & 0xfe00)) {
+                        if ((desc.LastModifiedDate & 0x1E0) < (file.LastModifiedDate & 0x1E)) {
+                            target = this;
+                        }
+                        else if ((desc.LastModifiedDate & 0x1E0) <= (file.LastModifiedDate & 0x1E0)) {
+                            if ((desc.LastModifiedDate & 0x1F) < (file.LastModifiedDate & 0x1F)) {
+                                target = this;
+                            }
+                            else if ((desc.LastModifiedDate & 0x1F) <= (file.LastModifiedDate & 0x1F)) {
+                                if ((desc.LastModifiedTime & 0xF800) < (file.LastModifiedTime & 0xF800)) {
+                                    target = this;
+                                }
+                                else if ((desc.LastModifiedTime & 0xF800) <= (file.LastModifiedTime & 0xF800)) {
+                                    if ((desc.LastModifiedTime & 0x7E0) < (file.LastModifiedTime & 0x7E0)
+                                        || (((desc.LastModifiedTime & 0x7E0) <= (file.LastModifiedTime & 0x7E0)
+                                            && ((desc.LastModifiedTime & 0x1F) < (file.LastModifiedTime & 0x1F))))) {
+                                        target = this;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    target->Remove(name);
+                }
+
+                fseek(zip->ZFS.Handle, offset, SEEK_SET);
+            }
+
+            if (file.ExtraFieldLength != 0) {
+                fread(extras, 1, file.ExtraFieldLength, zip->ZFS.Handle);
+            }
+
+            if (file.CommentLength != 0) {
+                fread(extras, 1, file.CommentLength, zip->ZFS.Handle);
+            }
+        }
+        else {
+            if (signature == ZIP_SIGNATURE_EOCD || signature == ZIP_SIGNATURE_RUNE) {
+                stop = true;
+            }
+            else {
+                printf("ZIPFS: Broken .zip archive\n");
+            }
+        }
+    }
+}
+
 // 0x0ffc8710
 s32 GetFileNameMatch(const char* path, const char* criterion) {
     const char* name = path;

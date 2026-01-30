@@ -76,7 +76,7 @@ public:
     virtual bool ReInitialize();                                                    // 0x34
     virtual void SetIsRune();                                                       // 0x38
     virtual void SetIsCentral();                                                    // 0x3C
-    virtual void Method0x40(ZipIO* zip);                                            // 0x40
+    virtual void RemoveDuplicates(ZipIO* zip);                                      // 0x40
     virtual void Method0x44();                                                      // 0x44
 
 public:
