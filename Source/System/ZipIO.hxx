@@ -91,9 +91,20 @@ protected:
     void WriteZipFile();
     void Pack(ZIPCDHV* dir, void* value);
 
-public:
+protected:
     u32 Mode;                                                                       // 0x4
     char* Name;                                                                     // 0x8
+
+public:
+    inline u32 Is(u32 options) {
+        return this->Mode & options;
+    }
+
+    inline const char* GetName() {
+        return this->Name;
+    }
+
+public:
     ZipFileSystem ZFS;                                                              // 0xC
 };
 

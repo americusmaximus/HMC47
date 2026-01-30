@@ -42,7 +42,7 @@ void ZSysMem::DisplayStatus(s32 x, s32 y) {
         g_pSysInterface->DisplayDebugString(x, y,
             "Process %.3f / %.3f  Internal %.3f / %.3f : %.3f Count %d",
             allocated / 1048576.0f, total / 1048576.0f,
-            this->Unk0x24E / 1048576.0f, this->Unk0x252 / 1048576.0,
+            this->Unk0x24E / 1048576.0f, this->Unk0x252 / 1048576.0f,
             (this->Unk0x1A - this->Unk0x16) / 1048576.0f, this->Unk0x24A + this->Unk0x246);
     }
 }
@@ -74,7 +74,7 @@ void ZSysMem::GetProcessStats(u32* allocated, u32* total) {
 
 // 0x0ffb1af0
 ZSysMem::ZSysMem() {
-    this->Unk0x242 = 0;
+    this->Unk0x242 = nullptr;
     this->Unk0x23A = 0;
     this->Unk0x23E = 0;
     this->Unk0x246 = 0;
@@ -89,9 +89,12 @@ ZSysMem::ZSysMem() {
     this->Lights = new CompareRefTab(256, 0);
     this->Tab = new AllocRefTab();
 
+    this->Sizes = new u32[this->Tab->GetCapacity() + 1];
+    ZeroMemory(this->Sizes, (this->Tab->GetCapacity() + 1) * sizeof(u32));
 
-
-    // TODO NOT IMPLEMENTED
+    this->TabItems = this->Tab->GetItems();
+    
+    this->Allocator.Unk0x21B = true;
 }
 
 // 0x0ffb1d20

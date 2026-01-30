@@ -620,7 +620,7 @@ LinkRefTab* ZSysFile::Method0x68() {
 
         while (node != nullptr && (node->Info.Type & ZARCHIVETYPE_0x2)) {
             const char* name = (node->Info.Type & ZARCHIVETYPE_ZIP)
-                ? ((ZipIO*)node->Archive)->Name : ((BigIO*)node->Archive)->Name;
+                ? ((ZipIO*)node->Archive)->GetName() : ((BigIO*)node->Archive)->GetName();
 
             this->Method0x74(name);
 
@@ -641,7 +641,7 @@ bool ZSysFile::ContainsArchive(const char* path) {
 
         while (node != nullptr) {
             const char* name = (node->Info.Type & ZARCHIVETYPE_ZIP)
-                ? ((ZipIO*)node->Archive)->Name : ((BigIO*)node->Archive)->Name;
+                ? ((ZipIO*)node->Archive)->GetName() : ((BigIO*)node->Archive)->GetName();
 
             if (stricmp(path, name) == 0) {
                 return true;
@@ -709,7 +709,7 @@ u32* ZSysFile::OpenArchive(const char* path) {
                 if (this->Exists(name, true)) {
                     BigIO* file = new BigIO(name, BIGIO_NONE);
 
-                    if (file->Init) {
+                    if (file->IsInit()) {
                         if (this->Archives == nullptr) {
                             this->Archives = new LinkRefTab(4, 1);
                         }
@@ -748,19 +748,19 @@ void ZSysFile::PrintStatus() {
         ZipIO* file = (ZipIO*)this->Archives->GetNext(&link);
 
         while (file != nullptr) {
-            if (file->Mode & ZIPIO_MODE_WRITE) {
+            if (file->Is(ZIPIO_MODE_WRITE)) {
                 if (file->ZFS.Exists("Pack.*")) {
                     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 844)
-                        ->LogMessage("Zip file \"%s\" pack info", file->Name);
+                        ->LogMessage("Zip file \"%s\" pack info", file->GetName());
                 }
                 else {
                     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 846)
-                        ->LogMessage("Zip file \"%s\"", file->Name);
+                        ->LogMessage("Zip file \"%s\"", file->GetName());
                 }
             }
             else {
                 g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysFileWintel.cpp", 850)
-                    ->LogMessage("Big file \"%s\"", ((BigIO*)file)->Name);
+                    ->LogMessage("Big file \"%s\"", ((BigIO*)file)->GetName());
             }
 
             file = (ZipIO*)this->Archives->GetNext(&link);

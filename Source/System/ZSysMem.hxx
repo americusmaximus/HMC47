@@ -63,13 +63,13 @@ public:
     virtual void Method0x68() = 0;                                          // 0x68
     virtual void Method0x6C() = 0;                                          // 0x6C
     
-public:
+public: // TODO
     bool Unk0x4;                                                            // 0x4
 
 protected:
     AllocRefTab* Tab;                                                       // 0x5
-    u32 Unk0x9;                                                             // 0x9
-    void* Unk0xD;                                                           // 0xD
+    u32* TabItems;                                                          // 0x9
+    u32* Sizes;                                                             // 0xD
     bool Unk0x11;                                                           // 0x11
 };
 

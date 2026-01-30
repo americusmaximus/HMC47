@@ -52,10 +52,17 @@ protected:
     u32 Unk0x10;                                                                    // 0x10
     u32 Unk0x14;                                                                    // 0x14
     u32 Unk0x18;                                                                    // 0x18
-
-public:
     char* Name;                                                                     // 0x1C
     bool Init;                                                                      // 0x20
+
+public:
+    inline bool IsInit() {
+        return this->Init;
+    }
+
+    const char* GetName() {
+        return this->Name;
+    }
 };
 
 #pragma pack(pop)
