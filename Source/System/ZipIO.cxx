@@ -41,6 +41,33 @@ ZipIO::ZipIO() {
     this->Mode = ZIPIO_MODE_READ;
 }
 
+// 0x0ffc1930
+void ZipIO::WriteZipDirectories() {
+#ifdef _DEBUG
+    // C standard library, modern MSVC implementation (debug),
+    // throws the following exception when switching between read/write
+    // without fseek/fflush function calls, therefore seeks are needed.
+
+    // Exception:
+    // Debug Assertion Failed!
+    // Flush between consecutive read and write.
+
+    // Note. The release version of the standard library works just fine.
+
+    const u32 offset = ftell(this->ZFS.Handle);
+    fseek(this->ZFS.Handle, 0, SEEK_SET);
+    fseek(this->ZFS.Handle, offset, SEEK_SET);
+#endif
+
+    u32 signature = ZIP_SIGNATURE_EOCD;
+    fwrite(&signature, 1, sizeof(u32), this->ZFS.Handle);
+    fwrite(&this->ZFS.Central, 1, sizeof(ZIPEOCDV), this->ZFS.Handle);
+
+    signature = ZIP_SIGNATURE_RUNE;
+    fwrite(&signature, 1, sizeof(u32), this->ZFS.Handle);
+    fwrite(&this->ZFS.Rune, 1, sizeof(ZIPEOCDV), this->ZFS.Handle);
+}
+
 // 0x0ffc1990
 void ZipIO::WriteZipFile() {
     this->ZFS.Rune.DirectoryOffset = ftell(this->ZFS.Handle);
@@ -627,14 +654,7 @@ bool ZipIO::Initialize(const char* path, u32 mode) {
 void ZipIO::Release() {
     if (this->Name != nullptr) {
         this->WriteZipFile();
-
-        u32 signature = ZIP_SIGNATURE_EOCD;
-        fwrite(&signature, 1, sizeof(u32), this->ZFS.Handle);
-        fwrite(&this->ZFS.Central, 1, sizeof(ZIPEOCDV), this->ZFS.Handle);
-
-        signature = ZIP_SIGNATURE_RUNE;
-        fwrite(&signature, 1, sizeof(u32), this->ZFS.Handle);
-        fwrite(&this->ZFS.Rune, 1, sizeof(ZIPEOCDV), this->ZFS.Handle);
+        this->WriteZipDirectories();
 
         this->ZFS.Runes.Release();
         this->ZFS.Files.Release();
@@ -728,7 +748,6 @@ void ZipIO::SetCompression(s32 level) {
 void ZipIO::Close() {
     this->ZFS.Runes.Release();
     this->ZFS.Files.Release();
-    
     this->ZFS.Offsets.Release();
 
     fclose(this->ZFS.Handle);
@@ -751,6 +770,77 @@ bool ZipIO::ReInitialize() {
     this->Name = nullptr;
 
     return this->Initialize(name, this->Mode);
+}
+
+// 0x0ffc3890
+bool ZipIO::Import(const char* path) {
+    char name[MAX_ZIP_STRING_LENGTH];
+    char extras[MAX_ZIP_STRING_LENGTH];
+
+    ZipIO zip;
+    bool stop = false;
+
+    if (zip.Initialize(path, ZIPIO_MODE_OPENFILE)) {
+        fseek(zip.ZFS.Handle, zip.ZFS.Central.DirectoryOffset, SEEK_SET);
+
+        while (!feof(zip.ZFS.Handle) && !stop) {
+            u32 signature = 0;
+            fread(&signature, 1, sizeof(u32), zip.ZFS.Handle);
+
+            if (signature == ZIP_SIGNATURE_CDH) {
+                ZIPCDHV file;
+                fread(&file, sizeof(ZIPCDHV), 1, zip.ZFS.Handle);
+
+                if (file.FileNameLength != 0) {
+                    fread(name, 1, file.FileNameLength, zip.ZFS.Handle);
+                    name[file.FileNameLength] = NULL;
+
+                    const u32 offset = ftell(zip.ZFS.Handle);
+
+                    u32 size = file.UncompressedSize;
+                    void* value = new u8[file.UncompressedSize + 1];
+
+                    ZIPLFHV desc;
+                    if (zip.FindFile(name, &desc, nullptr)) {
+                        if (size == 0) {
+                            size = desc.UncompressedSize;
+                        }
+
+                        zip.Unpack(&desc, value, nullptr, size);
+                    }
+
+                    fseek(zip.ZFS.Handle, offset, SEEK_SET);
+
+                    FILETIME time;
+                    DosDateTimeToFileTime(file.LastModifiedDate, file.LastModifiedTime, &time);
+
+                    this->SaveFile(name, &time, value, file.UncompressedSize);
+
+                    delete[] value;
+                }
+
+                if (file.ExtraFieldLength != 0) {
+                    fread(extras, 1, file.ExtraFieldLength, zip.ZFS.Handle);
+                }
+
+                if (file.CommentLength != 0) {
+                    fread(extras, 1, file.CommentLength, zip.ZFS.Handle);
+                }
+            }
+            else {
+                if (signature == ZIP_SIGNATURE_EOCD || signature == ZIP_SIGNATURE_RUNE) {
+                    stop = true;
+                }
+                else {
+                    printf("ZIPFS: Broken .zip archive\n");
+                }
+            }
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 // 0x0ffc3d30

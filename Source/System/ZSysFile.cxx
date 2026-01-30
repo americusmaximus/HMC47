@@ -675,7 +675,7 @@ u32* ZSysFile::OpenArchive(const char* path) {
 
                     while (node != nullptr) {
                         if (node->ArchiveType & ZARCHIVETYPE_ZIP) {
-                            ((ZipIO*)node)->Method0x40(file);
+                            ((ZipIO*)node)->RemoveDuplicates(file);
                         }
 
                         node = (ZArchiveNode*)this->Archives->GetNext(&link);

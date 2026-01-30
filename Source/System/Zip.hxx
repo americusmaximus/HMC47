@@ -103,6 +103,7 @@ struct ZIPEOCD {
 static_assert(sizeof(ZIPCDH)    == 0x2E,    "ZIPCDH size mismatch.");
 static_assert(sizeof(ZIPCDHV)   == 0x2A,    "ZIPCDHV size mismatch.");
 static_assert(sizeof(ZIPEOCD)   == 0x16,    "ZIPEOCD size mismatch.");
+static_assert(sizeof(ZIPEOCDV)  == 0x12,    "ZIPEOCDV size mismatch.");
 static_assert(sizeof(ZIPLFH)    == 0x1E,    "ZIPLFH size mismatch.");
 static_assert(sizeof(ZIPLFHV)   == 0x1A,    "ZIPLFHV size mismatch.");
 #endif

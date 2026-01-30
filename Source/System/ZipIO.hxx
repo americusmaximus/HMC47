@@ -60,9 +60,9 @@ public:
     ~ZipIO();
 
 public:
-    virtual bool Initialize(const char* path, u32 mode);                            // 0x0
+    virtual bool Initialize(const char* path, u32 options);                         // 0x0
     virtual void Release();                                                         // 0x4
-    virtual ZipIOContext* OpenFile(const char* path, u32 mode);                     // 0x8
+    virtual ZipIOContext* OpenFile(const char* path, u32 options);                  // 0x8
     virtual u32 ReadFile(ZipIOContext* context, void* value, u32 size);             // 0xC
     virtual u32 WriteFile(ZipIOContext* context, void* value, u32 size);            // 0x10
     virtual void CloseFile(ZipIOContext* context);                                  // 0x14
@@ -77,7 +77,7 @@ public:
     virtual void SetIsRune();                                                       // 0x38
     virtual void SetIsCentral();                                                    // 0x3C
     virtual void RemoveDuplicates(ZipIO* zip);                                      // 0x40
-    virtual void Method0x44();                                                      // 0x44
+    virtual bool Import(const char* path);                                          // 0x44
 
 public:
     void* Unpack(ZIPLFHV* desc, void* value, void*, u32 size);
@@ -87,6 +87,7 @@ public:
 protected:
     u32 GetDirectoryOffset();
     void ReadZipFile();
+    void WriteZipDirectories();
     void WriteZipFile();
     void Pack(ZIPCDHV* dir, void* value);
 
