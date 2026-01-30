@@ -173,7 +173,7 @@ const char* ZSysFile::GetFileName(const char* path) {
             result += length;
 
             if (result[0] == '\\') {
-                result++;
+                result = &result[1];
             }
         }
     }

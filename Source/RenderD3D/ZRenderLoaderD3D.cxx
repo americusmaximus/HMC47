@@ -88,7 +88,7 @@ void ZRenderModuleD3D::Method0x40() {
 // 0x0fb812f0
 // 0x0fba9990
 void ZRenderModuleD3D::Method0x3C(u32* todo) {
-    ZRenderModule::Method0x3C(todo);
+    ZRenderModule::Method0x3C(todo); // TODO
 }
 
 // 0x0fb90a60

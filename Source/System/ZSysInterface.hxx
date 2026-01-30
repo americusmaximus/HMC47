@@ -294,7 +294,7 @@ public:
     virtual bool Method0x18(const char*, u32 /* TODO */);                               // 0x18
     virtual void RestoreDisplaySettings();                                              // 0x1C
     virtual void Method0x20(bool);                                                      // 0x20
-    virtual void Method0x24();                                                          // 0x24
+    virtual void ReleaseRender();                                                       // 0x24
     virtual void Method0x28();                                                          // 0x28
     virtual void Method0x2C();                                                          // 0x2C
     virtual void Method0x30();                                                          // 0x30

@@ -164,7 +164,9 @@ void ZSysInterface::Method0x20(bool todo) {
 
         if (!todo) {
             if (g_pSysInterface->SoundModule != nullptr) {
-                // TODO NOT IMPLEMENTED
+                if (g_pSysInterface->SoundModule->Unk0x1C != nullptr) {
+                    g_pSysInterface->SoundModule->Unk0x1C->Method0x34();
+                }
             }
         }
     }
@@ -462,8 +464,10 @@ void ZSysInterface::DisplayDebugString(s32 x, s32 y, const char* format, ...) {
 }
 
 // 0x0ffb09e0
-void ZSysInterface::Method0x24() {
-    // TODO NOT IMPLEMENTED
+void ZSysInterface::ReleaseRender() {
+    while (this->Render != nullptr) {
+        delete this->Render;
+    }
 }
 
 // 0x0ffb0a00
