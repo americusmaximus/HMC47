@@ -30,6 +30,8 @@ SOFTWARE.
 #include "ZSettings.hxx"
 #include "ZSoundModule.hxx"
 
+typedef void (*NOTIFYDESTROYCALL)();
+
 #pragma pack(push, 1)
 
 struct Unk0xF00 {
@@ -295,7 +297,7 @@ public:
     virtual void RestoreDisplaySettings();                                              // 0x1C
     virtual void Method0x20(bool);                                                      // 0x20
     virtual void ReleaseRender();                                                       // 0x24
-    virtual void Method0x28();                                                          // 0x28
+    virtual void ReleaseScriptModule();                                                 // 0x28
     virtual void Method0x2C();                                                          // 0x2C
     virtual void Method0x30();                                                          // 0x30
     virtual void Method0x34();                                                          // 0x34
@@ -342,7 +344,7 @@ public:
     virtual void Method0xDC();                                                          // 0xDC
     virtual void Method0x10C(const char* path, u32 line);                               // 0x10C
     virtual u64 GetProcessorTicks(const char* path, u32 line);                          // 0x128
-    virtual void Method0x12C();                                                         // 0x12C
+    virtual void NotifyDestroy(ZModule* module);                                        // 0x12C
 
 public:
     void InitializeModule(ZModule** result, const char* name);

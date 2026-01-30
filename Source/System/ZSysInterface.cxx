@@ -172,6 +172,20 @@ void ZSysInterface::Method0x20(bool todo) {
     }
 }
 
+// 0x0ffacb20
+void ZSysInterface::Method0x2C() {
+    this->Method0x30();
+    this->Unk0x37B1 = new Unk0x38();
+}
+
+// 0x0ffacb90
+void ZSysInterface::Method0x30() {
+    if (this->Unk0x37B1 != nullptr) {
+        delete this->Unk0x37B1;
+        this->Unk0x37B1 = nullptr;
+    }
+}
+
 // 0x0ffacd70
 bool ZSysInterface::IsKeyPressed(s32 key) {
     return GetAsyncKeyState(key) & 0x8000;
@@ -370,6 +384,32 @@ bool StartEngine() {
     }
 
     return false;
+}
+
+// 0x0ffadeb0
+void ZSysInterface::ReleaseScriptModule() {
+    this->NotifyDestroy(this->ScriptModule);
+    this->Unk0x59->Method0x130();
+
+    if (this->ScriptModule != nullptr) {
+        this->ScriptModule->Release();
+        this->ReleaseModule(this->ScriptModule);
+        this->ScriptModule = nullptr;
+    }
+
+    this->InitializeModule(&this->ScriptModule, this->ScriptDll);
+}
+
+// 0x0ffadfd0
+void ZSysInterface::NotifyDestroy(ZModule* module) {
+    if (module != nullptr) {
+        NOTIFYDESTROYCALL notify =
+            (NOTIFYDESTROYCALL)GetProcAddress(module->ModuleHandle, "NotifyDestroy");
+
+        if (notify != nullptr) {
+            notify();
+        }
+    }
 }
 
 // 0x0ffadff0
