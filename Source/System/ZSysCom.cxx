@@ -51,6 +51,8 @@ SOFTWARE.
 
 #define MAX_ZSYSOM_CONFIG_BUFFER_LENGTH     256
 
+#define ZSYSCOM_BUFFER_LENGTH               1024
+
 // 0x0ffa44d0
 ZSysComBase::ZSysComBase() {
     this->ID = ZSYSCOM_ID_MESSAGE;
@@ -152,7 +154,7 @@ ZSysCom* ZSysCom::Log(const char* path, u32 line) {
 
 // 0x0ffa4750
 void ZSysCom::LogFatal(const char* format, ...) {
-    char buffer[1024];
+    char buffer[ZSYSCOM_BUFFER_LENGTH];
 
     va_list args;
     va_start(args, format);
@@ -253,7 +255,7 @@ void ZSysCom::Method0x30(const char* format, ...) {
 
 // 0x0ffa4ac0
 void ZSysCom::Method0x38(const char* format, ...) {
-    char buffer[1024];
+    char buffer[ZSYSCOM_BUFFER_LENGTH];
 
     va_list args;
     va_start(args, format);
@@ -277,7 +279,7 @@ void ZSysCom::Method0x38(const char* format, ...) {
 
 // 0x0ffa4b70
 void ZSysCom::Method0x34(const char* format, ...) {
-    char buffer[1024];
+    char buffer[ZSYSCOM_BUFFER_LENGTH];
 
     if (this->Lock) {
         return;
@@ -316,7 +318,7 @@ void ZSysCom::Method0x34(const char* format, ...) {
 
 // 0x0ffa4c70
 void ZSysCom::DataToDebug(const char* format, ...) {
-    char buffer[1024];
+    char buffer[ZSYSCOM_BUFFER_LENGTH];
 
     if (this->Debugger != NULL) {
         va_list args;
