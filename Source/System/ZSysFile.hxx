@@ -28,9 +28,27 @@ SOFTWARE.
 
 #pragma pack(push, 1)
 
-struct SysFileInfo {
-    u32 Size;
-    char* Name;
+#define ZARCHIVETYPE_NONE   0x0
+#define ZARCHIVETYPE_ZIP    0x1
+#define ZARCHIVETYPE_0x2    0x2     /* TODO */
+
+struct ZArchiveInfo {
+    u32 Type;                                                                               // 0x0
+};
+
+struct ZArchiveNode {
+    void* Archive;                                                                          // 0x0
+    ZArchiveInfo Info;                                                                      // 0x4
+};
+
+struct ZFileInfo {
+    u32 Size;                                                                               // 0x0
+    char* Name;                                                                             // 0x4
+};
+
+struct ZFileNode {
+    u32 Unk0x0;                                                                             // 0x0
+    ZFileInfo Info;                                                                         // 0x4
 };
 
 struct ZSysFileModule {

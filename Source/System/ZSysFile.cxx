@@ -22,7 +22,6 @@ SOFTWARE.
 
 #include "BigIO.hxx"
 #include "Globals.hxx"
-#include "ZArchive.hxx"
 
 #include <stdio.h>
 
@@ -190,7 +189,7 @@ ZipIO* ZSysFile::GetArchive(const char* path) {
         ZArchiveNode* node = (ZArchiveNode*)this->Archives->GetNext(&link);
 
         while (node != nullptr) {
-            if (node->ArchiveType & ZARCHIVETYPE_ZIP) {
+            if (node->Info.Type & ZARCHIVETYPE_ZIP) {
                 ZipIO* zip = (ZipIO*)node->Archive;
 
                 if (zip->ZFS.Exists(path) || this->Method0xA4(zip, path)) {
@@ -468,10 +467,28 @@ u32 ZSysFile::ReadAt(const char* path, void* value, u32 size, u32 offset, bool r
 
 // 0x0ffa6c40
 u32 ZSysFile::Method0x54(const char* path, u32* token) {
-    *token = 0;
+    *token = 0; // TODO
 
+    RefLink link;
     if (this->Files != nullptr) {
-        // TODO NOT IMPLEMENTED
+        this->Files->GetStart(&link);
+        ZFileNode* file = (ZFileNode*)this->Files->GetNext(&link);
+
+        while (file != nullptr) {
+            if (stricmp(file->Info.Name, path) == 0) {
+
+                // TODO NOT IMPLEMENTED
+
+
+                delete[] file->Info.Name;
+
+                this->Files->Remove(&link);
+
+                break;
+            }
+
+            file = (ZFileNode*)this->Files->GetNext(&link);
+        }
     }
 
     const u32 length = this->GetSize(path, false);
@@ -490,7 +507,7 @@ u32 ZSysFile::Method0x54(const char* path, u32* token) {
 
     // TODO NOT IMPLEMENTED
 
-    SysFileInfo* info = (SysFileInfo*)this->Files->Insert(key);
+    ZFileInfo* info = (ZFileInfo*)this->Files->Insert(key);
 
     info->Size = length;
     info->Name = name;
@@ -532,12 +549,6 @@ void ZSysFile::Append(const char* path, const void* value, u32 size) {
         this->Close(file);
     }
 }
-
-// 0x0ffc74e0
-void ZSysFile::Method0x4() {}
-
-// 0x0ffc74e0
-void ZSysFile::Method0x8() {}
 
 // 0x0ffa7020
 void ZSysFile::BlockExtensions(const char* value) {
@@ -607,8 +618,8 @@ LinkRefTab* ZSysFile::Method0x68() {
         previous->GetStart(&link);
         ZArchiveNode* node = (ZArchiveNode*)this->Archives->GetNext(&link);
 
-        while (node != nullptr && (node->ArchiveType & ZARCHIVETYPE_0x2)) {
-            const char* name = (node->ArchiveType & ZARCHIVETYPE_ZIP)
+        while (node != nullptr && (node->Info.Type & ZARCHIVETYPE_0x2)) {
+            const char* name = (node->Info.Type & ZARCHIVETYPE_ZIP)
                 ? ((ZipIO*)node->Archive)->Name : ((BigIO*)node->Archive)->Name;
 
             this->Method0x74(name);
@@ -629,7 +640,7 @@ bool ZSysFile::ContainsArchive(const char* path) {
         ZArchiveNode* node = (ZArchiveNode*)this->Archives->GetNext(&link);
 
         while (node != nullptr) {
-            const char* name = (node->ArchiveType & ZARCHIVETYPE_ZIP)
+            const char* name = (node->Info.Type & ZARCHIVETYPE_ZIP)
                 ? ((ZipIO*)node->Archive)->Name : ((BigIO*)node->Archive)->Name;
 
             if (stricmp(path, name) == 0) {
@@ -674,7 +685,7 @@ u32* ZSysFile::OpenArchive(const char* path) {
                     ZArchiveNode* node = (ZArchiveNode*)this->Archives->GetNext(&link);
 
                     while (node != nullptr) {
-                        if (node->ArchiveType & ZARCHIVETYPE_ZIP) {
+                        if (node->Info.Type & ZARCHIVETYPE_ZIP) {
                             ((ZipIO*)node)->RemoveDuplicates(file);
                         }
 
@@ -835,3 +846,9 @@ bool ZSysFile::ReleaseModule(HMODULE module) {
 void ZSysFile::Method0xAC(/* TODO */) {
     // TODO NOT IMPLEMENTED
 }
+
+// 0x0ffc74e0
+void ZSysFile::Method0x4() {}
+
+// 0x0ffc74e0
+void ZSysFile::Method0x8() {}
