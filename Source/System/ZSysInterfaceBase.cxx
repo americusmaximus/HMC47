@@ -140,3 +140,12 @@ void ZSysInterfaceBase::UnregisterConsoleCommand(ZConsoleCommand* command) {
         console->UnregisterCommand(command);
     }
 }
+
+// 0x0ffaa780
+void ZSysInterfaceBase::RunConsoleCommand(const char* command) {
+    ZConsole* console = this->GetConsole();
+
+    if (console != nullptr) {
+        console->RunCommand(command);
+    }
+}

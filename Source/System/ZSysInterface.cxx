@@ -30,6 +30,8 @@ SOFTWARE.
 #define GRAPGICS_RESOLUTION_640         640
 #define GRAPGICS_RESOLUTION_480         480
 
+#define ZSYSINTERFACE_BUFFER_LENGTH     1024
+
 static const char MainWindowClassName[MAIN_WINDOW_CLASS_NAME_LENGTH + 1] = "ZSystemClass000";
 
 static LRESULT WINAPI MainWindowHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -250,7 +252,7 @@ void ZSysInterface::Method0xC4() {
     try {
     }
     catch (ZExceptionRender e) {
-        char buffer[1024];
+        char buffer[ZSYSINTERFACE_BUFFER_LENGTH];
         sprintf(buffer, "%s: %s. Using old render.", e.TODO1, e.TODO2);
         this->RenderModule->Method0x24();
         MessageBoxA(NULL, buffer, "Fatal error", MB_TOPMOST | MB_ICONHAND);
@@ -268,7 +270,7 @@ void ZSysInterface::Method0xC4() {
     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 990)
         ->LogMessage("Closing old render");
 
-    this->Method0x24();
+    this->ReleaseRender();
 
     if (this->RenderModule != nullptr) {
         this->RenderModule->Release();
@@ -487,9 +489,18 @@ bool ZSysInterface::Method0x18(const char* args, u32 todo) {
     }
 }
 
+// 0x0ffb07f0
+void ZSysInterface::Method0xD4() {
+    char buffer[ZSYSINTERFACE_BUFFER_LENGTH];
+
+    if (g_pSysInterface->DebugOptionsVisibility != 0.0f) {
+        // TODO NOT IMPLEMENTED
+    }
+}
+
 // 0x0ffb0860
 void ZSysInterface::DisplayDebugString(s32 x, s32 y, const char* format, ...) {
-    char buffer[1024];
+    char buffer[ZSYSINTERFACE_BUFFER_LENGTH];
 
     if (g_pSysInterface->DebugOptionsVisibility != 0.0f) {
         for (ZRenderBase* render = this->Render; render != nullptr; render = render->Current) {
@@ -499,6 +510,17 @@ void ZSysInterface::DisplayDebugString(s32 x, s32 y, const char* format, ...) {
             va_end(args);
 
             render->PrintString(x, y, buffer);
+        }
+    }
+}
+
+// 0x0ffb08e0
+void ZSysInterface::Method0xDC(const char* format, ...) {
+    char buffer[ZSYSINTERFACE_BUFFER_LENGTH];
+
+    if (g_pSysInterface->DebugOptionsVisibility != 0.0f) {
+        for (ZRenderBase* render = this->Render; render != nullptr; render = render->Current) {
+            // TODO NOT IMPLEMENTED
         }
     }
 }

@@ -114,14 +114,14 @@ public:
     virtual bool ReleaseModule(ZModule*) = 0;                                   // 0xC0
     virtual void Method0xC4() = 0;                                              // 0xC4
     virtual void __cdecl Method0xC8(u32, u32, const char*, ...) = 0;            // 0xC8
-    virtual void Method0xCC() = 0;                                              // 0xCC
-    virtual void Method0xD0();                                                  // 0xD0
-    virtual void Method0xD4() = 0;                                              // 0xD4
+    virtual u32 Method0xCC(u32, u32) = 0;                                       // 0xCC
+    virtual s32 __cdecl FormatString(char*, const char* format, ...);           // 0xD0
+    virtual void __cdecl Method0xD4() = 0;                                      // 0xD4
     virtual void Method0xD8() = 0;                                              // 0xD8
-    virtual void Method0xDC() = 0;                                              // 0xDC
+    virtual void __cdecl Method0xDC(const char* format, ...) = 0;               // 0xDC
     virtual void RegisterConsoleCommand(ZConsoleCommand* command);              // 0xE0
     virtual void UnregisterConsoleCommand(ZConsoleCommand* command);            // 0xE4
-    virtual void Method0xE8();                                                  // 0xE8
+    virtual void RunConsoleCommand(const char* command);                        // 0xE8
     virtual ZConsole* GetConsole();                                             // 0xEC
     virtual void Method0xF0();                                                  // 0xF0
     virtual void Method0xF4();                                                  // 0xF4
@@ -337,11 +337,11 @@ public:
     virtual ZModule* LoadModule(const char* path);                                      // 0xBC
     virtual bool ReleaseModule(ZModule* module);                                        // 0xC0
     virtual void Method0xC4();                                                          // 0xC4
-    virtual void Method0xC8();                                                          // 0xC8
-    virtual void Method0xCC();                                                          // 0xCC
-    virtual void Method0xD4();                                                          // 0xD4
+    virtual void Method0xC8(u32, u32);                                                  // 0xC8
+    virtual u32 Method0xCC(u32, u32);                                                   // 0xCC
+    virtual void __cdecl Method0xD4();                                                  // 0xD4
     virtual void __cdecl DisplayDebugString(s32 x, s32 y, const char* format, ...);     // 0xD8
-    virtual void Method0xDC();                                                          // 0xDC
+    virtual void __cdecl Method0xDC(const char* format, ...);                           // 0xDC
     virtual void Method0x10C(const char* path, u32 line);                               // 0x10C
     virtual u64 GetProcessorTicks(const char* path, u32 line);                          // 0x128
     virtual void NotifyDestroy(ZModule* module);                                        // 0x12C
