@@ -25,9 +25,23 @@ SOFTWARE.
 #define ZSYSMEM_BUFFER_LENGTH       512
 
 #define ZMEMLINK_CHECKSUM_VALUE     0x87654321
-#define ZMEMLINK_SET_MEM_VALUE      0xED
+#define ZMEMLINK_SET_INIT_MEM       0xED
+#define ZMEMLINK_SET_FREE_MEM       0xD5
 
 #define ZMEMLINK_CHECKSUM(X, S)     (*(u32*)((size_t)X + (size_t)(S)))
+
+#define ZSYSMEM_GET_BLOCK(X)        ((ZMemBlock*)((size_t)X - sizeof(ZMemBlock)))
+#define ZSYSMEM_GET_LINK(X)         ((ZMemLink*)((size_t)X - sizeof(ZMemLink) - sizeof(void*)))
+
+#define ZSYSMEM_GET_COUNT(X)        (*(u32*)((size_t)X - 12))
+#define ZSYSMEM_GET_INDEX(X)        (*(u32*)((size_t)X - 4))
+#define ZSYSMEM_GET_SIZE(X)         (*(u32*)((size_t)X - 8))
+
+#define ZSYSMEM_ALLOCATOR_MASK      0x40000000
+#define ZSYSMEM_MEMLINK_MASK        0x80000000
+
+#define ZSYSMEM_IS_ALLOCATOR(X)     (((size_t)X & ZSYSMEM_ALLOCATOR_MASK))
+#define ZSYSMEM_IS_MEMLINK(X)       (((size_t)X & ZSYSMEM_MEMLINK_MASK))
 
 // 0x0ffb1860
 ZSysMemBase::ZSysMemBase() {
@@ -101,8 +115,8 @@ ZSysMem::ZSysMem() {
     this->Lights = new CompareRefTab(256, 0);
     this->Tab = new AllocRefTab();
 
-    this->Sizes = new u32[this->Tab->GetCapacity() + 1];
-    ZeroMemory(this->Sizes, (this->Tab->GetCapacity() + 1) * sizeof(u32));
+    this->Counts = new s32[this->Tab->GetCapacity() + 1];
+    ZeroMemory(this->Counts, (this->Tab->GetCapacity() + 1) * sizeof(s32));
 
     this->TabItems = this->Tab->GetItems();
 
@@ -112,8 +126,8 @@ ZSysMem::ZSysMem() {
 // 0x0ffb1d20
 // 0x0ffb1d60
 ZSysMem::~ZSysMem() {
-    delete[] this->Sizes;
-    this->Sizes = nullptr;
+    delete[] this->Counts;
+    this->Counts = nullptr;
 
     if (this->Tab != nullptr) {
         delete this->Tab;
@@ -160,15 +174,15 @@ void ZSysMem::PrintMemoryLink(const char* message, ZMemLink* link) {
     strcpy(buffer, message);
     strcat(buffer, "File:%-12s Line:%4d, Links: %3d, Size:%6d");
 
-    g_pSysCom->Method0x34(buffer, link->File, link->Line, link->Links, link->Size & ZMEM_SIZE_MASK);
+    g_pSysCom->Method0x34(buffer, link->File, link->Line, link->Count, link->Size & ZMEM_SIZE_MASK);
 }
 
 // 0x0ffb1fa0
 bool ZSysMem::IsMemoryLinkBroken(ZMemLink* link) {
     const u32 current = link->Unk0x10;
 
-    if (link->Size & 0x80000000) { // TODO
-        const u32 value = link->Unk0x1C ^ link->Size ^ link->Links ^ link->Line
+    if (ZSYSMEM_IS_MEMLINK(link->Size)) {
+        const u32 value = link->Index ^ link->Size ^ link->Count ^ link->Line
             ^ (u32)link->File ^ (u32)link->Previous ^ (u32)link->Next;
 
         link->Unk0x10 = value == 0 ? 1 : value; // TODO
@@ -208,7 +222,7 @@ void* ZSysMem::Allocate(size_t size) {
 
     if (this->Alloc) {
         block = (ZMemBlock*)this->Allocator.Allocate(size + sizeof(ZMemBlock));
-        block->Size = size | 0x40000000; // TODO
+        block->Size = size | ZSYSMEM_ALLOCATOR_MASK;
     }
     else {
         block = (ZMemBlock*)malloc(size + sizeof(ZMemBlock));
@@ -222,8 +236,8 @@ void* ZSysMem::Allocate(size_t size) {
         __asm { int 3 }
     }
 
-    block->Unk0x0 = 1; // TODO
-    block->Unk0x8 = 0; // TODO
+    block->Count = 1;
+    block->Index = 0;
 
     this->Allocations++;
     this->AllocatedSize += size + sizeof(ZMemBlock);
@@ -248,11 +262,11 @@ void* ZSysMem::AllocateLinked(size_t size) {
 
     if (this->Alloc) {
         link = (ZMemLink*)this->Allocator.Allocate(size + sizeof(ZMemLink));
-        link->Size = size | 0xC0000000; // TODO
+        link->Size = size | ZSYSMEM_MEMLINK_MASK | ZSYSMEM_ALLOCATOR_MASK;
     }
     else {
         link = (ZMemLink*)malloc(size + sizeof(ZMemLink));
-        link->Size = size | 0x80000000; // TODO
+        link->Size = size | ZSYSMEM_MEMLINK_MASK;
     }
 
     if (link == nullptr) {
@@ -274,7 +288,7 @@ void* ZSysMem::AllocateLinked(size_t size) {
 
     this->AllocLinksTail = link;
 
-    memset(&link->Value, ZMEMLINK_SET_MEM_VALUE, size);
+    memset(&link->Value, ZMEMLINK_SET_INIT_MEM, size);
     ZMEMLINK_CHECKSUM(link->Value, size) = ZMEMLINK_CHECKSUM_VALUE;
 
     link->Line = 0;
@@ -287,11 +301,11 @@ void* ZSysMem::AllocateLinked(size_t size) {
         this->MaxAllocatedSize = this->AllocatedSize;
     }
 
-    link->Links = 1;
-    link->Unk0x1C = 0;
+    link->Count = 1;
+    link->Index = 0;
 
-    if (link->Size & 0x80000000) { // TODO
-        const u32 value = link->Unk0x1C ^ link->Size ^ link->Links
+    if (ZSYSMEM_IS_MEMLINK(link->Size)) {
+        const u32 value = link->Index ^ link->Size ^ link->Count
             ^ link->Line ^ (u32)link->File ^ (u32)link->Previous ^ (u32)link->Next;
 
         link->Unk0x10 = value == 0 ? 1 : value; // TODO
@@ -299,14 +313,203 @@ void* ZSysMem::AllocateLinked(size_t size) {
 
     ZMemLink* previous = link->Previous;
 
-    if (previous != nullptr && (previous->Size & 0x80000000)) { // TODO
-        const u32 value = previous->Unk0x1C ^ previous->Size ^ previous->Links
+    if (previous != nullptr && ZSYSMEM_IS_MEMLINK(previous->Size)) {
+        const u32 value = previous->Index ^ previous->Size ^ previous->Count
             ^ previous->Line ^ (u32)previous->File ^ (u32)previous->Previous ^ (u32)previous->Next;
 
         previous->Unk0x10 = value == 0 ? 1 : value; // TODO
     }
 
     return &link->Value;
+}
+
+// 0x0ffb26c0
+bool ZSysMem::Delete(void* value) {
+    if (!this->Init) {
+        g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 304)
+            ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 304);
+
+        __asm { int 3 }
+    }
+
+    if (value == nullptr) {
+        g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 307)
+            ->LogMessage("Tried to Delete 0 Pointer");
+
+        return false;
+    }
+
+    if (g_pSysInterface != nullptr) {
+        if (g_pSysInterface->Unk0x59 != nullptr) {
+            // TODO NOT IMPLEMENTED
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 312)
+                ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 312);
+
+            __asm { int 3 }
+        }
+    }
+
+    bool check = false;
+
+    if (ZSYSMEM_IS_MEMLINK(ZSYSMEM_GET_SIZE(value))) {
+        ZMemLink* link = ZSYSMEM_GET_LINK(value);
+
+        check = this->IsMemoryLinkBroken(link);
+
+        if (link->Count >= 1) {
+            link->Count--;
+
+            if (ZSYSMEM_IS_MEMLINK(link->Size)) {
+                const u32 value = link->Index ^ link->Size ^ link->Count
+                    ^ link->Line ^ (u32)link->File ^ (u32)link->Previous ^ (u32)link->Next;
+
+                link->Unk0x10 = value == 0 ? 1 : value; // TODO
+            }
+
+            return false;
+        }
+
+        ZMemLink* next = link->Next;
+        ZMemLink* previous = link->Previous;
+
+        if (previous == nullptr) {
+            this->AllocLinks = next;
+        }
+        else {
+            previous->Next = next;
+        }
+
+        if (next == nullptr) {
+            this->AllocLinksTail = previous;
+        }
+        else {
+            next->Previous = previous;
+        }
+
+        link->Next = nullptr;
+        link->Previous = nullptr;
+
+        if (previous != nullptr && ZSYSMEM_IS_MEMLINK(previous->Size)) {
+            const u32 value = previous->Index ^ previous->Size ^ previous->Count
+                ^ previous->Line ^ (u32)previous->File ^ (u32)previous->Previous ^ (u32)previous->Next;
+
+            previous->Unk0x10 = value == 0 ? 1 : value; // TODO
+        }
+
+        if (next != nullptr && ZSYSMEM_IS_MEMLINK(next->Size)) {
+            const u32 value = next->Index ^ next->Size ^ next->Count
+                ^ next->Line ^ (u32)next->File ^ (u32)next->Previous ^ (u32)next->Next;
+
+            next->Unk0x10 = value == 0 ? 1 : value; // TODO
+        }
+
+        if (link->Index != 0) {
+            if (link->Index == 0) {
+                g_pSysMem->Method0x28(value);
+            }
+
+            const u32 index = ZSYSMEM_GET_INDEX(value);
+
+            if (this->Tab != nullptr) {
+                if (this->Tab->Release(index)) {
+                    this->Counts[this->Tab->GetCapacity() & index] = -1; // TODO
+                }
+                else {
+                    this->PrintMemoryLink("Couldn't free Ref for ", link);
+                }
+            }
+        }
+
+        memset(value, ZMEMLINK_SET_FREE_MEM, link->Size);
+
+        this->LinkAllocations--;
+
+        if (this->LinkAllocations < 0) {
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 342)
+                ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 342);
+
+            __asm { int 3 }
+        }
+
+        if (this->Unk0x242 != nullptr) {
+            this->Unk0x242->FUN_0ffa3b60(link->File);
+        }
+
+        this->AllocatedSize -= link->Size & ZMEM_SIZE_MASK - sizeof(ZMemLink) - sizeof(void*);
+
+        if (link->File != nullptr) {
+            free(link->File);
+        }
+
+        if (ZSYSMEM_IS_ALLOCATOR(link->Size)) {
+            this->Allocator.Delete(link);
+        }
+        else {
+            free(link);
+        }
+    }
+    else {
+        ZMemBlock* block = ZSYSMEM_GET_BLOCK(value);
+
+        block->Count--;
+
+        if (block->Count != 0) {
+            return false;
+        }
+
+        if (block->Index != 0) {
+            if (ZSYSMEM_GET_INDEX(value) == 0) {
+                g_pSysMem->Method0x28(value);
+            }
+
+            const u32 index = ZSYSMEM_GET_INDEX(value);
+
+            if (this->Tab != nullptr) {
+                if (this->Tab->Release(index)) {
+                    this->Counts[this->Tab->GetCapacity() & index] = -1; // TODO
+                }
+                else {
+                    check = true;
+                }
+            }
+        }
+
+        this->Allocations--;
+
+        if (this->Allocations < 0) {
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 366)
+                ->LogMessage("NrAllocs is less than 0");
+
+            check = true;
+            this->Allocations = 0;
+        }
+
+        this->AllocatedSize -= (block->Size & ZMEM_SIZE_MASK) + sizeof(ZMemBlock);
+
+        if (ZSYSMEM_IS_ALLOCATOR(block->Size)) {
+            this->Allocator.Delete(block);
+        }
+        else {
+            free(block);
+        }
+    }
+
+    if (this->AllocatedSize < 0) {
+        g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 380)
+            ->LogMessage("Error: Total no of bytes used:%d", this->AllocatedSize);
+
+        this->AllocatedSize = 0;
+        this->AllocCheck();
+
+        return true;
+    }
+
+    if (check) {
+        this->AllocCheck();
+    }
+
+    return true;
 }
 
 // 0x0ffb2cb0

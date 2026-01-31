@@ -29,21 +29,21 @@ SOFTWARE.
 #pragma pack(push, 1)
 
 struct ZMemBlock {
-    u32 Unk0x0;                                                                             // 0x0
-    u32 Size;                                                                               // 0x4
-    u32 Unk0x8;                                                                             // 0x8
+    u32 Count;                                                                              // 0x0
+    s32 Size;                                                                               // 0x4
+    u32 Index;                                                                              // 0x8
     void* Value[0];
 };
 
 struct ZMemLink {
     ZMemLink* Next;                                                                         // 0x0
     ZMemLink* Previous;                                                                     // 0x4
-    const char* File;                                                                       // 0x8
+    char* File;                                                                             // 0x8
     u32 Line;                                                                               // 0xC
     u32 Unk0x10;                                                                            // 0x10
-    u32 Links;                                                                              // 0x14
-    u32 Size;                                                                               // 0x18
-    u32 Unk0x1C;                                                                            // 0x1C
+    u32 Count;                                                                              // 0x14
+    s32 Size;                                                                               // 0x18
+    u32 Index;                                                                              // 0x1C
     void* Value;                                                                            // 0x20
 };
 
@@ -66,7 +66,7 @@ public:
     virtual void Method0x28() = 0;                                                          // 0x28
     virtual void* Allocate(size_t) = 0;                                                     // 0x2C
     virtual void* AllocateLinked(size_t) = 0;                                               // 0x30
-    virtual void Delete(void*) = 0;                                                         // 0x34
+    virtual bool Delete(void*) = 0;                                                         // 0x34
     virtual void Method0x38() = 0;                                                          // 0x38
     virtual void Method0x3C() = 0;                                                          // 0x3C
     virtual void Method0x40() = 0;                                                          // 0x40
@@ -86,7 +86,7 @@ protected:
     bool Init;                                                                              // 0x4
     AllocRefTab* Tab;                                                                       // 0x5
     u32* TabItems;                                                                          // 0x9
-    u32* Sizes;                                                                             // 0xD
+    s32* Counts;                                                                            // 0xD
     bool Alloc;                                                                             // 0x11
 };
 
@@ -109,7 +109,7 @@ public:
     virtual void Method0x28();                                                              // 0x28
     virtual void* Allocate(size_t size);                                                    // 0x2C
     virtual void* AllocateLinked(size_t size);                                              // 0x30
-    virtual void Delete(void* value);                                                       // 0x34
+    virtual bool Delete(void* value);                                                       // 0x34
     virtual void Method0x38();                                                              // 0x38
     virtual void Method0x3C();                                                              // 0x3C
     virtual void Method0x40();                                                              // 0x40
@@ -143,10 +143,10 @@ protected:
     ZMemLink* AllocLinks;                                                                   // 0x23A
     ZMemLink* AllocLinksTail;                                                               // 0x23E
     void* Unk0x242;                                                                         // 0x242
-    u32 Allocations;                                                                        // 0x246
-    u32 LinkAllocations;                                                                    // 0x24A
-    u32 AllocatedSize;                                                                      // 0x24E
-    u32 MaxAllocatedSize;                                                                   // 0x252
+    s32 Allocations;                                                                        // 0x246
+    s32 LinkAllocations;                                                                    // 0x24A
+    s32 AllocatedSize;                                                                      // 0x24E
+    s32 MaxAllocatedSize;                                                                   // 0x252
     u32 Unk0x256;                                                                           // 0x256
 };
 
