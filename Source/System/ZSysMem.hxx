@@ -63,7 +63,7 @@ public:
     virtual void Method0x1C();                                                              // 0x1C
     virtual void Method0x20();                                                              // 0x20
     virtual void Method0x24() = 0;                                                          // 0x24
-    virtual void Method0x28() = 0;                                                          // 0x28
+    virtual void Index(void*) = 0;                                                          // 0x28
     virtual void* Allocate(size_t) = 0;                                                     // 0x2C
     virtual void* AllocateLinked(size_t) = 0;                                               // 0x30
     virtual bool Delete(void*) = 0;                                                         // 0x34
@@ -84,9 +84,9 @@ public:
 
 protected:
     bool Init;                                                                              // 0x4
-    AllocRefTab* Tab;                                                                       // 0x5
-    u32* TabItems;                                                                          // 0x9
-    s32* Counts;                                                                            // 0xD
+    AllocRefTab* Indx;                                                                      // 0x5
+    u32* Indexes;                                                                           // 0x9
+    void** Values;                                                                          // 0xD
     bool Alloc;                                                                             // 0x11
 };
 
@@ -106,7 +106,7 @@ public:
     virtual void Method0x1C();                                                              // 0x1C
     virtual void Method0x20();                                                              // 0x20
     virtual void Method0x24();                                                              // 0x24
-    virtual void Method0x28();                                                              // 0x28
+    virtual void Index(void* value);                                                        // 0x28
     virtual void* Allocate(size_t size);                                                    // 0x2C
     virtual void* AllocateLinked(size_t size);                                              // 0x30
     virtual bool Delete(void* value);                                                       // 0x34

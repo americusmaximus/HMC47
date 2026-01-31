@@ -43,6 +43,8 @@ SOFTWARE.
 #define ZSYSMEM_IS_ALLOCATOR(X)     (((size_t)X & ZSYSMEM_ALLOCATOR_MASK))
 #define ZSYSMEM_IS_MEMLINK(X)       (((size_t)X & ZSYSMEM_MEMLINK_MASK))
 
+#define ZSYSMEM_INVALID_VALUE       ((void*)(-1))
+
 // 0x0ffb1860
 ZSysMemBase::ZSysMemBase() {
     this->Init = true;
@@ -113,12 +115,12 @@ ZSysMem::ZSysMem() {
 
     this->Textures = new CompareRefTab(256, 0);
     this->Lights = new CompareRefTab(256, 0);
-    this->Tab = new AllocRefTab();
+    this->Indx = new AllocRefTab();
 
-    this->Counts = new s32[this->Tab->GetCapacity() + 1];
-    ZeroMemory(this->Counts, (this->Tab->GetCapacity() + 1) * sizeof(s32));
+    this->Values = new void*[this->Indx->GetCapacity() + 1];
+    ZeroMemory(this->Values, (this->Indx->GetCapacity() + 1) * sizeof(void*));
 
-    this->TabItems = this->Tab->GetItems();
+    this->Indexes = this->Indx->GetItems();
 
     this->Allocator.Unk0x21B = true;
 }
@@ -126,14 +128,14 @@ ZSysMem::ZSysMem() {
 // 0x0ffb1d20
 // 0x0ffb1d60
 ZSysMem::~ZSysMem() {
-    delete[] this->Counts;
-    this->Counts = nullptr;
+    delete[] this->Values;
+    this->Values = nullptr;
 
-    if (this->Tab != nullptr) {
-        delete this->Tab;
+    if (this->Indx != nullptr) {
+        delete this->Indx;
     }
 
-    this->Tab = nullptr;
+    this->Indx = nullptr;
 
     if (this->Textures != nullptr) {
         delete this->Textures;
@@ -153,8 +155,22 @@ ZSysMem::~ZSysMem() {
 }
 
 // 0x0ffb1e30
-void ZSysMem::Method0x28() {
-    // TODO NOT IMPLEMENTED
+void ZSysMem::Index(void* value) {
+    const u32 index = this->Indx->Create();
+    this->Values[this->Indx->GetCapacity() & index] = value;
+
+    ZMemBlock* block = ZSYSMEM_GET_BLOCK(value);
+
+    block->Index = index;
+
+    if (ZSYSMEM_IS_MEMLINK(block->Size)) {
+        ZMemLink* link = ZSYSMEM_GET_LINK(value);
+
+        const u32 value = link->Index ^ link->Size ^ link->Count ^ link->Line
+            ^ (u32)link->File ^ (u32)link->Previous ^ (u32)link->Next;
+
+        link->Unk0x10 = value == 0 ? 1 : value; // TODO
+    }
 }
 
 // 0x0ffb1e90
@@ -406,14 +422,12 @@ bool ZSysMem::Delete(void* value) {
 
         if (link->Index != 0) {
             if (link->Index == 0) {
-                g_pSysMem->Method0x28(value);
+                g_pSysMem->Index(value);
             }
 
-            const u32 index = ZSYSMEM_GET_INDEX(value);
-
-            if (this->Tab != nullptr) {
-                if (this->Tab->Release(index)) {
-                    this->Counts[this->Tab->GetCapacity() & index] = -1; // TODO
+            if (this->Indx != nullptr) {
+                if (this->Indx->Release(link->Index)) {
+                    this->Values[this->Indx->GetCapacity() & link->Index] = ZSYSMEM_INVALID_VALUE;
                 }
                 else {
                     this->PrintMemoryLink("Couldn't free Ref for ", link);
@@ -459,15 +473,13 @@ bool ZSysMem::Delete(void* value) {
         }
 
         if (block->Index != 0) {
-            if (ZSYSMEM_GET_INDEX(value) == 0) {
-                g_pSysMem->Method0x28(value);
+            if (block->Index == 0) {
+                g_pSysMem->Index(value);
             }
 
-            const u32 index = ZSYSMEM_GET_INDEX(value);
-
-            if (this->Tab != nullptr) {
-                if (this->Tab->Release(index)) {
-                    this->Counts[this->Tab->GetCapacity() & index] = -1; // TODO
+            if (this->Indx != nullptr) {
+                if (this->Indx->Release(block->Index)) {
+                    this->Values[this->Indx->GetCapacity() & block->Index] = ZSYSMEM_INVALID_VALUE;
                 }
                 else {
                     check = true;
