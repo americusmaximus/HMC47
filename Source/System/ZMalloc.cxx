@@ -25,7 +25,7 @@ SOFTWARE.
 // 0x0ffc7530
 // 0x0ffd4408
 ZMalloc::ZMalloc() {
-    this->Unk0x0 = 0;
+    this->Allocated = 0;
     this->Unk0x4 = 0;
     this->Unk0x1D8 = 0;
     this->Unk0x1DC = 0;

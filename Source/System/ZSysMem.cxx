@@ -22,10 +22,17 @@ SOFTWARE.
 
 #include "Globals.hxx"
 
+#define ZSYSMEM_BUFFER_LENGTH       512
+
+#define ZMEMLINK_CHECKSUM_VALUE     0x87654321
+#define ZMEMLINK_SET_MEM_VALUE      0xED
+
+#define ZMEMLINK_CHECKSUM(X, S)     (*(u32*)((size_t)X + (size_t)(S)))
+
 // 0x0ffb1860
 ZSysMemBase::ZSysMemBase() {
-    this->Unk0x4 = true;
-    this->Unk0x11 = true;
+    this->Init = true;
+    this->Alloc = true;
 }
 
 // 0x0ffb1880
@@ -42,8 +49,8 @@ void ZSysMem::DisplayStatus(s32 x, s32 y) {
         g_pSysInterface->DisplayDebugString(x, y,
             "Process %.3f / %.3f  Internal %.3f / %.3f : %.3f Count %d",
             allocated / 1048576.0f, total / 1048576.0f,
-            this->Unk0x24E / 1048576.0f, this->Unk0x252 / 1048576.0f,
-            (this->Unk0x1A - this->Unk0x16) / 1048576.0f, this->Unk0x24A + this->Unk0x246);
+            this->AllocatedSize / 1048576.0f, this->MaxAllocatedSize / 1048576.0f,
+            (this->Unk0x1A - this->Unk0x16) / 1048576.0f, this->Allocations + this->LinkAllocations);
     }
 }
 
@@ -55,7 +62,8 @@ void ZSysMem::PrintStatus() {
     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 36)
         ->LogMessage("Alloc  : Process %.3f/%.3f Internal %.3f/%.3f : Count %.3f",
             allocated / 1048576.0f, total / 1048576.0f,
-            this->Unk0x24E / 1048576.0f, this->Unk0x252 / 1048576.0f, this->Unk0x24A + this->Unk0x246);
+            this->AllocatedSize / 1048576.0f, this->MaxAllocatedSize / 1048576.0f,
+            this->Allocations + this->LinkAllocations);
 
     g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 37)
         ->LogMessage("Texture: Light %d Texture %d",
@@ -75,12 +83,16 @@ void ZSysMem::GetProcessStats(u32* allocated, u32* total) {
 // 0x0ffb1af0
 ZSysMem::ZSysMem() {
     this->Unk0x242 = nullptr;
-    this->Unk0x23A = 0;
-    this->Unk0x23E = 0;
-    this->Unk0x246 = 0;
-    this->Unk0x24A = 0;
-    this->Unk0x24E = 0;
-    this->Unk0x252 = 0;
+
+    this->AllocLinks = nullptr;
+    this->AllocLinksTail = nullptr;
+
+    this->Allocations = 0;
+    this->LinkAllocations = 0;
+
+    this->AllocatedSize = 0;
+    this->MaxAllocatedSize = 0;
+
     this->Unk0x256 = 0;
 
     g_pSysMem = this;
@@ -93,14 +105,37 @@ ZSysMem::ZSysMem() {
     ZeroMemory(this->Sizes, (this->Tab->GetCapacity() + 1) * sizeof(u32));
 
     this->TabItems = this->Tab->GetItems();
-    
+
     this->Allocator.Unk0x21B = true;
 }
 
 // 0x0ffb1d20
 // 0x0ffb1d60
 ZSysMem::~ZSysMem() {
-    // TODO NOT IMPLEMENTED
+    delete[] this->Sizes;
+    this->Sizes = nullptr;
+
+    if (this->Tab != nullptr) {
+        delete this->Tab;
+    }
+
+    this->Tab = nullptr;
+
+    if (this->Textures != nullptr) {
+        delete this->Textures;
+    }
+
+    this->Textures = nullptr;
+
+    if (this->Lights != nullptr) {
+        delete this->Lights;
+    }
+
+    this->Lights = nullptr;
+
+    this->AllocCheck();
+
+    g_pSysMem = nullptr;
 }
 
 // 0x0ffb1e30
@@ -119,13 +154,206 @@ void ZSysMem::Method0x50() {
 }
 
 // 0x0ffb1f00
-void ZSysMem::Method0xC() {
-    char buffer[512];
+void ZSysMem::PrintMemoryLink(const char* message, ZMemLink* link) {
+    char buffer[ZSYSMEM_BUFFER_LENGTH];
 
+    strcpy(buffer, message);
+    strcat(buffer, "File:%-12s Line:%4d, Links: %3d, Size:%6d");
+
+    g_pSysCom->Method0x34(buffer, link->File, link->Line, link->Links, link->Size & ZMEM_SIZE_MASK);
+}
+
+// 0x0ffb1fa0
+bool ZSysMem::IsMemoryLinkBroken(ZMemLink* link) {
+    const u32 current = link->Unk0x10;
+
+    if (link->Size & 0x80000000) { // TODO
+        const u32 value = link->Unk0x1C ^ link->Size ^ link->Links ^ link->Line
+            ^ (u32)link->File ^ (u32)link->Previous ^ (u32)link->Next;
+
+        link->Unk0x10 = value == 0 ? 1 : value; // TODO
+    }
+
+    const bool underrun = link->Unk0x10 != current;
+
+    if (underrun) {
+        this->PrintMemoryLink("Memory underrun for ", link);
+    }
+
+    const bool overrun =
+        ZMEMLINK_CHECKSUM(link->Value, link->Size + ZMEM_SIZE_MASK) != ZMEMLINK_CHECKSUM_VALUE;
+
+    if (overrun) {
+        this->PrintMemoryLink("Memory overrun for ", link);
+    }
+
+    return underrun || overrun;
+}
+
+// 0x0ffb2020
+void ZSysMem::AllocCheck() {
     // TODO NOT IMPLEMENTED
-    //"File:%-12s Line:%4d, Links: %3d, Size:%6d"
+}
 
-    // g_pSysCom->Method0x34(buffer, )
+// 0x0ffb2260
+void* ZSysMem::Allocate(size_t size) {
+    if (!this->Init) {
+        g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 234)
+            ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 234);
+
+        __asm { int 3 }
+    }
+
+    ZMemBlock* block = nullptr;
+
+    if (this->Alloc) {
+        block = (ZMemBlock*)this->Allocator.Allocate(size + sizeof(ZMemBlock));
+        block->Size = size | 0x40000000; // TODO
+    }
+    else {
+        block = (ZMemBlock*)malloc(size + sizeof(ZMemBlock));
+        block->Size = size;
+    }
+
+    if (block == nullptr) {
+        g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 244)
+            ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 244);
+
+        __asm { int 3 }
+    }
+
+    block->Unk0x0 = 1; // TODO
+    block->Unk0x8 = 0; // TODO
+
+    this->Allocations++;
+    this->AllocatedSize += size + sizeof(ZMemBlock);
+
+    if (this->MaxAllocatedSize < this->AllocatedSize) {
+        this->MaxAllocatedSize = this->AllocatedSize;
+    }
+
+    return block->Value;
+}
+
+// 0x0ffb2360
+void* ZSysMem::AllocateLinked(size_t size) {
+    if (!this->Init) {
+        g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 234)
+            ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 234);
+
+        __asm { int 3 }
+    }
+
+    ZMemLink* link = nullptr;
+
+    if (this->Alloc) {
+        link = (ZMemLink*)this->Allocator.Allocate(size + sizeof(ZMemLink));
+        link->Size = size | 0xC0000000; // TODO
+    }
+    else {
+        link = (ZMemLink*)malloc(size + sizeof(ZMemLink));
+        link->Size = size | 0x80000000; // TODO
+    }
+
+    if (link == nullptr) {
+        g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 264)
+            ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 264);
+
+        __asm { int 3 }
+    }
+
+    link->Next = nullptr;
+    link->Previous = this->AllocLinksTail;
+
+    if (this->AllocLinksTail == nullptr) {
+        this->AllocLinks = link;
+    }
+    else {
+        this->AllocLinksTail->Next = link;
+    }
+
+    this->AllocLinksTail = link;
+
+    memset(&link->Value, ZMEMLINK_SET_MEM_VALUE, size);
+    ZMEMLINK_CHECKSUM(link->Value, size) = ZMEMLINK_CHECKSUM_VALUE;
+
+    link->Line = 0;
+    link->File = nullptr;
+
+    this->LinkAllocations++;
+    this->AllocatedSize = this->AllocatedSize + size + sizeof(ZMemLink) - sizeof(void*);
+
+    if (this->MaxAllocatedSize < this->AllocatedSize) {
+        this->MaxAllocatedSize = this->AllocatedSize;
+    }
+
+    link->Links = 1;
+    link->Unk0x1C = 0;
+
+    if (link->Size & 0x80000000) { // TODO
+        const u32 value = link->Unk0x1C ^ link->Size ^ link->Links
+            ^ link->Line ^ (u32)link->File ^ (u32)link->Previous ^ (u32)link->Next;
+
+        link->Unk0x10 = value == 0 ? 1 : value; // TODO
+    }
+
+    ZMemLink* previous = link->Previous;
+
+    if (previous != nullptr && (previous->Size & 0x80000000)) { // TODO
+        const u32 value = previous->Unk0x1C ^ previous->Size ^ previous->Links
+            ^ previous->Line ^ (u32)previous->File ^ (u32)previous->Previous ^ (u32)previous->Next;
+
+        previous->Unk0x10 = value == 0 ? 1 : value; // TODO
+    }
+
+    return &link->Value;
+}
+
+// 0x0ffb2cb0
+void ZSysMem::Method0x18() {
+    while (this->AllocLinks != nullptr) {
+        this->Delete(&this->AllocLinks->Value);
+    }
+}
+
+// 0x0ffb2f10
+u32 ZSysMem::Method0x54() {
+    u32 result = 0;
+
+    RefLink link;
+    if (this->Lights != nullptr) {
+        this->Lights->GetStart(&link);
+
+        u32 item = this->Lights->GetNextKey(&link); // TODO
+
+        while (link.Next != nullptr) {
+            // TODO NOT IMPLEMENTED
+
+            item = this->Lights->GetNextKey(&link);
+        }
+    }
+
+    return result;
+}
+
+// 0x0ffb2e50
+u32 ZSysMem::Method0x54() {
+    u32 result = 0;
+
+    RefLink link;
+    if (this->Textures != nullptr) {
+        this->Textures->GetStart(&link);
+
+        u32 item = this->Textures->GetNextKey(&link); // TODO
+
+        while (link.Next != nullptr) {
+            // TODO NOT IMPLEMENTED
+
+            item = this->Textures->GetNextKey(&link);
+        }
+    }
+
+    return result;
 }
 
 // 0x0ffc74e0

@@ -25,10 +25,10 @@ SOFTWARE.
 // 0x0ffa5b30
 void* operator new(size_t size) {
     if (g_pSysMem != nullptr) {
-        return g_pSysMem->Allocate(size);
+        return g_pSysMem->Allocate(size & ZMEM_SIZE_MASK);
     }
 
-    return malloc(size);
+    return malloc(size & ZMEM_SIZE_MASK);
 }
 
 // 0x0ffa13b0

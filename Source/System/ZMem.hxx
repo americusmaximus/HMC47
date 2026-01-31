@@ -28,13 +28,13 @@ SOFTWARE.
 
 class ZMem {
 protected:
-    u32 Unk0x0;                                                                 // 0x0
-    u32 Unk0x4;                                                                 // 0x4
+    u32 Allocated;                                                                  // 0x0
+    u32 Unk0x4;                                                                     // 0x4
 
     // TODO
 
-    u32 Unk0x1D8;                                                               // 0x1D8
-    u32 Unk0x1DC;                                                               // 0x1DC
+    u32 Unk0x1D8;                                                                   // 0x1D8
+    u32 Unk0x1DC;                                                                   // 0x1DC
 };
 
 #pragma pack(pop)

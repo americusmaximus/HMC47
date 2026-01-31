@@ -28,49 +28,66 @@ SOFTWARE.
 
 #pragma pack(push, 1)
 
+struct ZMemBlock {
+    u32 Unk0x0;                                                                             // 0x0
+    u32 Size;                                                                               // 0x4
+    u32 Unk0x8;                                                                             // 0x8
+    void* Value[0];
+};
+
+struct ZMemLink {
+    ZMemLink* Next;                                                                         // 0x0
+    ZMemLink* Previous;                                                                     // 0x4
+    const char* File;                                                                       // 0x8
+    u32 Line;                                                                               // 0xC
+    u32 Unk0x10;                                                                            // 0x10
+    u32 Links;                                                                              // 0x14
+    u32 Size;                                                                               // 0x18
+    u32 Unk0x1C;                                                                            // 0x1C
+    void* Value;                                                                            // 0x20
+};
+
 // 0x0ffd3740
 class ZSysMemBase {
 public:
     ZSysMemBase();
 
 public:
-    virtual ~ZSysMemBase();                                                 // 0x0
-    virtual void DisplayMemoryUsageStatistics(s32, s32) = 0;                // 0x4
-    virtual void PrintMemoryUsageStatistics() = 0;                          // 0x8
-    virtual void Method0xC() = 0;                                           // 0xC
-    virtual void Method0x10() = 0;                                          // 0x10
-    virtual void Method0x14() = 0;                                          // 0x14
-    virtual void Method0x18() = 0;                                          // 0x18
-    virtual void Method0x1C();                                              // 0x1C
-    virtual void Method0x20();                                              // 0x20
-    virtual void Method0x24() = 0;                                          // 0x24
-    virtual void Method0x28() = 0;                                          // 0x28
-    virtual void* Allocate(size_t) = 0;                                     // 0x2C
-    virtual void Method0x30() = 0;                                          // 0x30
-    virtual void Delete(void*) = 0;                                         // 0x34
-    virtual void Method0x38() = 0;                                          // 0x38
-    virtual void Method0x3C() = 0;                                          // 0x3C
-    virtual void Method0x40() = 0;                                          // 0x40
-    virtual void Method0x44() = 0;                                          // 0x44
-    virtual void Method0x48() = 0;                                          // 0x48
-    virtual u32 Method0x4C() = 0;                                           // 0x4C
-    virtual void Method0x50() = 0;                                          // 0x50
-    virtual void Method0x54() = 0;                                          // 0x54
-    virtual void Method0x58() = 0;                                          // 0x58
-    virtual void Method0x5C() = 0;                                          // 0x5C
-    virtual void Method0x60() = 0;                                          // 0x60
-    virtual void Method0x64() = 0;                                          // 0x64
-    virtual void Method0x68() = 0;                                          // 0x68
-    virtual void Method0x6C() = 0;                                          // 0x6C
-    
-public: // TODO
-    bool Unk0x4;                                                            // 0x4
+    virtual ~ZSysMemBase();                                                                 // 0x0
+    virtual void DisplayMemoryUsageStatistics(s32, s32) = 0;                                // 0x4
+    virtual void PrintMemoryUsageStatistics() = 0;                                          // 0x8
+    virtual void PrintMemoryLink(const char*, ZMemLink*) = 0;                               // 0xC
+    virtual void AllocCheck() = 0;                                                          // 0x10
+    virtual bool IsMemoryLinkBroken(ZMemLink*) = 0;                                         // 0x14
+    virtual void Method0x18() = 0;                                                          // 0x18
+    virtual void Method0x1C();                                                              // 0x1C
+    virtual void Method0x20();                                                              // 0x20
+    virtual void Method0x24() = 0;                                                          // 0x24
+    virtual void Method0x28() = 0;                                                          // 0x28
+    virtual void* Allocate(size_t) = 0;                                                     // 0x2C
+    virtual void* AllocateLinked(size_t) = 0;                                               // 0x30
+    virtual void Delete(void*) = 0;                                                         // 0x34
+    virtual void Method0x38() = 0;                                                          // 0x38
+    virtual void Method0x3C() = 0;                                                          // 0x3C
+    virtual void Method0x40() = 0;                                                          // 0x40
+    virtual void Method0x44() = 0;                                                          // 0x44
+    virtual void Method0x48() = 0;                                                          // 0x48
+    virtual u32 Method0x4C() = 0;                                                           // 0x4C
+    virtual void Method0x50() = 0;                                                          // 0x50
+    virtual u32 Method0x54() = 0;                                                           // 0x54
+    virtual u32 Method0x58() = 0;                                                           // 0x58
+    virtual void Method0x5C() = 0;                                                          // 0x5C
+    virtual void Method0x60() = 0;                                                          // 0x60
+    virtual void Method0x64() = 0;                                                          // 0x64
+    virtual void Method0x68() = 0;                                                          // 0x68
+    virtual void Method0x6C() = 0;                                                          // 0x6C
 
 protected:
-    AllocRefTab* Tab;                                                       // 0x5
-    u32* TabItems;                                                          // 0x9
-    u32* Sizes;                                                             // 0xD
-    bool Unk0x11;                                                           // 0x11
+    bool Init;                                                                              // 0x4
+    AllocRefTab* Tab;                                                                       // 0x5
+    u32* TabItems;                                                                          // 0x9
+    u32* Sizes;                                                                             // 0xD
+    bool Alloc;                                                                             // 0x11
 };
 
 // 0x0ffd37b8
@@ -79,40 +96,40 @@ public:
     ZSysMem();
 
 public:
-    virtual ~ZSysMem();                                                     // 0x0
-    virtual void DisplayStatus(s32 x, s32 y);                               // 0x4
-    virtual void PrintStatus();                                             // 0x8
-    virtual void Method0xC();                                               // 0xC
-    virtual void Method0x10();                                              // 0x10
-    virtual void Method0x14();                                              // 0x14
-    virtual void Method0x18();                                              // 0x18
-    virtual void Method0x1C();                                              // 0x1C
-    virtual void Method0x20();                                              // 0x20
-    virtual void Method0x24();                                              // 0x24
-    virtual void Method0x28();                                              // 0x28
-    virtual void* Allocate(size_t size);                                    // 0x2C
-    virtual void Method0x30();                                              // 0x30
-    virtual void Delete(void* ptr);                                         // 0x34
-    virtual void Method0x38();                                              // 0x38
-    virtual void Method0x3C();                                              // 0x3C
-    virtual void Method0x40();                                              // 0x40
-    virtual void Method0x44();                                              // 0x44
-    virtual void Method0x48();                                              // 0x48
-    virtual u32 Method0x4C();                                               // 0x4C
-    virtual void Method0x50();                                              // 0x50
-    virtual void Method0x54();                                              // 0x54
-    virtual void Method0x58();                                              // 0x58
-    virtual void Method0x5C();                                              // 0x5C
-    virtual void Method0x60();                                              // 0x60
-    virtual void Method0x64();                                              // 0x64
-    virtual void Method0x68();                                              // 0x68
-    virtual void Method0x6C();                                              // 0x6C
-    virtual void GetProcessStats(u32* allocated, u32* total);               // 0x70
+    virtual ~ZSysMem();                                                                     // 0x0
+    virtual void DisplayStatus(s32 x, s32 y);                                               // 0x4
+    virtual void PrintStatus();                                                             // 0x8
+    virtual void PrintMemoryLink(const char* mesage, ZMemLink* link);                       // 0xC
+    virtual void AllocCheck();                                                              // 0x10
+    virtual bool IsMemoryLinkBroken(ZMemLink* link);                                        // 0x14
+    virtual void Method0x18();                                                              // 0x18
+    virtual void Method0x1C();                                                              // 0x1C
+    virtual void Method0x20();                                                              // 0x20
+    virtual void Method0x24();                                                              // 0x24
+    virtual void Method0x28();                                                              // 0x28
+    virtual void* Allocate(size_t size);                                                    // 0x2C
+    virtual void* AllocateLinked(size_t size);                                              // 0x30
+    virtual void Delete(void* value);                                                       // 0x34
+    virtual void Method0x38();                                                              // 0x38
+    virtual void Method0x3C();                                                              // 0x3C
+    virtual void Method0x40();                                                              // 0x40
+    virtual void Method0x44();                                                              // 0x44
+    virtual void Method0x48();                                                              // 0x48
+    virtual u32 Method0x4C();                                                               // 0x4C
+    virtual void Method0x50();                                                              // 0x50
+    virtual u32 Method0x54();                                                               // 0x54
+    virtual u32 Method0x58();                                                               // 0x58
+    virtual void Method0x5C();                                                              // 0x5C
+    virtual void Method0x60();                                                              // 0x60
+    virtual void Method0x64();                                                              // 0x64
+    virtual void Method0x68();                                                              // 0x68
+    virtual void Method0x6C();                                                              // 0x6C
+    virtual void GetProcessStats(u32* allocated, u32* total);                               // 0x70
 
 protected:
-    u32 Unk0x12;                                                            // 0x12
-    ZMalloc Allocator;                                                      // 0x16
-    u32 Unk0x1A;                                                            // 0x1A
+    u32 Unk0x12;                                                                            // 0x12
+    ZMalloc Allocator;                                                                      // 0x16
+    u32 Unk0x1A;                                                                            // 0x1A
 
     // TODO
 
@@ -120,20 +137,24 @@ protected:
 
     // TODO
 
-    bool Unk0x231;                                                          // 0x231
-    CompareRefTab* Textures;                                                // 0x232
-    CompareRefTab* Lights;                                                  // 0x236
-    u32 Unk0x23A;                                                           // 0x23A
-    u32 Unk0x23E;                                                           // 0x23E
-    void* Unk0x242;                                                         // 0x242
-    u32 Unk0x246;                                                           // 0x246
-    u32 Unk0x24A;                                                           // 0x24A
-    u32 Unk0x24E;                                                           // 0x24E
-    u32 Unk0x252;                                                           // 0x252
-    u32 Unk0x256;                                                           // 0x256
+    bool Unk0x231;                                                                          // 0x231
+    CompareRefTab* Textures;                                                                // 0x232
+    CompareRefTab* Lights;                                                                  // 0x236
+    ZMemLink* AllocLinks;                                                                   // 0x23A
+    ZMemLink* AllocLinksTail;                                                               // 0x23E
+    void* Unk0x242;                                                                         // 0x242
+    u32 Allocations;                                                                        // 0x246
+    u32 LinkAllocations;                                                                    // 0x24A
+    u32 AllocatedSize;                                                                      // 0x24E
+    u32 MaxAllocatedSize;                                                                   // 0x252
+    u32 Unk0x256;                                                                           // 0x256
 };
 
 #pragma pack(pop)
+
+#ifdef _WIN64
+#error ZSysMem is incompatible with x64.
+#endif
 
 #if defined(_DEBUG) && !defined(_WIN64)
 static_assert(sizeof(ZSysMem)       == 0x25A,   "ZSysMem size mismatch.");
