@@ -62,7 +62,7 @@ public:
     virtual void Method0x18() = 0;                                                          // 0x18
     virtual void Method0x1C();                                                              // 0x1C
     virtual void Method0x20();                                                              // 0x20
-    virtual void Method0x24() = 0;                                                          // 0x24
+    virtual void* SetMemoryLinkDetails(void*, const char*, u32) = 0;                        // 0x24
     virtual void Index(void*) = 0;                                                          // 0x28
     virtual void* Allocate(size_t) = 0;                                                     // 0x2C
     virtual void* AllocateLinked(size_t) = 0;                                               // 0x30
@@ -105,7 +105,7 @@ public:
     virtual void Method0x18();                                                              // 0x18
     virtual void Method0x1C();                                                              // 0x1C
     virtual void Method0x20();                                                              // 0x20
-    virtual void Method0x24();                                                              // 0x24
+    virtual void* SetMemoryLinkDetails(void* value, const char* path, u32 line);            // 0x24
     virtual void Index(void* value);                                                        // 0x28
     virtual void* Allocate(size_t size);                                                    // 0x2C
     virtual void* AllocateLinked(size_t size);                                              // 0x30

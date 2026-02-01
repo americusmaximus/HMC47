@@ -225,6 +225,29 @@ void ZSysMem::AllocCheck() {
     // TODO NOT IMPLEMENTED
 }
 
+// 0x0ffb21c0
+void* ZSysMem::SetMemoryLinkDetails(void* value, const char* path, u32 line) {
+    const char* name = strrchr(path, '\\');
+    name = name == nullptr ? path : &name[1];
+
+    char* str = (char*)malloc(strlen(name) + 1);
+    strcpy(str, name);
+
+    ZMemLink* link = ZSYSMEM_GET_LINK(value);
+
+    link->File = str;
+    link->Line = line;
+
+    if (ZSYSMEM_IS_ALLOCATOR(link->Size)) {
+        const u32 value = link->Index ^ link->Size ^ link->Count
+            ^ link->Line ^ (u32)link->File ^ (u32)link->Previous ^ (u32)link->Next;
+
+        link->Unk0x10 = value == 0 ? 1 : value; // TODO
+    }
+
+    return value;
+}
+
 // 0x0ffb2260
 void* ZSysMem::Allocate(size_t size) {
     if (!this->Init) {

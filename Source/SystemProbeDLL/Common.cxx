@@ -22,8 +22,6 @@ SOFTWARE.
 
 #include "Globals.hxx"
 
-#define MEMORY_SIZE_MASK    0x1FFFFFFF
-
 // 0x0fbb2b70
 // 0x0fbb2d20
 // 0x0fbb2d60
@@ -32,7 +30,7 @@ void* operator new(size_t size) {
         return g_pSysMem->Allocate(size);
     }
 
-    return malloc(size & MEMORY_SIZE_MASK);
+    return malloc(size & ZMEM_SIZE_MASK);
 }
 
 // 0x0fbb1230
