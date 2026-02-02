@@ -20,19 +20,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <System/ZSysCom.hxx>
-#include <System/ZSysFile.hxx>
-#include <System/ZSysInterface.hxx>
-#include <System/ZSysMem.hxx>
+#include <System/ZEngineDataModule.hxx>
 
-class ZSysInput;
+// 0x0ff79b90
+extern "C"
+ZEngineDataModule * Create() {
+    return new ZEngineDataModule();
+}
 
-__declspec(dllexport) ZSysCom*        g_pSysCom;
-__declspec(dllexport) ZSysFile*       g_pSysFile;
-__declspec(dllexport) ZSysInput*      g_pSysInput;
-__declspec(dllexport) ZSysInterface*  g_pSysInterface;
-__declspec(dllexport) ZSysMem*        g_pSysMem;
-
+// 0x0ff7f89d
 BOOL APIENTRY DllMain(HMODULE, DWORD, LPVOID) {
     return TRUE;
 }

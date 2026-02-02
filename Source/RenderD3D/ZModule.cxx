@@ -50,7 +50,7 @@ void ZModule::Method0x24() {}
 void ZModule::Method0x28() {}
 
 // 0x0fb81230
-void ZModule::Method0x10() {}
+void ZModule::Method0x10(u32) {}
 
 // 0x0fb81a00
 void ZModule::Method0x34() {}

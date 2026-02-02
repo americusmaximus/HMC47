@@ -235,7 +235,7 @@ void ZRender::HandleMiddleButtonDown(WPARAM wParam, s32 x, s32 y) {
         this->Method0x9C();
         this->Method0x98();
 
-        this->Unk0x56 = g_pSysInterface->Unk0x59->Unk0x1C1->Method0x18();
+        this->Unk0x56 = g_pSysInterface->EngineData->Unk0x1C1->Method0x18();
         this->Unk0x20 = this->Unk0x20 & 0xFF7FFFFF; // TODO
     }
 }
@@ -270,7 +270,7 @@ void ZRender::HandleKeyDown(WPARAM wParam, LPARAM lParam) {
     g_pSysInterface->Unk0x4 = false;
 
     if (wParam == VK_DELETE && g_pSysInterface->Unk0x38F1) {
-        g_pSysInterface->Unk0x59->Method0x16C();
+        g_pSysInterface->EngineData->Unk0x16C->???();
     }
 
     if (this->ParentWindow != NULL) {
@@ -381,7 +381,7 @@ void ZRender::HandleLeftButtonDown(WPARAM wParam, s32 x, s32 y) {
         this->Method0x9C();
         this->Method0x98();
 
-        this->Unk0x56 = g_pSysInterface->Unk0x59->Unk0x1C1->Method0x18();
+        this->Unk0x56 = g_pSysInterface->EngineData->Unk0x1C1->Method0x18();
     }
 }
 
@@ -424,7 +424,7 @@ void ZRender::HandleLeftButtonDoubleClick(WPARAM wParam, s32 x, s32 y) {
         this->Method0x9C();
         this->Method0x98();
 
-        this->Unk0x56 = g_pSysInterface->Unk0x59->Unk0x1C1->Method0x18();
+        this->Unk0x56 = g_pSysInterface->EngineData->Unk0x1C1->Method0x18();
     }
 }
 
@@ -464,7 +464,7 @@ void ZRender::HandleRightButtonDown(WPARAM wParam, s32 x, s32 y) {
         this->Method0x9C();
         this->Method0x98();
 
-        this->Unk0x56 = g_pSysInterface->Unk0x59->Unk0x1C1->Method0x18();
+        this->Unk0x56 = g_pSysInterface->EngineData->Unk0x1C1->Method0x18();
     }
 }
 

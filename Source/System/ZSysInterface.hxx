@@ -24,11 +24,13 @@ SOFTWARE.
 
 #include "ZConsole.hxx"
 #include "ZDirectPlayModule.hxx"
+#include "ZEngineData.hxx"
 #include "ZMasterControl.hxx"
 #include "ZRender.hxx"
 #include "ZRenderModule.hxx"
 #include "ZSettings.hxx"
 #include "ZSoundModule.hxx"
+#include "ZEngineDataModule.hxx"
 
 typedef void (*NOTIFYDESTROYCALL)();
 
@@ -107,9 +109,9 @@ public:
     virtual void Sleep(f32) = 0;                                                // 0xA4
     virtual void Method0xA8() = 0;                                              // 0xA8
     virtual void Method0xAC() = 0;                                              // 0xAC
-    virtual void Method0xB0() = 0;                                              // 0xB0
+    virtual void SetRenderNameCounterValue(const char*, u64) = 0;               // 0xB0
     virtual void Method0xB4() = 0;                                              // 0xB4
-    virtual void Method0xB8() = 0;                                              // 0xB8
+    virtual void SetRenderCounterValue(u64) = 0;                                // 0xB8
     virtual ZModule* LoadModule(const char*) = 0;                               // 0xBC
     virtual bool ReleaseModule(ZModule*) = 0;                                   // 0xC0
     virtual void Method0xC4() = 0;                                              // 0xC4
@@ -123,7 +125,7 @@ public:
     virtual void UnregisterConsoleCommand(ZConsoleCommand* command);            // 0xE4
     virtual void RunConsoleCommand(const char* command);                        // 0xE8
     virtual ZConsole* GetConsole();                                             // 0xEC
-    virtual void Method0xF0();                                                  // 0xF0
+    virtual void Method0xF0(u64 value, const char* path, u32 line);             // 0xF0
     virtual void Method0xF4();                                                  // 0xF4
     virtual void Method0xF8();                                                  // 0xF8
     virtual void Method0xFC();                                                  // 0xFC
@@ -180,7 +182,7 @@ public:
     bool DisableOptions;                                                        // 0x50
     GraphicsTextureQuality TextureResolution;                                   // 0x51
     GraphicsLevelOfDetail LevelOfDetail;                                        // 0x55
-    void* Unk0x59;                                                              // 0x59
+    ZEngineData* EngineData;                                                    // 0x59
     u32 Unk0x5D;                                                                // 0x5D
     ZString ModulePath;                                                         // 0x61
     ZString BasePath;                                                           // 0xE1
@@ -202,8 +204,7 @@ public:
     ZString RecordFile;                                                         // 0x8E1
     ZString PlayFile;                                                           // 0x961
     ZString PlayVideo;                                                          // 0x9E1
-    f32 ProcessorCounter;                                                       // 0xA61
-    u32 Unk0xA65;                                                               // 0xA65
+    f64 ProcessorCounter;                                                       // 0xA61
     u32 Unk0xA69;                                                               // 0xA69
     u32 FreeVideoMemory;                                                        // 0xA6D
     f32 TimersVisibility;                                                       // 0xA71
@@ -275,7 +276,7 @@ public:
     u32 Unk0x3A37;                                                              // 0x3A37
     ZConsole* Console;                                                          // 0x3A3B
     bool Unk0x3A3F;                                                             // 0x3A3F
-    ZModule* Engine;                                                            // 0x3A40
+    ZEngineDataModule* EngineModule;                                            // 0x3A40
     bool ProcessingWindowMessages;                                              // 0x3A44
 };
 
@@ -311,7 +312,7 @@ public:
     virtual void Method0x54();                                                          // 0x54
     virtual void Method0x58();                                                          // 0x58
     virtual void SetWindowTitle(const char* title);                                     // 0x5C
-    virtual void Method0x60();                                                          // 0x60
+    virtual void SetEngineData(ZEngineData* value);                                     // 0x60
     virtual void Method0x64();                                                          // 0x64
     virtual void Method0x68();                                                          // 0x68
     virtual void Method0x6C();                                                          // 0x6C
@@ -331,9 +332,9 @@ public:
     virtual void Sleep(f32 time);                                                       // 0xA4
     virtual void Method0xA8();                                                          // 0xA8
     virtual void Method0xAC();                                                          // 0xAC
-    virtual void Method0xB0();                                                          // 0xB0
+    virtual void SetRenderNameCounterValue(const char* name, u64 value);                // 0xB0
     virtual void Method0xB4();                                                          // 0xB4
-    virtual void Method0xB8();                                                          // 0xB8
+    virtual void SetRenderCounterValue(u64 value);                                      // 0xB8
     virtual ZModule* LoadModule(const char* path);                                      // 0xBC
     virtual bool ReleaseModule(ZModule* module);                                        // 0xC0
     virtual void Method0xC4();                                                          // 0xC4

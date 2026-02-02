@@ -81,7 +81,7 @@ void ZModule::Method0x24() {}
 void ZModule::Method0x28() {}
 
 // 0x0fbb2d00
-void ZModule::Method0x10() {}
+void ZModule::Method0x10(u32) {}
 
 // 0x0fbb2e00
 FARPROC ZModule::GetFunctionAddress(const char* name) {

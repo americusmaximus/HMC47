@@ -59,7 +59,7 @@ public:
     virtual void PrintMemoryLink(const char*, ZMemLink*) = 0;                               // 0xC
     virtual void AllocCheck() = 0;                                                          // 0x10
     virtual bool IsMemoryLinkBroken(ZMemLink*) = 0;                                         // 0x14
-    virtual void Method0x18() = 0;                                                          // 0x18
+    virtual void DeleteLinks() = 0;                                                         // 0x18
     virtual void Method0x1C();                                                              // 0x1C
     virtual void Method0x20();                                                              // 0x20
     virtual void* SetMemoryLinkDetails(void*, const char*, u32) = 0;                        // 0x24
@@ -102,7 +102,7 @@ public:
     virtual void PrintMemoryLink(const char* mesage, ZMemLink* link);                       // 0xC
     virtual void AllocCheck();                                                              // 0x10
     virtual bool IsMemoryLinkBroken(ZMemLink* link);                                        // 0x14
-    virtual void Method0x18();                                                              // 0x18
+    virtual void DeleteLinks();                                                             // 0x18
     virtual void Method0x1C();                                                              // 0x1C
     virtual void Method0x20();                                                              // 0x20
     virtual void* SetMemoryLinkDetails(void* value, const char* path, u32 line);            // 0x24

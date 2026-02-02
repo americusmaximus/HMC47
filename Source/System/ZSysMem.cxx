@@ -117,8 +117,10 @@ ZSysMem::ZSysMem() {
     this->Lights = new CompareRefTab(256, 0);
     this->Indx = new AllocRefTab();
 
-    this->Values = new void*[this->Indx->GetCapacity() + 1];
-    ZeroMemory(this->Values, (this->Indx->GetCapacity() + 1) * sizeof(void*));
+    const u32 capacity = this->Indx->GetCapacity() + 1;
+
+    this->Values = new void*[capacity];
+    ZeroMemory(this->Values, capacity * sizeof(void*));
 
     this->Indexes = this->Indx->GetItems();
 
@@ -362,6 +364,21 @@ void* ZSysMem::AllocateLinked(size_t size) {
     return &link->Value;
 }
 
+// 0x0ffb25d0
+void ZSysMem::Method0x38(void* value, const char* path, u32 line) {
+
+    // TODO NOT IMPLEMENTED
+
+    ZMemLink* link = ZSYSMEM_GET_LINK(value);
+
+    if (link->Unk0x10 != 1) { // TODO
+        void* pointer = this->AllocateLinked(link->Size & ZMEM_SIZE_MASK);
+        this->SetMemoryLinkDetails(pointer, path, line);
+
+        // TODO NOT IMPLEMENTED
+    }
+}
+
 // 0x0ffb26c0
 bool ZSysMem::Delete(void* value) {
     if (!this->Init) {
@@ -379,7 +396,7 @@ bool ZSysMem::Delete(void* value) {
     }
 
     if (g_pSysInterface != nullptr) {
-        if (g_pSysInterface->Unk0x59 != nullptr) {
+        if (g_pSysInterface->EngineData != nullptr) {
             // TODO NOT IMPLEMENTED
 
             g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 312)
@@ -548,7 +565,7 @@ bool ZSysMem::Delete(void* value) {
 }
 
 // 0x0ffb2cb0
-void ZSysMem::Method0x18() {
+void ZSysMem::DeleteLinks() {
     while (this->AllocLinks != nullptr) {
         this->Delete(&this->AllocLinks->Value);
     }

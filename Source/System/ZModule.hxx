@@ -35,7 +35,7 @@ public:
     virtual void Method0x4();                                                   // 0x4
     virtual void Initialize();                                                  // 0x8
     virtual void Release();                                                     // 0xC
-    virtual void Method0x10();                                                  // 0x10
+    virtual void Method0x10(u32);                                               // 0x10
     virtual void Method0x14();                                                  // 0x14
     virtual void Method0x18();                                                  // 0x18
     virtual void Method0x1C();                                                  // 0x1C

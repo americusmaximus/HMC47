@@ -20,19 +20,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <System/ZSysCom.hxx>
-#include <System/ZSysFile.hxx>
-#include <System/ZSysInterface.hxx>
-#include <System/ZSysMem.hxx>
+#pragma once
 
-class ZSysInput;
-
-__declspec(dllexport) ZSysCom*        g_pSysCom;
-__declspec(dllexport) ZSysFile*       g_pSysFile;
-__declspec(dllexport) ZSysInput*      g_pSysInput;
-__declspec(dllexport) ZSysInterface*  g_pSysInterface;
-__declspec(dllexport) ZSysMem*        g_pSysMem;
-
-BOOL APIENTRY DllMain(HMODULE, DWORD, LPVOID) {
-    return TRUE;
-}
+#include "Globals.hxx"

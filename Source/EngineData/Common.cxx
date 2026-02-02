@@ -20,19 +20,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <System/ZSysCom.hxx>
-#include <System/ZSysFile.hxx>
-#include <System/ZSysInterface.hxx>
-#include <System/ZSysMem.hxx>
+#include "Common.hxx"
 
-class ZSysInput;
+// 0x0ff7a2af
+void* operator new(size_t size) {
+    if (g_pSysMem != nullptr) {
+        return g_pSysMem->Allocate(size);
+    }
 
-__declspec(dllexport) ZSysCom*        g_pSysCom;
-__declspec(dllexport) ZSysFile*       g_pSysFile;
-__declspec(dllexport) ZSysInput*      g_pSysInput;
-__declspec(dllexport) ZSysInterface*  g_pSysInterface;
-__declspec(dllexport) ZSysMem*        g_pSysMem;
+    return malloc(size & ZMEM_SIZE_MASK);
+}
 
-BOOL APIENTRY DllMain(HMODULE, DWORD, LPVOID) {
-    return TRUE;
+// 0x0ff7a1c6
+// 0x0ff8dbc0
+void operator delete(void* ptr) noexcept {
+    if (g_pSysMem != nullptr) {
+        g_pSysMem->Delete(ptr);
+        return;
+    }
+
+    free(ptr);
 }

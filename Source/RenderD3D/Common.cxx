@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Globals.hxx"
+#include "Common.hxx"
 
 // 0x0fb81030
 void* operator new(size_t size) {

@@ -103,8 +103,8 @@ ZSysInterface::ZSysInterface(HMODULE module) {
     this->TimersVisibility = 0.0f;
     this->FullScreen = true;
 
-    this->Engine = nullptr;
-    this->Unk0x59 = nullptr;
+    this->EngineModule = nullptr;
+    this->EngineData = nullptr;
 
     {
         char* path = new char[MAX_PATH];
@@ -391,7 +391,7 @@ bool StartEngine() {
 // 0x0ffadeb0
 void ZSysInterface::ReleaseScriptModule() {
     this->NotifyDestroy(this->ScriptModule);
-    this->Unk0x59->Method0x130();
+    this->EngineData->Method0x130();
 
     if (this->ScriptModule != nullptr) {
         this->ScriptModule->Release();
@@ -442,9 +442,10 @@ void ZSysInterface::ExecuteEngine(u32 code) {
         }
     }
     else {
-        const DWORD64 start = __rdtsc();
+        const u64 start = __rdtsc();
 
         g_pSysInterface->Method0x10C("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1341);
+
         this->Method0x90();
 
         for (ZRenderBase* render = this->Render; render != nullptr; render = render->Current) {
@@ -455,6 +456,7 @@ void ZSysInterface::ExecuteEngine(u32 code) {
 
                 LinkSortRefTab* list = render->Method0x6C();
                 list->GetStart(&link);
+
                 void* result = REFTAB_KEY_TO_PTR(list->GetNextKey(&link)); // TODO
 
                 while (link.Next != nullptr) {
@@ -467,15 +469,23 @@ void ZSysInterface::ExecuteEngine(u32 code) {
             }
         }
 
-        this->Unk0x59->Method0x48();
-        this->Method0x38(code);
-
-        const DWORD64 end = __rdtsc();
+        this->EngineData->Method0x48();
+        this->Method0x38();
 
         if (this->TimersVisibility != 0.0f) {
-            g_pSysInterface->Method0xD8(0, 30, "Mainloop: %f", (end - start) * 60.0f / this->ProcessorCounter);
+            g_pSysInterface->DisplayDebugString(0, 30,
+                "Mainloop: %f", (__rdtsc() - start) * 60.0 / this->ProcessorCounter);
         }
     }
+}
+
+// 0x0ffae2d0
+void ZSysInterface::SetEngineData(ZEngineData* value) {
+    if (this->EngineData != nullptr) {
+        delete this->EngineData;
+    }
+
+    this->EngineData = value;
 }
 
 // 0x0ffb0270
@@ -522,6 +532,22 @@ void ZSysInterface::Method0xDC(const char* format, ...) {
         for (ZRenderBase* render = this->Render; render != nullptr; render = render->Current) {
             // TODO NOT IMPLEMENTED
         }
+    }
+}
+
+// 0x0ffb0950
+void ZSysInterface::SetRenderNameCounterValue(const char* name, u64 value) {
+    for (ZRenderBase* render = this->Render; render != nullptr; render = render->Current) {
+        ZCounter* counter = render->GetCounter();
+        counter->Method0x0(name, value);
+    }
+}
+
+// 0x0ffb0990
+void ZSysInterface::SetRenderCounterValue(u64 value) {
+    for (ZRenderBase* render = this->Render; render != nullptr; render = render->Current) {
+        ZCounter* counter = render->GetCounter();
+        counter->Method0x4(value);
     }
 }
 
@@ -697,6 +723,11 @@ void ZSysInterface::Method0x9C() {
 
 // 0x0ffb17a0
 void ZSysInterface::Method0x10C(const char* path, u32 line) {
+    const u64 ticks =
+        g_pSysInterface->GetProcessorTicks("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 2456);
+
+    this->Method0xF0(ticks, path, line);
+
     // TODO NOT IMPLEMENTED
 }
 
@@ -718,8 +749,6 @@ void ZSysInterface::Method0xA0() {
                 ->LogMessage("Cycles pr second %f\n", cycles);
         }
 
-        // TODO NOT IMPLEMENTED
-
         this->ProcessorCounter = cycles;
     }
 }
@@ -730,14 +759,14 @@ void ZSysInterface::Sleep(f32 time) {
 }
 
 // 0x0ffb1330
-bool ZSysInterface::ReleaseModule(ZModule* ptr) {
-    if (ptr == nullptr) {
+bool ZSysInterface::ReleaseModule(ZModule* module) {
+    if (module == nullptr) {
         return false;
     }
 
-    HMODULE module = ptr->ModuleHandle;
+    HMODULE handle = module->ModuleHandle;
 
-    delete ptr;
+    delete module;
 
-    return g_pSysFile->ReleaseModule(module);
+    return g_pSysFile->ReleaseModule(handle);
 }

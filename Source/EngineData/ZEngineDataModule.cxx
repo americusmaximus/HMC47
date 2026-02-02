@@ -20,19 +20,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <System/ZSysCom.hxx>
-#include <System/ZSysFile.hxx>
-#include <System/ZSysInterface.hxx>
-#include <System/ZSysMem.hxx>
+#include "Common.hxx"
 
-class ZSysInput;
+#include <System/ZEngineDataModule.hxx>
 
-__declspec(dllexport) ZSysCom*        g_pSysCom;
-__declspec(dllexport) ZSysFile*       g_pSysFile;
-__declspec(dllexport) ZSysInput*      g_pSysInput;
-__declspec(dllexport) ZSysInterface*  g_pSysInterface;
-__declspec(dllexport) ZSysMem*        g_pSysMem;
+// 0x0ff90554
+ZEngineDataModule::ZEngineDataModule() {}
 
-BOOL APIENTRY DllMain(HMODULE, DWORD, LPVOID) {
-    return TRUE;
+// 0x0ff79bd0
+ZEngineDataModule::~ZEngineDataModule() { }
+
+// 0x0ff79c20
+void ZEngineDataModule::Release() {
+    g_pSysInterface->SetEngineData(nullptr);
+}
+
+// 0x0ff79c30
+void ZEngineDataModule::Initialize() {
+    g_pSysInterface->SetEngineData(new ZEngineData());
 }

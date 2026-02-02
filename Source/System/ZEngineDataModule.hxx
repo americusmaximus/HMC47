@@ -20,19 +20,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <System/ZSysCom.hxx>
-#include <System/ZSysFile.hxx>
-#include <System/ZSysInterface.hxx>
-#include <System/ZSysMem.hxx>
+#pragma once
 
-class ZSysInput;
+#include "ZModule.hxx"
 
-__declspec(dllexport) ZSysCom*        g_pSysCom;
-__declspec(dllexport) ZSysFile*       g_pSysFile;
-__declspec(dllexport) ZSysInput*      g_pSysInput;
-__declspec(dllexport) ZSysInterface*  g_pSysInterface;
-__declspec(dllexport) ZSysMem*        g_pSysMem;
+#pragma pack(push, 1)
 
-BOOL APIENTRY DllMain(HMODULE, DWORD, LPVOID) {
-    return TRUE;
-}
+class ZEngineDataModule : public ZModule {
+public:
+    ZEngineDataModule();
+
+public:
+    virtual ~ZEngineDataModule();                                               // 0x0
+    virtual void Initialize();                                                  // 0x8
+    virtual void Release();                                                     // 0xC
+};
+
+#pragma pack(pop)
+
+#if defined(_DEBUG) && !defined(_WIN64)
+static_assert(sizeof(ZEngineDataModule)     == 0xC,     "ZEngineDataModule size mismatch.");
+#endif

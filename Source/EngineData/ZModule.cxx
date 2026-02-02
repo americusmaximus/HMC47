@@ -22,25 +22,55 @@ SOFTWARE.
 
 #include <System/ZModule.hxx>
 
-// 0x10001050
+// 0x0ff8e230
+void ZModule::Method0x4() {}
+
+// 0x0ff8e230
+void ZModule::Initialize() {}
+
+// 0x0ff8e230
+void ZModule::Release() {}
+
+// 0x0ff8e230
+void ZModule::Method0x14() {}
+
+// 0x0ff8e230
+void ZModule::Method0x18() {}
+
+// 0x0ff8e230
+void ZModule::Method0x1C() {}
+
+// 0x0ff8e230
+void ZModule::Method0x20() {}
+
+// 0x0ff8e230
+void ZModule::Method0x24() {}
+
+// 0x0ff8e230
+void ZModule::Method0x28() {}
+
+// 0x0ff8e220
+void ZModule::Method0x10(u32) {}
+
+// 0x0ff79cb0
 void ZModule::Method0x34() {}
 
-// 0x10006540
-// 0x10007720
+// 0x0ff8e0e0
+// 0x0ff91238
 ZModule::ZModule() {
     this->ModuleName = nullptr;
     this->ModuleHandle = NULL;
 }
 
-// 0x10006560
-// 0x100065c0
+// 0x0ff79c10
+// 0x0ff8e100
 ZModule::~ZModule() {
     if (this->ModuleName != nullptr) {
         delete[] this->ModuleName;
     }
 }
 
-// 0x100065f0
+// 0x0ff8e190
 void ZModule::SetModule(HMODULE module, const char* name) {
     if (this->ModuleName != nullptr) {
         delete[] this->ModuleName;
@@ -52,37 +82,7 @@ void ZModule::SetModule(HMODULE module, const char* name) {
     this->ModuleHandle = module;
 }
 
-// 0x10006680
-void ZModule::Method0x4() {}
-
-// 0x10006680
-void ZModule::Initialize() {}
-
-// 0x10006680
-void ZModule::Release() {}
-
-// 0x10006680
-void ZModule::Method0x14() {}
-
-// 0x10006680
-void ZModule::Method0x18() {}
-
-// 0x10006680
-void ZModule::Method0x1C() {}
-
-// 0x10006680
-void ZModule::Method0x20() {}
-
-// 0x10006680
-void ZModule::Method0x24() {}
-
-// 0x10006680
-void ZModule::Method0x28() {}
-
-// 0x10006690
-void ZModule::Method0x10(u32) {}
-
-// 0x100066a0
+// 0x0ff8e240
 FARPROC ZModule::GetFunctionAddress(const char* name) {
     return this->ModuleHandle == NULL
         ? nullptr : GetProcAddress(this->ModuleHandle, name);

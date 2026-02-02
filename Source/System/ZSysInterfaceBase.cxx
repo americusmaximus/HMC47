@@ -46,7 +46,7 @@ ZSysInterfaceBase::ZSysInterfaceBase() {
     this->Unk0x3A27 = 0; // TODO
     this->Unk0x3A2B = 0; // TODO
     this->Unk0x37DD = 0; // TODO
-    this->ProcessorCounter = 0.0f;
+    this->ProcessorCounter = 0.0;
 
     this->Unk0x3A2F = 0; // TODO
     this->SaveRecordRuntime = false;
@@ -121,6 +121,12 @@ bool ZSysInterfaceBase::Method0x0() {
     }
 
     return false;
+}
+
+// 0x0ffaa660
+void ZSysInterfaceBase::Method0xF0(u64 value, const char* path, u32 line) {
+    this->Method0x108(TODO, 4, 1, path, line);
+    this->Unk0x3A37 = 1; // TODO
 }
 
 // 0x0ffaa720

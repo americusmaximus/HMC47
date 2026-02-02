@@ -29,6 +29,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectPlay", "Source\Direct
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZLib", "Source\ZLib\ZLib.vcxproj", "{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EngineData", "Source\EngineData\EngineData.vcxproj", "{9746ECF0-9D9A-4D4E-B1B1-4EC9E794A453}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E123EA86-DCD6-4184-BE22-B3CA506EC85D} = {E123EA86-DCD6-4184-BE22-B3CA506EC85D}
+		{E9AA90CC-2291-4E42-825B-33E6C9CCBD8B} = {E9AA90CC-2291-4E42-825B-33E6C9CCBD8B}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -101,6 +107,14 @@ Global
 		{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}.Release|x64.Build.0 = Release|x64
 		{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}.Release|x86.ActiveCfg = Release|Win32
 		{DDBEFC83-FF26-475C-BCFC-8939C73F3C69}.Release|x86.Build.0 = Release|Win32
+		{9746ECF0-9D9A-4D4E-B1B1-4EC9E794A453}.Debug|x64.ActiveCfg = Debug|x64
+		{9746ECF0-9D9A-4D4E-B1B1-4EC9E794A453}.Debug|x64.Build.0 = Debug|x64
+		{9746ECF0-9D9A-4D4E-B1B1-4EC9E794A453}.Debug|x86.ActiveCfg = Debug|Win32
+		{9746ECF0-9D9A-4D4E-B1B1-4EC9E794A453}.Debug|x86.Build.0 = Debug|Win32
+		{9746ECF0-9D9A-4D4E-B1B1-4EC9E794A453}.Release|x64.ActiveCfg = Release|x64
+		{9746ECF0-9D9A-4D4E-B1B1-4EC9E794A453}.Release|x64.Build.0 = Release|x64
+		{9746ECF0-9D9A-4D4E-B1B1-4EC9E794A453}.Release|x86.ActiveCfg = Release|Win32
+		{9746ECF0-9D9A-4D4E-B1B1-4EC9E794A453}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

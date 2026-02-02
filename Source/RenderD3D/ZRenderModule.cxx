@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Globals.hxx"
+#include "Common.hxx"
 
 #include <System/Texture.hxx>
 #include <System/ZRenderModule.hxx>
@@ -136,7 +136,7 @@ void ZRenderModule::Method0x3C(u32* todo) {
                     }
 
                     if (i % 50 == 0) { // TODO
-                        g_pSysInterface->Unk0x59->Method0x54(1, 0, ((count - i) * 0.5f) / (f32)count);
+                        g_pSysInterface->EngineData->Method0x54(1, 0, ((count - i) * 0.5f) / (f32)count); // TODO
                     }
 
                     local_18 = (int*)((int)local_18 + (local_18[1] & 0x3fffffffU));
