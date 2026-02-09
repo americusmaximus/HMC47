@@ -73,7 +73,7 @@ public:
     virtual void Method0x44() = 0;                                                          // 0x44
     virtual void Method0x48() = 0;                                                          // 0x48
     virtual void* GetByIndex(u32) = 0;                                                      // 0x4C
-    virtual void Method0x50() = 0;                                                          // 0x50
+    virtual void Method0x50(void*) = 0;                                                     // 0x50
     virtual u32 Method0x54() = 0;                                                           // 0x54
     virtual u32 Method0x58() = 0;                                                           // 0x58
     virtual void Method0x5C() = 0;                                                          // 0x5C
@@ -116,7 +116,7 @@ public:
     virtual void Method0x44();                                                              // 0x44
     virtual void Method0x48();                                                              // 0x48
     virtual void* GetByIndex(u32 index);                                                    // 0x4C
-    virtual void Method0x50();                                                              // 0x50
+    virtual void Method0x50(void* value);                                                   // 0x50
     virtual u32 Method0x54();                                                               // 0x54
     virtual u32 Method0x58();                                                               // 0x58
     virtual void Method0x5C();                                                              // 0x5C

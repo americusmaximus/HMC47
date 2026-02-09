@@ -191,8 +191,10 @@ void* ZSysMem::GetByIndex(u32 index) {
 }
 
 // 0x0ffb1ed0
-void ZSysMem::Method0x50() {
-    // TODO NOT IMPLEMENTED
+void ZSysMem::Method0x50(void* value) {
+    if (value != nullptr) {
+        g_pSysInterface->EngineData->Method0x110(value);
+    }
 }
 
 // 0x0ffb1f00

@@ -99,7 +99,7 @@ public:
     virtual void Method0x104();                                                             // 0x104
     virtual void Method0x108();                                                             // 0x108
     virtual void Method0x10C();                                                             // 0x10C
-    virtual void Method0x110();                                                             // 0x110
+    virtual void Method0x110(void*);                                                        // 0x110
     virtual void Method0x114();                                                             // 0x114
     virtual void Method0x118();                                                             // 0x118
     virtual void Method0x11C();                                                             // 0x11C
