@@ -188,6 +188,7 @@
     <ClCompile Include="ZConsoleAutoCompleteHandler.cxx" />
     <ClCompile Include="ZConsoleCommand.cxx" />
     <ClCompile Include="ZConsoleHandler.cxx" />
+    <ClCompile Include="ZCopiableBinTree.cxx" />
     <ClCompile Include="ZHelpConsoleCommand.cxx" />
     <ClCompile Include="ZipFileSystem.cxx" />
     <ClCompile Include="ZipFileSystemCache.cxx" />
@@ -218,6 +219,7 @@
     <ClInclude Include="ZArray.hxx" />
     <ClInclude Include="ZBinTree.hxx" />
     <ClInclude Include="ZConsole.hxx" />
+    <ClInclude Include="ZCopiableBinTree.hxx" />
     <ClInclude Include="ZCounter.hxx" />
     <ClInclude Include="ZDirectPlay.hxx" />
     <ClInclude Include="ZDirectPlayModule.hxx" />
@@ -230,7 +232,6 @@
     <ClInclude Include="ZipIO.hxx" />
     <ClInclude Include="ZList.hxx" />
     <ClInclude Include="ZMalloc.hxx" />
-    <ClInclude Include="ZMem.hxx" />
     <ClInclude Include="ZModule.hxx" />
     <ClInclude Include="ZRender.hxx" />
     <ClInclude Include="ZRenderModule.hxx" />

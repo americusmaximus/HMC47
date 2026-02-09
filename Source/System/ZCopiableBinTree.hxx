@@ -22,38 +22,9 @@ SOFTWARE.
 
 #pragma once
 
-#include "StaticRefTab.hxx"
-#include "ZBinTree.hxx"
+#include "ZValueTree.hxx"
 
-#pragma pack(push, 1)
-
-struct ZValueTreeNode : ZBinTreeNode {
-    void* Value;
-};
-
-class ZValueTree : public ZBinTree {
-public:
-    ZValueTree(u32 count);
-    ~ZValueTree();
-
-public:
-    virtual ZBinTreeNode* Remove(ZBinTreeNode* node);                           // 0x4
-    virtual void CopyValue(ZBinTreeNode* dst, ZBinTreeNode* src);               // 0x24
-    virtual void InsertItem(u32 key, void* value);                              // 0x28
-    virtual void RemoveItem(u32 key);                                           // 0x2C
-    virtual void* GetItemValue(u32 key);                                        // 0x30
-
+class ZCopiableBinTree : public ZBinTree {
 protected:
-    StaticRefTab* Items;                                                        // 0x1D
+    virtual void CopyValue(ZBinTreeNode* a, ZBinTreeNode* b);                       // 0x24
 };
-
-#pragma pack(pop)
-
-#ifdef _WIN64
-#error ZValueTree is incompatible with x64.
-#endif
-
-#if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZValueTree)        == 0x21,    "ZValueTree size mismatch.");
-static_assert(sizeof(ZValueTreeNode)    == 0x15,    "ZValueTreeNode size mismatch.");
-#endif

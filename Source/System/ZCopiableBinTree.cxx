@@ -20,25 +20,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#include "ZCopiableBinTree.hxx"
 
-#include "Common.hxx"
-
-#pragma pack(push, 1)
-
-class ZMem {
-protected:
-    u32 Allocated;                                                                  // 0x0
-    u32 Unk0x4;                                                                     // 0x4
-
-    // TODO
-
-    u32 Unk0x1D8;                                                                   // 0x1D8
-    u32 Unk0x1DC;                                                                   // 0x1DC
-};
-
-#pragma pack(pop)
-
-#if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZMem)      == 0x1E0,   "ZMem size mismatch.");
-#endif
+// 0x0ffc75b0
+void ZCopiableBinTree::CopyValue(ZBinTreeNode* dst, ZBinTreeNode* src) {
+    ((ZValueTreeNode*)dst)->Value = ((ZValueTreeNode*)src)->Value;
+}

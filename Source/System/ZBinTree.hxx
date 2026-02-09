@@ -47,7 +47,7 @@ public:
     virtual void Insert(ZBinTreeNode* node);                                    // 0x0
     virtual ZBinTreeNode* Remove(ZBinTreeNode* node);                           // 0x4
     virtual ZBinTreeNode* GetMatch(u32 value, ZBinTreeNode* node);              // 0x8
-    virtual ZBinTreeNode* GetClose(u32 value, ZBinTreeNode* node);              // 0xC
+    virtual ZBinTreeNode* GetApproximate(u32 value, ZBinTreeNode* node);        // 0xC
     virtual ZBinTreeNode* GetMinimum(ZBinTreeNode* node);                       // 0x10
     virtual ZBinTreeNode* GetMaximum(ZBinTreeNode* node);                       // 0x14
     virtual ZBinTreeNode* GetSuccessor(ZBinTreeNode* node);                     // 0x18
@@ -74,5 +74,6 @@ protected:
 #endif
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZBinTree)  == 0x1D,    "ZBinTree size mismatch.");
+static_assert(sizeof(ZBinTree)      == 0x1D,    "ZBinTree size mismatch.");
+static_assert(sizeof(ZBinTreeNode)  == 0x11,    "ZBinTreeNode size mismatch.");
 #endif

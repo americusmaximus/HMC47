@@ -83,7 +83,7 @@ ZBinTreeNode* ZBinTree::GetMatch(u32 value, ZBinTreeNode* node) {
 }
 
 // 0x0ffc7ea0
-ZBinTreeNode* ZBinTree::GetClose(u32 value, ZBinTreeNode* node) {
+ZBinTreeNode* ZBinTree::GetApproximate(u32 value, ZBinTreeNode* node) {
     if (node == nullptr) {
         node = this->Nodes;
 
@@ -94,7 +94,7 @@ ZBinTreeNode* ZBinTree::GetClose(u32 value, ZBinTreeNode* node) {
 
     if (value < node->Key) {
         if (node->Left != nullptr) {
-            ZBinTreeNode* result = this->GetClose(value, node->Left);
+            ZBinTreeNode* result = this->GetApproximate(value, node->Left);
 
             if (result != nullptr) {
                 if (value <= result->Key) {
@@ -105,7 +105,7 @@ ZBinTreeNode* ZBinTree::GetClose(u32 value, ZBinTreeNode* node) {
     }
     else if (node->Key < value) {
         if (node->Right != nullptr) {
-            ZBinTreeNode* result = this->GetClose(value, node->Right);
+            ZBinTreeNode* result = this->GetApproximate(value, node->Right);
 
             if (result != nullptr) {
                 if (value <= result->Key) {

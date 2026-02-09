@@ -65,8 +65,10 @@ void ZSysMem::DisplayStatus(s32 x, s32 y) {
         g_pSysInterface->DisplayDebugString(x, y,
             "Process %.3f / %.3f  Internal %.3f / %.3f : %.3f Count %d",
             allocated / 1048576.0f, total / 1048576.0f,
-            this->AllocatedSize / 1048576.0f, this->MaxAllocatedSize / 1048576.0f,
-            (this->Unk0x1A - this->Unk0x16) / 1048576.0f, this->Allocations + this->LinkAllocations);
+            this->AllocatedSize / 1048576.0f,
+            this->MaxAllocatedSize / 1048576.0f,
+            (this->Allocator.Capacity - this->Allocator.Allocated) / 1048576.0f,
+            this->Allocations + this->LinkAllocations);
     }
 }
 
@@ -176,8 +178,16 @@ void ZSysMem::Index(void* value) {
 }
 
 // 0x0ffb1e90
-u32 ZSysMem::Method0x4C() {
-    // TODO NOT IMPLEMENTED
+void* ZSysMem::GetByIndex(u32 index) {
+    if (index == 0) {
+        return nullptr;
+    }
+
+    if (!this->Indx->IsAvailable(index)) {
+        return nullptr;
+    }
+
+    return this->Values[this->Indx->GetCapacity() & index];
 }
 
 // 0x0ffb1ed0
@@ -224,6 +234,8 @@ bool ZSysMem::IsMemoryLinkBroken(ZMemLink* link) {
 
 // 0x0ffb2020
 void ZSysMem::AllocCheck() {
+    ZMemLink* link = this->AllocLinks;
+
     // TODO NOT IMPLEMENTED
 }
 
@@ -369,7 +381,7 @@ void ZSysMem::Method0x38(void* value, const char* path, u32 line) {
 
     // TODO NOT IMPLEMENTED
 
-    ZMemLink* link = ZSYSMEM_GET_LINK(value);
+    // TODO ZMemLink* link = ZSYSMEM_GET_LINK(value); ZSYSMEM_GET_COUNT ???
 
     if (link->Unk0x10 != 1) { // TODO
         void* pointer = this->AllocateLinked(link->Size & ZMEM_SIZE_MASK);
@@ -497,7 +509,7 @@ bool ZSysMem::Delete(void* value) {
         }
 
         if (ZSYSMEM_IS_ALLOCATOR(link->Size)) {
-            this->Allocator.Delete(link);
+            this->Allocator.Release(link);
         }
         else {
             free(link);
@@ -540,7 +552,7 @@ bool ZSysMem::Delete(void* value) {
         this->AllocatedSize -= (block->Size & ZMEM_SIZE_MASK) + sizeof(ZMemBlock);
 
         if (ZSYSMEM_IS_ALLOCATOR(block->Size)) {
-            this->Allocator.Delete(block);
+            this->Allocator.Release(block);
         }
         else {
             free(block);

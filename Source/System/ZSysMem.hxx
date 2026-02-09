@@ -72,7 +72,7 @@ public:
     virtual void Method0x40() = 0;                                                          // 0x40
     virtual void Method0x44() = 0;                                                          // 0x44
     virtual void Method0x48() = 0;                                                          // 0x48
-    virtual u32 Method0x4C() = 0;                                                           // 0x4C
+    virtual void* GetByIndex(u32) = 0;                                                      // 0x4C
     virtual void Method0x50() = 0;                                                          // 0x50
     virtual u32 Method0x54() = 0;                                                           // 0x54
     virtual u32 Method0x58() = 0;                                                           // 0x58
@@ -115,7 +115,7 @@ public:
     virtual void Method0x40();                                                              // 0x40
     virtual void Method0x44();                                                              // 0x44
     virtual void Method0x48();                                                              // 0x48
-    virtual u32 Method0x4C();                                                               // 0x4C
+    virtual void* GetByIndex(u32 index);                                                    // 0x4C
     virtual void Method0x50();                                                              // 0x50
     virtual u32 Method0x54();                                                               // 0x54
     virtual u32 Method0x58();                                                               // 0x58
@@ -129,15 +129,6 @@ public:
 protected:
     u32 Unk0x12;                                                                            // 0x12
     ZMalloc Allocator;                                                                      // 0x16
-    u32 Unk0x1A;                                                                            // 0x1A
-
-    // TODO
-
-    u8 Unk0xTODO[552]; // TODO
-
-    // TODO
-
-    bool Unk0x231;                                                                          // 0x231
     CompareRefTab* Textures;                                                                // 0x232
     CompareRefTab* Lights;                                                                  // 0x236
     ZMemLink* AllocLinks;                                                                   // 0x23A

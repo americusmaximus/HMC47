@@ -22,26 +22,46 @@ SOFTWARE.
 
 #pragma once
 
-#include "ZBinTree.hxx"
-#include "ZMem.hxx"
+#include "ZCopiableBinTree.hxx"
+
+#define MAX_ZMALLOC_AVAILABLE_BUCKET_COUNT      100
 
 #pragma pack(push, 1)
 
-class ZMalloc : public ZMem, public ZBinTree {
+class ZMalloc {
 public:
     ZMalloc();
     ~ZMalloc();
 
-protected:
-    virtual void CopyValue(ZBinTreeNode* a, ZBinTreeNode* b);                   // 0x24
+public:
+    void* Allocate(size_t size);
+    void Release(void* value);
 
 protected:
-    bool Unk0x1FD;                                                              // 0x1FD
-    ZBinTree Unk0x1FE;                                                          // 0x1FE
-    bool Unk0x21B;                                                              // 0x21B
+    void SetValues(s32* block, ZValueTreeNode* node);
+
+public:
+    u32 Allocated;                                                                  // 0x0
+    u32 Capacity;                                                                   // 0x4
+
+protected:
+    s32* AvailableBlocks[16];                                                       // 0x8
+    ZValueTreeNode* AvailableNodes[MAX_ZMALLOC_AVAILABLE_BUCKET_COUNT];             // 0x48
+    u32 AvailableNodeCount;                                                         // 0x1D8
+    u32 AvailableBlockCount;                                                        // 0x1DC
+    ZCopiableBinTree Unk0x1E0;                                                      // 0x1E0
+    bool Lock;                                                                      // 0x1FD
+    ZBinTree Unk0x1FE;                                                              // 0x1FE
+
+public:
+    bool Unk0x21B;                                                                  // 0x21B
 };
 
 #pragma pack(pop)
+
+#ifdef _WIN64
+#error ZSysMem is incompatible with x64.
+#endif
 
 #if defined(_DEBUG) && !defined(_WIN64)
 static_assert(sizeof(ZMalloc)   == 0x21C,   "ZMalloc size mismatch.");
