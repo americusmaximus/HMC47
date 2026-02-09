@@ -157,6 +157,43 @@ void ZSysInterface::Initialize() {
     this->Continue = true;
 }
 
+// 0x0ffab760
+void ZSysInterface::Method0x14(WPARAM wParam, void* value, u32 size) {
+    if (this->Unk0x38F1 && this->Unk0xA85 != NULL) {
+        u32* payload = new u32[2]; // TODO Type
+
+        payload[0] = size;
+
+        if (wParam == 8 || wParam == 11 || wParam == 10 || wParam == 5) { // TODO
+            payload[1] = (u32)value; // TODO Type
+        }
+        else {
+            payload[1] = 0; // TODO Type
+
+            if (value != nullptr) {
+                void* mem = new u8[size];
+                CopyMemory(mem, value, size);
+
+                payload[1] = (u32)mem; // TODO Type
+            }
+        }
+
+        switch (wParam) { // TODO
+        case 2:
+        case 5:
+        case 8:
+        case 10:
+        case 11:
+            SendMessageA(this->Unk0xA85, 0x3039, wParam, (LPARAM)payload); // TODO
+            return;
+        }
+
+        while (!PostMessageA(this->Unk0xA85, 0x3039, wParam, (LPARAM)payload)) { // TODO
+            this->Sleep(0);
+        }
+    }
+}
+
 // 0x0ffab8c0
 void ZSysInterface::Method0x20(bool todo) {
     g_pSysFile->Method0x8();
@@ -166,8 +203,8 @@ void ZSysInterface::Method0x20(bool todo) {
 
         if (!todo) {
             if (g_pSysInterface->SoundModule != nullptr) {
-                if (g_pSysInterface->SoundModule->Unk0x1C != nullptr) {
-                    g_pSysInterface->SoundModule->Unk0x1C->Method0x34();
+                if (g_pSysInterface->SoundModule->GetUnk0x1C() != nullptr) {
+                    g_pSysInterface->SoundModule->GetUnk0x1C()->Method0x34();
                 }
             }
         }
@@ -348,7 +385,7 @@ bool StartEngine() {
             ->LogMessage("Starting engine, Commandline=\"%s\"\n", g_pSysInterface->CommandLine.AsString());
     }
 
-    if (g_pSysInterface->Method0x18(g_pSysInterface->CommandLine, 21 /* TODO */)) {
+    if (g_pSysInterface->Method0x18(g_pSysInterface->CommandLine.AsString(), 21 /* TODO */)) {
         if (g_pSysInterface->UseTryCatchMainLoop) {
             g_pSysInterface->RunAction = &ZSysInterface::ExecuteEngineWrapper;
             g_pSysFile->Touch(g_pSysInterface->LogPath);
@@ -363,7 +400,7 @@ bool StartEngine() {
             // TODO NOT IMPLEMENTED
         }
 
-        g_pSysInterface->InitializeModule(&g_pSysInterface->Engine, "EngineData.dll");
+        g_pSysInterface->InitializeModule(&g_pSysInterface->EngineModule, "EngineData.dll");
         g_pSysInterface->InitializeModule(&g_pSysInterface->RenderModule, g_pSysInterface->DrawDll);
 
         if (g_pSysInterface->RenderModule == nullptr) {
@@ -538,16 +575,14 @@ void ZSysInterface::Method0xDC(const char* format, ...) {
 // 0x0ffb0950
 void ZSysInterface::SetRenderNameCounterValue(const char* name, u64 value) {
     for (ZRenderBase* render = this->Render; render != nullptr; render = render->Current) {
-        ZCounter* counter = render->GetCounter();
-        counter->Method0x0(name, value);
+        render->GetCounter()->SetNameValue(name, value);
     }
 }
 
 // 0x0ffb0990
 void ZSysInterface::SetRenderCounterValue(u64 value) {
     for (ZRenderBase* render = this->Render; render != nullptr; render = render->Current) {
-        ZCounter* counter = render->GetCounter();
-        counter->Method0x4(value);
+        render->GetCounter()->SetValue(value);
     }
 }
 

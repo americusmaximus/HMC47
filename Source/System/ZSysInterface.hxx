@@ -70,7 +70,7 @@ public:
     virtual void Initialize() = 0;                                              // 0x8
     virtual bool HandleWindowMessages(HWND) = 0;                                // 0xC
     virtual void Method0x10() = 0;                                              // 0x10
-    virtual void Method0x14() = 0;                                              // 0x14
+    virtual void Method0x14(WPARAM, void*, u32) = 0;                            // 0x14
     virtual bool Method0x18(const char*, u32) = 0;                              // 0x18
     virtual void RestoreDisplaySettings() = 0;                                  // 0x1C
     virtual void Method0x20(bool) = 0;                                          // 0x20
@@ -238,7 +238,7 @@ public:
     u32 Unk0x37D9;                                                              // 0x37D9
     u32 Unk0x37DD;                                                              // 0x37DD
     f32 Unk0x37E1;                                                              // 0x37E1
-    ZRenderBase* Render;                                                        // 0x37E5
+    ZRender* Render;                                                            // 0x37E5
     ZMasterControl* MasterControl;                                              // 0x37E9
     ZString MasterProject;                                                      // 0x37ED
     ZString CommandLine;                                                        // 0x386D
@@ -293,7 +293,7 @@ public:
     virtual void Initialize();                                                          // 0x8
     virtual bool HandleWindowMessages(HWND hwnd);                                       // 0xC
     virtual void Method0x10();                                                          // 0x10
-    virtual void Method0x14();                                                          // 0x14
+    virtual void Method0x14(WPARAM wParam, void* value, u32 size);                      // 0x14
     virtual bool Method0x18(const char*, u32 /* TODO */);                               // 0x18
     virtual void RestoreDisplaySettings();                                              // 0x1C
     virtual void Method0x20(bool);                                                      // 0x20

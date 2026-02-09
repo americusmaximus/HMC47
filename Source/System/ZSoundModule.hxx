@@ -50,13 +50,15 @@ public:
         return this->Unk0xC;
     }
 
+    inline void* GetUnk0x1C() {
+        return this->Unk0x1C;
+    }
+
 protected:
     void* Unk0xC;                                                               // 0xC
     u32 Unk0x10;                                                                // 0x10
     u32 Unk0x14;                                                                // 0x14
     void* Unk0x18;                                                              // 0x18
-
-public:
     void* Unk0x1C;                                                              // 0x1C
 };
 
