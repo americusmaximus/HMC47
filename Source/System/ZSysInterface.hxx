@@ -118,7 +118,7 @@ public:
     virtual void Method0xC4() = 0;                                              // 0xC4
     virtual void __cdecl Method0xC8(u32, u32, const char*, ...) = 0;            // 0xC8
     virtual u32 Method0xCC(u32, u32) = 0;                                       // 0xCC
-    virtual s32 __cdecl FormatString(char*, const char* format, ...);           // 0xD0
+    virtual s32 __cdecl FormatString(char* buffer, const char* format, ...);    // 0xD0
     virtual void __cdecl Method0xD4() = 0;                                      // 0xD4
     virtual void Method0xD8() = 0;                                              // 0xD8
     virtual void __cdecl Method0xDC(const char* format, ...) = 0;               // 0xDC
@@ -127,8 +127,8 @@ public:
     virtual void RunConsoleCommand(const char* command);                        // 0xE8
     virtual ZConsole* GetConsole();                                             // 0xEC
     virtual void Method0xF0(u64 value, const char* path, u32 line);             // 0xF0
-    virtual void Method0xF4();                                                  // 0xF4
-    virtual void Method0xF8();                                                  // 0xF8
+    virtual u32 Method0xF4(u32 v1, u32 v2);                                     // 0xF4
+    virtual f32 Method0xF8(u32 v1, u32 v2);                                     // 0xF8
     virtual void Method0xFC();                                                  // 0xFC
     virtual void Method0x100();                                                 // 0x100
     virtual void Method0x104();                                                 // 0x104

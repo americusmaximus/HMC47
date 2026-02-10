@@ -114,7 +114,7 @@ ZSysInterfaceBase::~ZSysInterfaceBase() {
 // 0x0ffa9890
 bool ZSysInterfaceBase::Method0x0() {
     if (!this->Unk0x3995) {
-        if (strlen(this->Unk0x861) != 0) {
+        if (strlen(this->Unk0x861.AsString()) != 0) {
             return true;
         }
     }
@@ -122,10 +122,34 @@ bool ZSysInterfaceBase::Method0x0() {
     return false;
 }
 
+// 0x0ffa95e0
+s32 ZSysInterfaceBase::FormatString(char* buffer, const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    const s32 result = vsprintf(buffer, format, args);
+
+    va_end(args);
+
+    return result;
+}
+
 // 0x0ffaa660
 void ZSysInterfaceBase::Method0xF0(u64 value, const char* path, u32 line) {
     this->Method0x108(TODO, 4, 1, path, line);
     this->Unk0x3A37 = 1; // TODO
+}
+
+// 0x0ffaa690
+u32 ZSysInterfaceBase::Method0xF4(u32, u32) {
+    this->Unk0x3A37 = this->Unk0x3A37 * 69069 + 1;
+
+    return this->Unk0x3A37 >> 8 & 0x7FFF;
+}
+
+// 0x0ffaa6c0
+f32 ZSysInterfaceBase::Method0xF8(u32 v1, u32 v2) {
+    return this->Method0xF4(v1, v2) / 32767.0f;
 }
 
 // 0x0ffaa720
