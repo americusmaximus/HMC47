@@ -203,8 +203,8 @@ void ZSysInterface::Method0x20(bool todo) {
 
         if (!todo) {
             if (g_pSysInterface->SoundModule != nullptr) {
-                if (g_pSysInterface->SoundModule->GetUnk0x1C() != nullptr) {
-                    g_pSysInterface->SoundModule->GetUnk0x1C()->Method0x34();
+                if (g_pSysInterface->SoundModule->GetSound() != nullptr) {
+                    g_pSysInterface->SoundModule->Method0x34();
                 }
             }
         }
@@ -723,8 +723,8 @@ static LRESULT WINAPI MainWindowHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
             }
 
             if (g_pSysInterface->SoundModule != nullptr) {
-                if (g_pSysInterface->SoundModule->GetUnk0xC() != nullptr) {
-                    g_pSysInterface->SoundModule->GetUnk0xC()->Method0x48();
+                if (g_pSysInterface->SoundModule->GetSound() != nullptr) {
+                    g_pSysInterface->SoundModule->GetSound()->Method0x48();
                 }
             }
         }

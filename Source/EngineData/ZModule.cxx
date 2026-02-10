@@ -35,10 +35,10 @@ void ZModule::Release() {}
 void ZModule::Method0x14() {}
 
 // 0x0ff8e230
-void ZModule::Method0x18() {}
+void ZModule::BeginInit() {}
 
 // 0x0ff8e230
-void ZModule::Method0x1C() {}
+void ZModule::EndInit() {}
 
 // 0x0ff8e230
 void ZModule::Method0x20() {}
@@ -50,7 +50,7 @@ void ZModule::Method0x24() {}
 void ZModule::Method0x28() {}
 
 // 0x0ff8e220
-void ZModule::Method0x10(u32) {}
+void ZModule::Method0x10(const char*) {}
 
 // 0x0ff79cb0
 void ZModule::Method0x34() {}

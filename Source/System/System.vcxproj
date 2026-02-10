@@ -190,9 +190,6 @@
     <ClCompile Include="ZConsoleHandler.cxx" />
     <ClCompile Include="ZCopiableBinTree.cxx" />
     <ClCompile Include="ZHelpConsoleCommand.cxx" />
-    <ClCompile Include="ZipFileSystem.cxx" />
-    <ClCompile Include="ZipFileSystemCache.cxx" />
-    <ClCompile Include="ZipIO.cxx" />
     <ClCompile Include="ZMalloc.cxx" />
     <ClCompile Include="ZString.cxx" />
     <ClCompile Include="ZSysCom.cxx" />
@@ -201,6 +198,9 @@
     <ClCompile Include="ZSysInterfaceBase.cxx" />
     <ClCompile Include="ZSysMem.cxx" />
     <ClCompile Include="ZValueTree.cxx" />
+    <ClCompile Include="ZipFileSystem.cxx" />
+    <ClCompile Include="ZipFileSystemCache.cxx" />
+    <ClCompile Include="ZipIO.cxx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllocRefTab.hxx" />
@@ -223,19 +223,19 @@
     <ClInclude Include="ZCounter.hxx" />
     <ClInclude Include="ZDirectPlay.hxx" />
     <ClInclude Include="ZDirectPlayModule.hxx" />
+    <ClInclude Include="ZDirectSound.hxx" />
     <ClInclude Include="ZEngineData.hxx" />
     <ClInclude Include="ZEngineDataModule.hxx" />
     <ClInclude Include="ZException.hxx" />
     <ClInclude Include="ZExceptionRender.hxx" />
-    <ClInclude Include="Zip.hxx" />
-    <ClInclude Include="ZipFileSystem.hxx" />
-    <ClInclude Include="ZipIO.hxx" />
     <ClInclude Include="ZList.hxx" />
     <ClInclude Include="ZMalloc.hxx" />
     <ClInclude Include="ZModule.hxx" />
     <ClInclude Include="ZRender.hxx" />
     <ClInclude Include="ZRenderModule.hxx" />
     <ClInclude Include="ZSettings.hxx" />
+    <ClInclude Include="ZSound.hxx" />
+    <ClInclude Include="ZSoundBase.hxx" />
     <ClInclude Include="ZSoundModule.hxx" />
     <ClInclude Include="ZString.hxx" />
     <ClInclude Include="ZSysCom.hxx" />
@@ -244,6 +244,9 @@
     <ClInclude Include="ZSysMem.hxx" />
     <ClInclude Include="ZTextureManager.hxx" />
     <ClInclude Include="ZValueTree.hxx" />
+    <ClInclude Include="Zip.hxx" />
+    <ClInclude Include="ZipFileSystem.hxx" />
+    <ClInclude Include="ZipIO.hxx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Globals\Globals.vcxproj">

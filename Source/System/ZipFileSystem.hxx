@@ -27,8 +27,6 @@ SOFTWARE.
 #include "Zip.hxx"
 #include "ZList.hxx"
 
-#include <stdio.h>
-
 #pragma pack(push, 1)
 
 class FileSystemCache {

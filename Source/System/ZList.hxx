@@ -24,6 +24,8 @@ SOFTWARE.
 
 #include "Common.hxx"
 
+#include <stdio.h>
+
 #pragma pack(push, 1)
 
 template <typename T>

@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{3ccf9dd3-fde7-40a0-a82b-d9912ee594a8}</ProjectGuid>
-    <RootNamespace>SystemProbeDLL</RootNamespace>
+    <ProjectGuid>{65c500b9-452a-44a6-912b-642b0a2749ca}</ProjectGuid>
+    <RootNamespace>Sound</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -71,36 +71,35 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/3DFX;../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/EAX;DX70/Include;../../SDK/zlib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/3DFX;../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/EAX;DX70/Include;../../SDK/zlib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/3DFX;../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/EAX;DX70/Include;../../SDK/zlib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/3DFX;../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/EAX;DX70/Include;../../SDK/zlib;</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;SYSTEMPROBEDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;SOUND_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile />
-      <DisableSpecificWarnings>4200;26495;28159;</DisableSpecificWarnings>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ModuleDefinitionFile>Module.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);dxguid.lib;opengl32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);dsound.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -109,14 +108,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;SYSTEMPROBEDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>WIN32;NDEBUG;SOUND_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile />
-      <DisableSpecificWarnings>4200;26495;28159;</DisableSpecificWarnings>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,28 +122,26 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ModuleDefinitionFile>Module.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);dxguid.lib;opengl32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);dsound.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;SYSTEMPROBEDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <SDLCheck>flase</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;SOUND_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile />
-      <DisableSpecificWarnings>4200;26495;28159;</DisableSpecificWarnings>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ModuleDefinitionFile>Module.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);dxguid.lib;opengl32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);dsound.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,14 +150,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;SYSTEMPROBEDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;SOUND_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile />
-      <DisableSpecificWarnings>4200;26495;28159;</DisableSpecificWarnings>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -171,28 +165,41 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ModuleDefinitionFile>Module.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);dxguid.lib;opengl32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);dsound.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CGraphicsPreset.cxx" />
-    <ClCompile Include="CSystemProbe.cxx" />
-    <ClCompile Include="Common.cxx" />
-    <ClCompile Include="Main.cxx" />
-    <ClCompile Include="ZModule.cxx" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\EAX\EAX.vcxproj">
+      <Project>{d6a90cf4-3964-4ada-95fe-fd9631450a60}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Globals\Globals.vcxproj">
       <Project>{e9aa90cc-2291-4e42-825b-33e6c9ccbd8b}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CGraphics.hxx" />
-    <ClInclude Include="CSystemProbe.hxx" />
-    <ClInclude Include="Globals.hxx" />
+    <ClCompile Include="Common.cxx" />
+    <ClCompile Include="LinkRefTab.cxx" />
+    <ClCompile Include="Main.cxx" />
+    <ClCompile Include="RefTab.cxx" />
+    <ClCompile Include="ZDirectSound.cxx" />
+    <ClCompile Include="ZModule.cxx" />
+    <ClCompile Include="ZPropertySet.cxx" />
+    <ClCompile Include="ZSound.cxx" />
+    <ClCompile Include="ZSoundBase.cxx" />
+    <ClCompile Include="ZSoundBuffer.cxx" />
+    <ClCompile Include="ZSoundListener.cxx" />
+    <ClCompile Include="ZSoundModule.cxx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Module.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.hxx" />
+    <ClInclude Include="DirectSound.hxx" />
+    <ClInclude Include="Globals.hxx" />
+    <ClInclude Include="ZPropertySet.hxx" />
+    <ClInclude Include="ZSoundBuffer.hxx" />
+    <ClInclude Include="ZSoundListener.hxx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

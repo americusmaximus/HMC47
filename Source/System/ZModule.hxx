@@ -35,10 +35,10 @@ public:
     virtual void Method0x4();                                                   // 0x4
     virtual void Initialize();                                                  // 0x8
     virtual void Release();                                                     // 0xC
-    virtual void Method0x10(u32);                                               // 0x10
+    virtual void Method0x10(const char*);                                       // 0x10
     virtual void Method0x14();                                                  // 0x14
-    virtual void Method0x18();                                                  // 0x18
-    virtual void Method0x1C();                                                  // 0x1C
+    virtual void BeginInit();                                                   // 0x18
+    virtual void EndInit();                                                     // 0x1C
     virtual void Method0x20();                                                  // 0x20
     virtual void Method0x24();                                                  // 0x24
     virtual void Method0x28();                                                  // 0x28

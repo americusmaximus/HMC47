@@ -1,0 +1,75 @@
+/*
+Copyright (c) 2026 Americus Maximus
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+#include <System/ZSoundBase.hxx>
+
+// 0x0ff3a7e0
+// 0x0ff51024
+ZSoundBase::ZSoundBase() {
+    // TODO
+}
+
+// 0x0ff3aa70
+// 0x0ff3aaf0
+ZSoundBase::~ZSoundBase() {
+    // TODO
+}
+
+// 0x0ff35860
+bool ZSoundBase::Method0x30() {
+    return this->Unk0x10A;
+}
+
+// 0x0ff35900
+bool ZSoundBase::Method0x1BC() {
+    return this->Unk0xF8;
+}
+
+// 0x0ff3aad0
+bool ZSoundBase::Method0x1B0() {
+    return this->Unk0xC9;
+}
+
+// 0x0ff3aae0
+bool ZSoundBase::Method0x1B4() {
+    return this->Unk0x141 != 0; // TODO
+}
+
+// 0x0ff3d5b0
+BOOL ZSoundBase::EndInit(const char*) {
+    return TRUE;
+}
+
+// 0x0ff3d5b0
+BOOL ZSoundBase::Method0x54(u32) {
+    return TRUE; // TODO
+}
+
+// 0x0ff3d6a0
+bool ZSoundBase::Method0x38() {
+    // TODO NOT IMLEMETED
+}
+
+// 0x0ff3dbd0
+void ZSoundBase::Method0x14C() {
+    // TODO NOT IMLEMETED
+}

@@ -34,8 +34,8 @@ SOFTWARE.
 #define LINKREFTAB_KEYVALUEADDR(X)  \
             ((RefKeyValue*)((size_t)X - sizeof(u32)))
 
-// 0x0ffc0050
-// 0x0ffd40a8
+// 0x0ff4aef0
+// 0x0ff51e40
 LinkRefTab::LinkRefTab(u32 count, u32 size) : RefTab(count, size) {
     if (count < 1) {
         count = 1;
@@ -50,8 +50,8 @@ LinkRefTab::LinkRefTab(u32 count, u32 size) : RefTab(count, size) {
     this->Previous = nullptr;
 }
 
-// 0x0ffc00a0
-// 0x0ffc00e0
+// 0x0ff4af40
+// 0x0ff4af80
 LinkRefTab::~LinkRefTab() {
     if (this->Links = nullptr) {
         delete this->Links;
@@ -62,7 +62,7 @@ LinkRefTab::~LinkRefTab() {
     this->Previous = nullptr;
 }
 
-// 0x0ffc0170
+// 0x0ff4b010
 u32 LinkRefTab::GetKeyByIndex(u32 i) {
     RefLink link;
 
@@ -83,7 +83,7 @@ u32 LinkRefTab::GetKeyByIndex(u32 i) {
     return 0;
 }
 
-// 0x0ffc01d0
+// 0x0ff4b070
 RefKeyValue* LinkRefTab::GetByIndex(u32 i) {
     RefLink link;
 
@@ -104,7 +104,7 @@ RefKeyValue* LinkRefTab::GetByIndex(u32 i) {
     return nullptr;
 }
 
-// 0x0ffc0220
+// 0x0ff4b0c0
 u32 LinkRefTab::GetCount() {
     if (this->Links == nullptr) {
         return this->Count;
@@ -113,7 +113,7 @@ u32 LinkRefTab::GetCount() {
     return this->Count - this->Links->GetCount();
 }
 
-// 0x0ffc0240
+// 0x0ff4b0e0
 void LinkRefTab::Clear() {
     if (this->Links != nullptr) {
         delete this->Links;
@@ -126,7 +126,7 @@ void LinkRefTab::Clear() {
     RefTab::Clear();
 }
 
-// 0x0ffc0290
+// 0x0ff4b130
 void LinkRefTab::Clear2() {
     if (this->Links != nullptr) {
         delete this->Links;
@@ -137,7 +137,7 @@ void LinkRefTab::Clear2() {
     this->Previous = nullptr;
 }
 
-// 0x0ffc02c0
+// 0x0ff4b160
 void* LinkRefTab::InsertBefore(RefKeyValue* point, u32 key) {
     RefKeyValue* kv = nullptr;
 
@@ -203,7 +203,7 @@ void* LinkRefTab::InsertBefore(RefKeyValue* point, u32 key) {
     return kv->Value;
 }
 
-// 0x0ffc03d0
+// 0x0ff4b270
 void* LinkRefTab::Insert(u32 key) {
     RefKeyValue* kv = nullptr;
 
@@ -247,12 +247,12 @@ void* LinkRefTab::Insert(u32 key) {
     return kv->Value;
 }
 
-// 0x0ffc04a0
+// 0x0ff4b340
 void* LinkRefTab::InsertAtEnd(u32 key) {
     return this->Insert(key);
 }
 
-// 0x0ffc04b0
+// 0x0ff4b350
 void* LinkRefTab::InsertAtStart(u32 key) {
     RefKeyValue* kv = nullptr;
 
@@ -296,21 +296,21 @@ void* LinkRefTab::InsertAtStart(u32 key) {
     return kv->Value;
 }
 
-// 0x0ffc0580
+// 0x0ff4b420
 RefKeyValue* LinkRefTab::GetPreviousValue(RefKeyValue* kv) {
     Ref* ref = LINKREFTAB_PREVREFADDR(kv);
 
     return ref->Previous == nullptr ? nullptr : LINKREFTAB_KEYADDR(ref->Previous);
 }
 
-// 0x0ffc05b0
+// 0x0ff4b450
 RefKeyValue* LinkRefTab::GetNextValue(RefKeyValue* kv) {
     Ref* ref = LINKREFTAB_NEXTREFADDR(kv);
 
     return ref->Previous == nullptr ? nullptr : LINKREFTAB_KEYADDR(ref->Previous);
 }
 
-// 0x0ffc05e0
+// 0x0ff4b480
 void LinkRefTab::GetStart(RefLink* link) {
     link->Size = 0;
     link->Direction = REFTAB_TRAVERSE_FORWARD;
@@ -319,7 +319,7 @@ void LinkRefTab::GetStart(RefLink* link) {
     this->BlockCount = this->BlockCount & REFTAB_UNLOCK;
 }
 
-// 0x0ffc0600
+// 0x0ff4b4a0
 void LinkRefTab::GetEnd(RefLink* link) {
     link->Size = 0;
     link->Direction = REFTAB_TRAVERSE_BACKWARD;
@@ -328,7 +328,7 @@ void LinkRefTab::GetEnd(RefLink* link) {
     this->BlockCount = this->BlockCount & REFTAB_UNLOCK;
 }
 
-// 0x0ffc0620
+// 0x0ff4b4c0
 RefKeyValue* LinkRefTab::GetNext(RefLink* link) {
     if (this->BlockCount & REFTAB_LOCK) {
         g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\RefTab.cpp", 1007)
@@ -345,7 +345,7 @@ RefKeyValue* LinkRefTab::GetNext(RefLink* link) {
     return link->Next == nullptr ? nullptr : LINKREFTAB_KEYADDR(link->Next);
 }
 
-// 0x0ffc0690
+// 0x0ff4b530
 RefKeyValue* LinkRefTab::GetPrevious(RefLink* link) {
     if (this->BlockCount & REFTAB_LOCK) {
         g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\RefTab.cpp", 1025)
@@ -362,7 +362,7 @@ RefKeyValue* LinkRefTab::GetPrevious(RefLink* link) {
     return link->Next == nullptr ? nullptr : LINKREFTAB_KEYADDR(link->Next);
 }
 
-// 0x0ffc06f0
+// 0x0ff4b590
 void LinkRefTab::RemoveKeyValue(RefKeyValue* kv) {
     Ref* ref = LINKREFTAB_PREVREFADDR(kv);
 
@@ -392,7 +392,7 @@ void LinkRefTab::RemoveKeyValue(RefKeyValue* kv) {
     this->BlockCount = this->BlockCount | REFTAB_LOCK;
 }
 
-// 0x0ffc07a0
+// 0x0ff4b640
 void LinkRefTab::Remove(RefLink* link) {
     Ref* ref = link->Next;
 
@@ -431,12 +431,12 @@ void LinkRefTab::Remove(RefLink* link) {
     ref->Previous = nullptr;
 }
 
-// 0x0ffc0870
+// 0x0ff4b710
 RefKeyValue* LinkRefTab::GetCurrent(RefLink* link) {
     return link->Next == nullptr ? nullptr : LINKREFTAB_KEYADDR(link->Next);
 }
 
-// 0x0ffc0890
+// 0x0ff4b730
 void LinkRefTab::PrintStatus() {
     g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\RefTab.cpp", 1070)
         ->LogMessage("Nr Ele %d NrLinks %d\n", this->Count, this->GetCount());

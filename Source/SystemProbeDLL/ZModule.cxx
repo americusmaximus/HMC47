@@ -66,10 +66,10 @@ void ZModule::Release() {}
 void ZModule::Method0x14() {}
 
 // 0x0fbb2ce0
-void ZModule::Method0x18() {}
+void ZModule::BeginInit() {}
 
 // 0x0fbb2ce0
-void ZModule::Method0x1C() {}
+void ZModule::EndInit() {}
 
 // 0x0fbb2ce0
 void ZModule::Method0x20() {}
@@ -81,7 +81,7 @@ void ZModule::Method0x24() {}
 void ZModule::Method0x28() {}
 
 // 0x0fbb2d00
-void ZModule::Method0x10(u32) {}
+void ZModule::Method0x10(const char*) {}
 
 // 0x0fbb2e00
 FARPROC ZModule::GetFunctionAddress(const char* name) {
