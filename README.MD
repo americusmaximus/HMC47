@@ -52,8 +52,9 @@ EAX 2 Wrapper from Creative Technolody for Environmental Audio Extensions 2.
 ## Thanks
 1. [0danny](https://github.com/0danny/re47) for some reverse engineering of the game files.
 2. [AdrienTD](https://github.com/AdrienTD/c47edit) for the game scene editor.
+3. [SIGMA FEDERATION](https://github.com/sigmaco/a3d-sdk) for Aureal A3D SDK.
 
 ## Legal
 1. This is not a complete game. Please purchase software you like!
 2. The source code in this repository is mostly produced by reverse engineering the original binaries. There are a couple of exceptions for reverse engineering under DMCA -- documentation, interoperability, fair use. See goals section for the interoperability and fair use cases. The documentation is needed to support those. Also please see an article about [software preservation](https://en.wikipedia.org/wiki/Digital_preservation).
-3. Hitman, Hitman: Codename 47, IO Interactive, Eidos Interactive, EAX, DirectX, OpenGL, and others are trademarks of their respective owners.
+3. Hitman, Hitman: Codename 47, IO Interactive, Eidos Interactive, Aureal, A3D, EAX, DirectX, OpenGL, and others are trademarks of their respective owners.
