@@ -23,9 +23,10 @@ SOFTWARE.
 #pragma once
 
 enum GraphicsAnisotropy {
-    ANISOTROPY_UNKNOWN      = -1,
-    ANISOTROPY_0            = 0, // TODO
-    ANISOTROPY_FORCE_DWORD  = 0x7FFFFFFF
+    GRAPHICSANISOTROPY_UNKNOWN      = -1,
+    GRAPHICSANISOTROPY_OFF          = 0,
+    GRAPHICSANISOTROPY_ON           = 1,
+    GRAPHICSANISOTROPY_FORCE_DWORD  = 0x7FFFFFFF
 };
 
 enum GraphicsAPI {

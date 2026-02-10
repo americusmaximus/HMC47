@@ -61,7 +61,7 @@ ZSysInterfaceBase::ZSysInterfaceBase() {
     this->FullScreen = false;
     this->StereoView = false;
     this->Antialias = false;
-    this->Anisotropy = ANISOTROPY_0;
+    this->Anisotropy = GRAPHICSANISOTROPY_OFF;
     this->DisableDXT = false;
     this->DisablePAL = false;
     this->ColorDepth = 0;

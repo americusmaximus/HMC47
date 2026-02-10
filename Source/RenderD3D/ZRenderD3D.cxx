@@ -506,7 +506,7 @@ void ZRenderD3D::Initialize() {
         this->SetFeature(ZRENDERFEATURE_ANTIALIAS, TRUE);
     }
 
-    if (g_pSysInterface->Anisotropy != ANISOTROPY_0) {
+    if (g_pSysInterface->Anisotropy != GRAPHICSANISOTROPY_OFF) {
         this->SetFeature(ZRENDERFEATURE_ANISOTROPY, g_pSysInterface->Anisotropy);
     }
 
