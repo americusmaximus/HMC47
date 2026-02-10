@@ -24,7 +24,7 @@ git clone --recurse-submodules https://github.com/americusmaximus/HMC47
 ## Modules
 
 ### ✔ Hitman
-A simple game launcher that loads system module and passes the control flow execution to it.
+A simple game launcher that loads the system module and passes the control flow execution to it.
 
 ### ✔ Direct Play
 The Direct Play module serves as a simple wrapper around Microsoft DirectPlay interface.
@@ -33,13 +33,16 @@ The Direct Play module serves as a simple wrapper around Microsoft DirectPlay in
 Globals module serves as a glue for DLL linking of a few game-wide objects used to communicate between different part of the game for a multitude of reasons.
 
 ### Sound
-DirectSound-powered sound management module.
+The Sound module is a sound management module that handles sound and sound effects output via DirectSound and EAX.
 
 ### System
-System module owns creation and management of the objects that are then being used by other modules via Globals to communicate with each other, manage memory, and work with file system, archive files, and other game resources.
+System module owns creation and management of the objects that are then being used by other modules via Globals to communicate with each other. These objects include functionality that glues different modules together, and provide low-level functionality such as tracked memory allocation, access to zip files, and various output.
 
 ### ✔ System Probe
 System Probe is a module that is responsible for querying system graphics capabilities and providing the recommended graphics settings back to the game. It is used only in the graphics settings screen upon user request.
+
+### ✔ StartW
+StartW application is a command-line tool to start any other application while properly passing command-line arguments to the new process.
 
 ## Third-Party Modules
 

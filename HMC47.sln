@@ -40,6 +40,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sound", "Source\Sound\Sound
 		{E123EA86-DCD6-4184-BE22-B3CA506EC85D} = {E123EA86-DCD6-4184-BE22-B3CA506EC85D}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "STARTW", "Source\STARTW\STARTW.vcxproj", "{69672F36-2440-4779-82F2-85BC91435CF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -128,6 +130,14 @@ Global
 		{65C500B9-452A-44A6-912B-642B0A2749CA}.Release|x64.Build.0 = Release|x64
 		{65C500B9-452A-44A6-912B-642B0A2749CA}.Release|x86.ActiveCfg = Release|Win32
 		{65C500B9-452A-44A6-912B-642B0A2749CA}.Release|x86.Build.0 = Release|Win32
+		{69672F36-2440-4779-82F2-85BC91435CF0}.Debug|x64.ActiveCfg = Debug|x64
+		{69672F36-2440-4779-82F2-85BC91435CF0}.Debug|x64.Build.0 = Debug|x64
+		{69672F36-2440-4779-82F2-85BC91435CF0}.Debug|x86.ActiveCfg = Debug|Win32
+		{69672F36-2440-4779-82F2-85BC91435CF0}.Debug|x86.Build.0 = Debug|Win32
+		{69672F36-2440-4779-82F2-85BC91435CF0}.Release|x64.ActiveCfg = Release|x64
+		{69672F36-2440-4779-82F2-85BC91435CF0}.Release|x64.Build.0 = Release|x64
+		{69672F36-2440-4779-82F2-85BC91435CF0}.Release|x86.ActiveCfg = Release|Win32
+		{69672F36-2440-4779-82F2-85BC91435CF0}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
