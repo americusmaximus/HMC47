@@ -34,7 +34,7 @@ public:
 
 public:
     virtual ~ZRenderModule();                                                   // 0x0
-    virtual void Method0x10();                                                  // 0x10
+    virtual void Method0x10(const char*);                                       // 0x10
     virtual void Method0x14();                                                  // 0x14
     virtual void InitializeRenderer(HWND window);                               // 0x38
     virtual void Method0x3C(u32* todo);                                         // 0x3C

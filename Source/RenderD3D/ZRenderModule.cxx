@@ -56,8 +56,8 @@ ZRenderModule::~ZRenderModule() {
     }
 }
 
-// 0x0x0fba52d0
-void ZRenderModule::Method0x10() {
+// 0x0fba52d0
+void ZRenderModule::Method0x10(const char*) {
     this->Method0x48(this->Count + 1);
 }
 
@@ -156,10 +156,10 @@ void ZRenderModule::Method0x3C(u32* todo) {
         u32 size = 0;
         if (!g_pSysInterface->DisableDXT
             && (size = g_pSysFile->GetSize("Pack.DXT", false)) != INVALID_FILE_SIZE) {
-            void* ptr = new u8[size];
+            void* value = new u8[size];
 
-            if (size != g_pSysFile->ReadAt("Pack.DXT", ptr, size, 0, false)) {
-                delete[] ptr;
+            if (size != g_pSysFile->ReadAt("Pack.DXT", value, size, 0, false)) {
+                delete[] value;
                 goto LAB_0fba57f7;
             }
             if (puVar5 == (undefined*)0x0) goto LAB_0fba57f7;

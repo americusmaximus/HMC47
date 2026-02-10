@@ -31,8 +31,7 @@ void* operator new(size_t size) {
     return malloc(size & ZMEM_SIZE_MASK);
 }
 
-// 0x0ff7a1c6
-// 0x0ff8dbc0
+// 0x0ff63280
 void operator delete(void* ptr) noexcept {
     if (g_pSysMem != nullptr) {
         g_pSysMem->Delete(ptr);
