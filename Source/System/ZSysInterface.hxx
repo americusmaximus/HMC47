@@ -25,12 +25,13 @@ SOFTWARE.
 #include "ZConsole.hxx"
 #include "ZDirectPlayModule.hxx"
 #include "ZEngineData.hxx"
+#include "ZEngineDataModule.hxx"
 #include "ZMasterControl.hxx"
 #include "ZRender.hxx"
 #include "ZRenderModule.hxx"
 #include "ZSettings.hxx"
 #include "ZSoundModule.hxx"
-#include "ZEngineDataModule.hxx"
+#include "ZSysActionContainer.hxx"
 
 typedef void (*NOTIFYDESTROYCALL)();
 
@@ -76,8 +77,8 @@ public:
     virtual void Method0x20(bool) = 0;                                          // 0x20
     virtual void Method0x24() = 0;                                              // 0x24
     virtual void Method0x28() = 0;                                              // 0x28
-    virtual void Method0x2C() = 0;                                              // 0x2C
-    virtual void Method0x30() = 0;                                              // 0x30
+    virtual void InitializeSystemActions() = 0;                                 // 0x2C
+    virtual void ReleaseSystemActions() = 0;                                    // 0x30
     virtual void Method0x34() = 0;                                              // 0x34
     virtual void Method0x38() = 0;                                              // 0x38
     virtual void Method0x3C() = 0;                                              // 0x3C
@@ -225,7 +226,7 @@ public:
     f32 Unk0xAAD;                                                               // 0xAAD
     Unk0xF00 Unk0xAB1;                                                          // 0xAB1
     Unk0x1E00 Unk0x19B1;                                                        // 0x19B1
-    void* Unk0x37B1;                                                            // 0x37B1
+    ZSysActionContainer* Actions;                                               // 0x37B1
     u32 Unk0x37B5;                                                              // 0x37B5
     u32 Unk0x37B9;                                                              // 0x37B9
     u32 Unk0x37BD;                                                              // 0x37BD
@@ -299,8 +300,8 @@ public:
     virtual void Method0x20(bool);                                                      // 0x20
     virtual void ReleaseRender();                                                       // 0x24
     virtual void ReleaseScriptModule();                                                 // 0x28
-    virtual void Method0x2C();                                                          // 0x2C
-    virtual void Method0x30();                                                          // 0x30
+    virtual void InitializeSystemActions();                                             // 0x2C
+    virtual void ReleaseSystemActions();                                                // 0x30
     virtual void Method0x34();                                                          // 0x34
     virtual void Method0x38();                                                          // 0x38
     virtual void Method0x3C();                                                          // 0x3C

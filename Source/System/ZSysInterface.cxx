@@ -41,7 +41,7 @@ bool StartEngine(); // TODO
 // 0x0ffaad90
 ZSysInterface::ZSysInterface(HMODULE module) {
     this->Unk0xA8D = 0; // TODO
-    this->Unk0x37B1 = nullptr;
+    this->Actions = nullptr;
 
     this->WindowWidth = GRAPGICS_RESOLUTION_640;
     this->WindowHeight = GRAPGICS_RESOLUTION_480;
@@ -212,16 +212,16 @@ void ZSysInterface::Method0x20(bool todo) {
 }
 
 // 0x0ffacb20
-void ZSysInterface::Method0x2C() {
-    this->Method0x30();
-    this->Unk0x37B1 = new Unk0x38();
+void ZSysInterface::InitializeSystemActions() {
+    this->ReleaseSystemActions();
+    this->Actions = new ZSysActionContainer();
 }
 
 // 0x0ffacb90
-void ZSysInterface::Method0x30() {
-    if (this->Unk0x37B1 != nullptr) {
-        delete this->Unk0x37B1;
-        this->Unk0x37B1 = nullptr;
+void ZSysInterface::ReleaseSystemActions() {
+    if (this->Actions != nullptr) {
+        delete this->Actions;
+        this->Actions = nullptr;
     }
 }
 

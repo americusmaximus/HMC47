@@ -192,6 +192,8 @@
     <ClCompile Include="ZHelpConsoleCommand.cxx" />
     <ClCompile Include="ZMalloc.cxx" />
     <ClCompile Include="ZString.cxx" />
+    <ClCompile Include="ZSysAction.cxx" />
+    <ClCompile Include="ZSysActionContainer.cxx" />
     <ClCompile Include="ZSysCom.cxx" />
     <ClCompile Include="ZSysFile.cxx" />
     <ClCompile Include="ZSysInterface.cxx" />
@@ -238,6 +240,9 @@
     <ClInclude Include="ZSoundBase.hxx" />
     <ClInclude Include="ZSoundModule.hxx" />
     <ClInclude Include="ZString.hxx" />
+    <ClInclude Include="ZSysAction.hxx" />
+    <ClInclude Include="ZSysActionContainer.hxx" />
+    <ClInclude Include="ZSysActionNode.hxx" />
     <ClInclude Include="ZSysCom.hxx" />
     <ClInclude Include="ZSysFile.hxx" />
     <ClInclude Include="ZSysInterface.hxx" />

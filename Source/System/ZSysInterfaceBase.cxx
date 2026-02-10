@@ -64,8 +64,8 @@ ZSysInterfaceBase::ZSysInterfaceBase() {
     this->Anisotropy = ANISOTROPY_0;
     this->DisableDXT = false;
     this->DisablePAL = false;
-    this->ColorDepth = 0; // TODO
-    this->RefreshRate = 0; // TODO
+    this->ColorDepth = 0;
+    this->RefreshRate = 0;
     this->TextureResolution = GRAPHICSTEXTUREQUALITY_VERY_LOW;
     this->LevelOfDetail = GRAPHICSLEVELOFDETAIL_1;
     this->ShadowDetail = GRAPHICSSHADOWQUALITY_ALL;
@@ -77,7 +77,6 @@ ZSysInterfaceBase::ZSysInterfaceBase() {
     this->PathfinderInfo = false;
     this->EnableScriptRTC = false;
     this->Console = nullptr;
-    this->Unk0xA65 = 0; // TODO
     this->Unk0xA69 = 0; // TODO
     this->FreeVideoMemory = 0;
 

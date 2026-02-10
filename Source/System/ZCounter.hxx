@@ -29,15 +29,16 @@ SOFTWARE.
 class ZCounter {
 public:
     ZCounter();
+    ~ZCounter();
 
 public:
     virtual void SetNameValue(const char* name, u64 value);                     // 0x0
     virtual void SetValue(u64 value);                                           // 0x4
     virtual void Method0x8();                                                   // 0x8
     virtual void Method0xC();                                                   // 0xC
-    virtual void Method0x10();                                                  // 0x10
-    virtual void Method0x14();                                                  // 0x14
-    virtual void Method0x18();                                                  // 0x18
+    virtual u32 GetCount();                                                     // 0x10
+    virtual u32 GetUnk0xC();                                                    // 0x14
+    virtual LinkRefTab* GetItems();                                             // 0x18
 
 protected:
     u32 Unk0x4;                                                                 // 0x4
