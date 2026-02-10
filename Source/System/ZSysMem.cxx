@@ -67,7 +67,7 @@ void ZSysMem::DisplayStatus(s32 x, s32 y) {
             allocated / 1048576.0f, total / 1048576.0f,
             this->AllocatedSize / 1048576.0f,
             this->MaxAllocatedSize / 1048576.0f,
-            (this->Allocator.Capacity - this->Allocator.Allocated) / 1048576.0f,
+            (this->Allocator.GetCapacity() - this->Allocator.GetSize()) / 1048576.0f,
             this->Allocations + this->LinkAllocations);
     }
 }

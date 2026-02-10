@@ -37,14 +37,20 @@ public:
     void* Allocate(size_t size);
     void Release(void* value);
 
+    inline u32 GetSize() {
+        return this->Size;
+    }
+
+    inline u32 GetCapacity() {
+        return this->Capacity;
+    }
+
 protected:
     void SetValues(s32* block, ZValueTreeNode* node);
 
-public:
-    u32 Allocated;                                                                  // 0x0
-    u32 Capacity;                                                                   // 0x4
-
 protected:
+    u32 Size;                                                                       // 0x0
+    u32 Capacity;                                                                   // 0x4
     s32* AvailableBlocks[16];                                                       // 0x8
     ZValueTreeNode* AvailableNodes[MAX_ZMALLOC_AVAILABLE_BUCKET_COUNT];             // 0x48
     u32 AvailableNodeCount;                                                         // 0x1D8

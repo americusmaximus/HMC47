@@ -25,10 +25,16 @@ SOFTWARE.
 
 #define MAX_BLOCK_SIZE  0x200000
 
+/*
+NOTE: The reversed implementation is ugly, but it works. The class definitely needs a face lift.
+Additionally, based on the log messages, it looks like there are a few inlined methods,
+    which would be great to separate out.
+*/
+
 // 0x0ffc7530
 // 0x0ffd4408
 ZMalloc::ZMalloc() {
-    this->Unk0x0 = 0;
+    this->Size = 0;
     this->Capacity = 0;
 
     this->AvailableNodeCount = 0;
@@ -224,7 +230,7 @@ void* ZMalloc::Allocate(size_t size) {
 
             block[0] = iVar7;
 
-            this->Unk0x0 -= iVar7;
+            this->Size -= iVar7;
             this->Lock = false;
 
             return (void*)((size_t)block + 8);
@@ -255,7 +261,7 @@ void ZMalloc::Release(void* value) {
         s32 iVar1 = block[0];
         s32 iVar7 = -iVar1;
 
-        this->Unk0x0 = this->Unk0x0 + iVar1;
+        this->Size += iVar1;
 
         s32 iVar3 = block[1];
 
@@ -333,7 +339,7 @@ void ZMalloc::Release(void* value) {
 
             if (this->AvailableBlockCount != 0x10) {
                 this->AvailableBlocks[this->AvailableBlockCount] = block;
-                this->AvailableBlockCount = this->AvailableBlockCount + 1;
+                this->AvailableBlockCount++;
                 return;
             }
 
