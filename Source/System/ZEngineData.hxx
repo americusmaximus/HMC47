@@ -152,7 +152,7 @@ protected:
     u32 Unk0x147;                                                                           // 0x147
     u32 Unk0x14B;                                                                           // 0x14B
     bool Unk0x14F;                                                                          // 0x14F
-    void* Unk0x150;                                                                         // 0x150
+    RefTab* Unk0x150;                                                                       // 0x150
 
     bool Unk_4_17[17]; // TODO
 
