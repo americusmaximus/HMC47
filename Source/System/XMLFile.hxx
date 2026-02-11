@@ -33,20 +33,22 @@ public:
     XMLFile(bool initialize);
 
 public:
-    virtual ~XMLFile();                                                                     // 0x0
-    virtual void HandleStartElement(const XML_Char* name, const XML_Char** atts);           // 0x4
-    virtual void HandleEndElement(const XML_Char* name);                                    // 0x8
-    virtual void HandleCharacterData(const XML_Char* s, int len);                           // 0xC
-    virtual void HandleProcessingInstruction(const XML_Char* target, const XML_Char* data); // 0x10
-    virtual void HandleSetDefault(const XML_Char* s, int len);                              // 0x14
-    virtual void Method0x18();                                                              // 0x18
-    virtual void Method0x1C();                                                              // 0x1C
-    virtual void Method0x20();                                                              // 0x20
-    virtual void Method0x24();                                                              // 0x24
-    virtual void Method0x28();                                                              // 0x28
+    virtual ~XMLFile();                                                                         // 0x0
+    virtual void HandleStartElement(const char* name, const char** atts);                       // 0x4
+    virtual void HandleEndElement(const char* name);                                            // 0x8
+    virtual void HandleCharacterData(const char* s, s32 len);                                   // 0xC
+    virtual void HandleProcessingInstruction(const char* target, const char* data);             // 0x10
+    virtual void HandleSetDefault(const char* s, s32 len);                                      // 0x14
+    virtual s32 HandleNotStandalone();                                                          // 0x18
+    virtual void HandleUnparsedEntityDecl(const char* entityName, const char* base,
+        const char* systemId, const char* publicId, const char* notationName);                  // 0x1C
+    virtual void HandleNotationDecl(const char* notationName,
+        const char* base, const char* systemId, const char* publicId);                          // 0x20
+    virtual void HandleStartNamespaceDecl(const char* prefix, const char* uri);                 // 0x24
+    virtual void HandleEndNamespaceDecl(const char* prefix);                                    // 0x28
 
 protected:
-    XML_Parser Parser;                                                                      // 0x4
+    XML_Parser Parser;                                                                          // 0x4
 };
 
 #pragma pack(pop)
