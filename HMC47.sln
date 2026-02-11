@@ -42,6 +42,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sound", "Source\Sound\Sound
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "STARTW", "Source\STARTW\STARTW.vcxproj", "{69672F36-2440-4779-82F2-85BC91435CF0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xmlparse", "Source\xmlparse\xmlparse.vcxproj", "{70AF5F42-183B-4453-9E3B-EF343E3D06A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -138,6 +140,14 @@ Global
 		{69672F36-2440-4779-82F2-85BC91435CF0}.Release|x64.Build.0 = Release|x64
 		{69672F36-2440-4779-82F2-85BC91435CF0}.Release|x86.ActiveCfg = Release|Win32
 		{69672F36-2440-4779-82F2-85BC91435CF0}.Release|x86.Build.0 = Release|Win32
+		{70AF5F42-183B-4453-9E3B-EF343E3D06A1}.Debug|x64.ActiveCfg = Debug|x64
+		{70AF5F42-183B-4453-9E3B-EF343E3D06A1}.Debug|x64.Build.0 = Debug|x64
+		{70AF5F42-183B-4453-9E3B-EF343E3D06A1}.Debug|x86.ActiveCfg = Debug|Win32
+		{70AF5F42-183B-4453-9E3B-EF343E3D06A1}.Debug|x86.Build.0 = Debug|Win32
+		{70AF5F42-183B-4453-9E3B-EF343E3D06A1}.Release|x64.ActiveCfg = Release|x64
+		{70AF5F42-183B-4453-9E3B-EF343E3D06A1}.Release|x64.Build.0 = Release|x64
+		{70AF5F42-183B-4453-9E3B-EF343E3D06A1}.Release|x86.ActiveCfg = Release|Win32
+		{70AF5F42-183B-4453-9E3B-EF343E3D06A1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

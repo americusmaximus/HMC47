@@ -19,31 +19,37 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Common.cxx" />
-    <ClCompile Include="Main.cxx" />
-    <ClCompile Include="ZEngineDataModule.cxx" />
-    <ClCompile Include="ZModule.cxx" />
+    <ClCompile Include="..\..\SDK\libexpat\expat\lib\xmlparse.c" />
+    <ClCompile Include="..\..\SDK\libexpat\expat\lib\xmlrole.c" />
+    <ClCompile Include="..\..\SDK\libexpat\expat\lib\xmltok.c" />
+    <ClCompile Include="..\..\SDK\libexpat\expat\lib\xmltok_impl.c" />
+    <ClCompile Include="..\..\SDK\libexpat\expat\lib\xmltok_ns.c" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Globals\Globals.vcxproj">
-      <Project>{e9aa90cc-2291-4e42-825b-33e6c9ccbd8b}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\xmlparse\xmlparse.vcxproj">
-      <Project>{70af5f42-183b-4453-9e3b-ef343e3d06a1}</Project>
-    </ProjectReference>
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\ascii.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\asciitab.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\expat.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\expat_external.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\iasciitab.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\internal.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\latin1tab.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\nametab.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\siphash.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\utf8tab.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\winconfig.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\xmlrole.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\xmltok.h" />
+    <ClInclude Include="..\..\SDK\libexpat\expat\lib\xmltok_impl.h" />
+    <ClInclude Include="expat_config.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Module.def" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Common.hxx" />
-    <ClInclude Include="Globals.hxx" />
+    <None Include="libexpat.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9746ecf0-9d9a-4d4e-b1b1-4ec9e794a453}</ProjectGuid>
-    <RootNamespace>EngineData</RootNamespace>
+    <ProjectGuid>{70af5f42-183b-4453-9e3b-ef343e3d06a1}</ProjectGuid>
+    <RootNamespace>xmlparse</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -92,35 +98,35 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;</ExternalIncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;</ExternalIncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;</ExternalIncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;</ExternalIncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;ENGINEDATA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;XMLPARSE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
       <PrecompiledHeaderOutputFile />
-      <DisableSpecificWarnings>4200;26495;</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <ModuleDefinitionFile>Module.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>libexpat.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -129,14 +135,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;ENGINEDATA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;XMLPARSE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
       <PrecompiledHeaderOutputFile />
-      <DisableSpecificWarnings>4200;26495;</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,27 +150,27 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <ModuleDefinitionFile>Module.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>libexpat.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;ENGINEDATA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;XMLPARSE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
       <PrecompiledHeaderOutputFile />
-      <DisableSpecificWarnings>4200;26495;</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <ModuleDefinitionFile>Module.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>libexpat.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -173,14 +179,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;ENGINEDATA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;XMLPARSE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
       <PrecompiledHeaderOutputFile />
-      <DisableSpecificWarnings>4200;26495;</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -188,7 +194,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <ModuleDefinitionFile>Module.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>libexpat.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

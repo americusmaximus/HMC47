@@ -1,3 +1,6 @@
 [submodule "SDK/zlib"]
 	path = SDK/zlib
 	url = https://github.com/americusmaximus/zlib
+[submodule "SDK/libexpat"]
+	path = SDK/libexpat
+	url = https://github.com/americusmaximus/libexpat

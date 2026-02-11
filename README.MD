@@ -19,7 +19,8 @@ git clone --recurse-submodules https://github.com/americusmaximus/HMC47
 ## Requirements & Dependencies
 1. [Microsoft Visual Studio](https://visualstudio.microsoft.com/downloads/)
 2. [Microsoft DirectX 7.0](https://archive.org/details/dx7sdk-7001)
-2. [ZLib](https://github.com/madler/zlib)
+3. [libexpat](https://github.com/libexpat/libexpat)
+4. [ZLib](https://github.com/madler/zlib)
 
 ## Modules
 
@@ -48,6 +49,9 @@ StartW application is a command-line tool to start any other application while p
 
 ### ✔ EAX
 EAX 2 Wrapper from Creative Technolody for Environmental Audio Extensions 2.
+
+### ✔ XmlParse
+A DLL version of libexpat - library for working with XML documents.
 
 ## Thanks
 1. [0danny](https://github.com/0danny/re47) for some reverse engineering of the game files.
