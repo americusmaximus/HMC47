@@ -71,16 +71,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;../../SDK/libexpat/expat/lib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;../../SDK/libexpat/expat/lib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;../../SDK/libexpat/expat/lib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;../../SDK/libexpat/expat/lib;</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -210,6 +210,7 @@
     <ClInclude Include="BlockRefTab.hxx" />
     <ClInclude Include="Common.hxx" />
     <ClInclude Include="CompareRefTab.hxx" />
+    <ClInclude Include="ConfigFile.hxx" />
     <ClInclude Include="FastLookup.hxx" />
     <ClInclude Include="Globals.hxx" />
     <ClInclude Include="LinkRefTab.hxx" />
@@ -218,6 +219,7 @@
     <ClInclude Include="StaticRefTab.hxx" />
     <ClInclude Include="StringRefTab.hxx" />
     <ClInclude Include="Texture.hxx" />
+    <ClInclude Include="XMLFile.hxx" />
     <ClInclude Include="ZArray.hxx" />
     <ClInclude Include="ZBinTree.hxx" />
     <ClInclude Include="ZConsole.hxx" />
