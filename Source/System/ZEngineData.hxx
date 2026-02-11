@@ -138,7 +138,7 @@ protected:
 
     bool Unk_1_29[29]; // TODO
 
-    void* Unk0x7E;                                                                          // 0x7E
+    LinkRefTab* Unk0x7E;                                                                    // 0x7E
 
     bool Unk_2_132[132]; // TODO
 

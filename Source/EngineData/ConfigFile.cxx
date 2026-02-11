@@ -24,8 +24,13 @@ SOFTWARE.
 
 // 0x0ff61040
 // 0x0ff90150
-ConfigFile::ConfigFile() : XMLFile(true) {
-    // TODO NOT IMPLEMENTED
+ConfigFile::ConfigFile()
+    : XMLFile(true), Unk0x8(8, 39) {
+
+    this->Unk0x34 = this->Unk0x38;
+    this->Unk0x38[0] = NULL;
+
+    this->Unk0xF1 = 0;
 }
 
 // 0x0ff611e0

@@ -22,6 +22,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "LinkRefTab.hxx"
 #include "XMLFile.hxx"
 
 #pragma pack(push, 1)
@@ -35,9 +36,11 @@ public:
     // TODO
 
 protected:
-
-    // TODO
-
+    LinkRefTab Unk0x8;                                                                      // 0x8
+    u32 Unk0x30;                                                                            // 0x30
+    char* Unk0x34;                                                                          // 0x34
+    char Unk0x38[185];                                                                      // 0x38
+    u32 Unk0xF1;                                                                            // 0xF1
 };
 
 #pragma pack(pop)
