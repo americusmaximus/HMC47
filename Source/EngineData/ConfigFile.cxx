@@ -24,6 +24,20 @@ SOFTWARE.
 
 #define CONFIGFILE_MAX_FILE_LENGTH  10000
 
+#define INI_VALUE_DEFAULT_LENGTH    12
+#define INI_VALUE_MAX_LENGTH        16
+#define INI_VALUE_BUFFER_LENGTH     256
+
+#pragma pack(push, 1)
+
+struct IniFileItem {
+    bool Set;
+    const char* Name;
+    const char* Value;
+};
+
+#pragma pack(pop)
+
 static const char* Actions[] = {
     "WalkForward", "Run", "WalkLeft", "WalkRight", "WalkBackWard",
     "TurnLeft", "TurnRight", "LeanOutLeft", "LeanOutRight",
@@ -255,6 +269,145 @@ bool ConfigFile::WriteConfigFile() {
     delete[] value;
 
     return false;
+}
+
+// 0x0ff619a0
+bool ConfigFile::UpdateIniFile() {
+    if (g_pSysInterface->DisableOptions) {
+        return true;
+    }
+
+    const char* cmd = g_pSysInterface->CommandLine.AsString();
+
+    if (cmd[0] == '@') {
+        cmd = &cmd[1];
+
+        if (g_pSysFile->Exists(cmd, false)) {
+            // Open existing file.
+            const u32 size = g_pSysFile->GetSize(cmd, false);
+            char* content = new char[size + 1];
+
+            g_pSysFile->ReadAt(cmd, content, size, 0, false);
+            content[size] = NULL;
+
+            // Create new (replacement) file.
+            HANDLE file = g_pSysFile->Create(cmd);
+
+            // Collect and prepare settings.
+            ZRender* render = g_pSysInterface->Render;
+
+            u32 caps = 0;
+            render->GetCaps(&caps);
+            render->Method0x1C(3, 0);
+
+            char resolution[INI_VALUE_MAX_LENGTH];
+            sprintf(resolution, "%dx%d",
+                g_pSysInterface->WindowWidth, g_pSysInterface->WindowHeight);
+
+            char depth[INI_VALUE_DEFAULT_LENGTH];
+            sprintf(depth, "%d", g_pSysInterface->ColorDepth);
+
+            char shadows[INI_VALUE_DEFAULT_LENGTH];
+            sprintf(shadows, "%d", g_pSysInterface->ShadowDetail);
+
+            char textures[INI_VALUE_DEFAULT_LENGTH];
+            sprintf(textures, "%d", g_pSysInterface->TextureResolution);
+
+            char lod[INI_VALUE_DEFAULT_LENGTH];
+            sprintf(lod, "%d", g_pSysInterface->LevelOfDetail);
+
+            IniFileItem items[] = {
+                { false, "Anisotropy", g_pSysInterface->Anisotropy ? "2" : "0" },
+                { !g_pSysInterface->EnableLight, "AntiAlias", nullptr },
+                { (caps & 4) && g_pSysInterface->EnableLight, "BumpMap", nullptr },
+                { g_pSysInterface->DisableDXT, "DisableDXT", nullptr },
+                { g_pSysInterface->DisablePAL, "DisablePAL", nullptr },
+                { g_pSysInterface->EnableLight, "DisableLight", nullptr },
+                { this->Unk0xF1 == 0
+                ? g_pSysInterface->FullScreen : (this->Unk0xF1 != 1), "Window", nullptr },
+                { false, "Resolution", resolution },
+                { false, "DrawDll", g_pSysInterface->RenderModule->ModuleName },
+                { false, "ColorDepth", depth },
+                { false, "ShadowDetail", shadows },
+                { false, "TextureResolution", textures },
+                { false, nullptr, nullptr }
+            };
+
+            const char* current = content;
+            char buffer[INI_VALUE_BUFFER_LENGTH];
+
+            do {
+                // Go through the each line of content in the file.
+                const char* start = current;
+                const char* end = strchr(current, '\n');
+
+                if (end != nullptr) {
+                    current = strchr(end, '\r') == nullptr
+                        ? current + strlen(start) : current + 1;
+                }
+
+                // Then go through each unset setting and,
+                // for matching setting name - write new values into the file.
+                if (start != nullptr && start[0] != NULL) {
+                    bool found = false;
+
+                    for (u32 i = 0; items[i].Name != nullptr; i++) {
+                        const size_t length = strlen(items[i].Name);
+
+                        if (strnicmp(start, items[i].Name, length) == 0) {
+                            found = true;
+
+                            // If the setting is not set (written) - write it,
+                            // otherwise skip it alltogether, thus it won't be in the new file.
+                            if (!items[i].Set) {
+                                const u32 bytes = items[i].Value == nullptr
+                                    ? sprintf(buffer, "%s\r\n", items[i].Name)
+                                    : sprintf(buffer, "%s %s\r\n", items[i].Name, items[i].Value);
+
+                                g_pSysFile->WriteTo(file, buffer, bytes);
+                            }
+
+                            items[i].Set = true;
+                        }
+                    }
+
+                    // If there's no match - write the original content.
+                    if (!found) {
+                        g_pSysFile->WriteTo(file, start, current - start);
+                    }
+                }
+                else {
+                    // The end of the original file is reached.
+                    // Write all the settings that have'nt been updated to the end of the file.
+                    for (u32 i = 0; items[i].Name != nullptr; i++) {
+                        if (!items[i].Set) {
+                            const u32 bytes = items[i].Value == nullptr
+                                ? sprintf(buffer, "%s\r\n", items[i].Name)
+                                : sprintf(buffer, "%s %s\r\n", items[i].Name, items[i].Value);
+
+                            g_pSysFile->WriteTo(file, buffer, bytes);
+                        }
+                    }
+                }
+            } while (current != nullptr && current[0] != NULL);
+
+            delete[] content;
+
+            g_pSysFile->Close(file);
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// 0x0ff61f00
+bool ConfigFile::SaveConfiguration() {
+    const bool cfg = this->WriteConfigFile();
+    const bool ini = this->UpdateIniFile();
+
+    return cfg && ini;
 }
 
 // 0x0ff61f30

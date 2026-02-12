@@ -34,8 +34,8 @@ SOFTWARE.
 #define LINKSORTREFTAB_KEYVALUEADDR(X)  \
             ((RefKeyValue*)((size_t)X - sizeof(u32)))
 
-// 0x0ffc0940
-// 0x0ffd411c
+// 0x0ff86280
+// 0x0ff90f1c
 LinkSortRefTab::LinkSortRefTab(u32 count, u32 size) : LinkRefTab(count, size) {
     if (count < 1) {
         count = 1;
@@ -53,11 +53,11 @@ LinkSortRefTab::LinkSortRefTab(u32 count, u32 size) : LinkRefTab(count, size) {
     this->Current = nullptr;
 }
 
-// 0x0ffc0990
-// 0x0ffc09d0
+// 0x0ff862d0
+// 0x0ff86310
 LinkSortRefTab::~LinkSortRefTab() {}
 
-// 0x0ffc0a60
+// 0x0ff863a0
 void LinkSortRefTab::RemoveKeyValue(RefKeyValue* kv) {
     if (this->Current == kv) {
         this->Current = nullptr;
@@ -66,7 +66,7 @@ void LinkSortRefTab::RemoveKeyValue(RefKeyValue* kv) {
     LinkRefTab::RemoveKeyValue(kv);
 }
 
-// 0x0ffc0a80
+// 0x0ff863c0
 void LinkSortRefTab::Remove(RefLink* link) {
     if (this->Current == this->GetCurrent(link)) {
         this->Current = nullptr;
@@ -75,7 +75,7 @@ void LinkSortRefTab::Remove(RefLink* link) {
     LinkRefTab::Remove(link);
 }
 
-// 0x0ffc0ab0
+// 0x0ff863f0
 void* LinkSortRefTab::InsertSort(u32 key, f32 order, LinkSortRefTabInsert mode) {
     RefKeyValue* current = this->Current;
 
@@ -251,12 +251,12 @@ void* LinkSortRefTab::InsertSort(u32 key, f32 order, LinkSortRefTabInsert mode) 
     return result;
 }
 
-// 0x0ffc0be0
+// 0x0ff86520
 f32 LinkSortRefTab::GetSortValue(RefKeyValue* kv) {
     return LINKSORTREFTAB_GETSORTVALUE(kv);
 }
 
-// 0x0ffc0bf0
+// 0x0ff86530
 void LinkSortRefTab::ReplaceAt(RefKeyValue* kv, f32 order) {
     RefKeyValue* result =
         LINKSORTREFTAB_KEYVALUEADDR(this->InsertSort(kv->Key, order, LINKSORTREFTAB_INSERT));
@@ -266,19 +266,19 @@ void LinkSortRefTab::ReplaceAt(RefKeyValue* kv, f32 order) {
     this->RemoveKeyValue(kv);
 }
 
-// 0x0ffc0c40
+// 0x0ff86580
 void LinkSortRefTab::Clear() {
     this->Current = nullptr;
 
     LinkRefTab::Clear();
 }
 
-// 0x0ffc0c90
+// 0x0ff865d0
 void LinkSortRefTab::Clear2() {
     this->Current = nullptr;
 }
 
-// 0x0ffc0ca0
+// 0x0ff865e0
 void LinkSortRefTab::PrintStatus() {
     RefLink link;
 

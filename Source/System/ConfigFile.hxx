@@ -112,9 +112,9 @@ public:
     virtual void SetMouseInvert(bool value);                                                    // 0x70
     virtual bool GetMouseInvert();                                                              // 0x74
     virtual bool ReadConfigFile();                                                              // 0x78
-    virtual bool Method0x7C();                                                                  // 0x7C
+    virtual bool SaveConfiguration();                                                           // 0x7C
     virtual bool WriteConfigFile();                                                             // 0x80
-    virtual bool Method0x84();                                                                  // 0x84
+    virtual bool UpdateIniFile();                                                               // 0x84
     virtual void ApplyKeySettings();                                                            // 0x88
     virtual void ApplyMouseSettings();                                                          // 0x8C
     virtual void ApplySoundSettings();                                                          // 0x90

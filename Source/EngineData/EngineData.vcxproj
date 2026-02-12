@@ -19,9 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BlockRefTab.cxx" />
     <ClCompile Include="Common.cxx" />
     <ClCompile Include="ConfigFile.cxx" />
     <ClCompile Include="LinkRefTab.cxx" />
+    <ClCompile Include="LinkSortRefTab.cxx" />
     <ClCompile Include="Main.cxx" />
     <ClCompile Include="RefTab.cxx" />
     <ClCompile Include="StaticRefTab.cxx" />
