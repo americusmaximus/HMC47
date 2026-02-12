@@ -115,7 +115,7 @@ void XMLCALL XMLEndNamespaceDeclHandler(void* userData, const char* prefix) {
 }
 
 // 0x0ff84770
-const char* GetAttributeValue(const char** atts, const char* name) {
+const char* XMLFile::GetAttributeValue(const char** atts, const char* name) {
     for (u32 i = 0; atts[i] != nullptr; i += 2) {
         if (strcmp(atts[i], name) == 0) {
             return atts[i + 1];
@@ -123,6 +123,16 @@ const char* GetAttributeValue(const char** atts, const char* name) {
     }
 
     return nullptr;
+}
+
+// 0x0ff847e0
+XML_Status XMLFile::Parse(const char* content, u32 length, s32 final) {
+    return XML_Parse(this->Parser, content, length, final);
+}
+
+// 0x0ff84800
+XML_Error XMLFile::GetErrorCode() {
+    return XML_GetErrorCode(this->Parser);
 }
 
 // 0x0ff84810

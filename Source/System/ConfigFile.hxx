@@ -114,7 +114,7 @@ public:
     virtual SoundConfig* GetSoundSettings();                                                    // 0x6C
     virtual void SetMouseInvert(bool value);                                                    // 0x70
     virtual bool GetMouseInvert();                                                              // 0x74
-    virtual bool Method0x78();                                                                  // 0x78
+    virtual bool ReadConfigFile();                                                              // 0x78
     virtual bool Method0x7C();                                                                  // 0x7C
     virtual bool Method0x80();                                                                  // 0x80
     virtual bool Method0x84();                                                                  // 0x84
@@ -122,7 +122,7 @@ public:
     virtual void ApplyMouseSettings();                                                          // 0x8C
     virtual void ApplySoundSettings();                                                          // 0x90
     virtual void Method0x94();                                                                  // 0x94
-    virtual void Method0x98();                                                                  // 0x98
+    virtual void Method0x98(s32 value);                                                         // 0x98
     virtual void ApplyAllSettings();                                                            // 0x9C
 
 protected:

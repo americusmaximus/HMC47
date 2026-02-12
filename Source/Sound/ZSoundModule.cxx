@@ -67,7 +67,7 @@ void ZSoundModule::Initialize() {
     if (!g_pSysInterface->Unk0x38F1) {
         ConfigFile* config = g_pSysInterface->EngineData->GetConfigFile();
 
-        if (config->Method0x78()) {
+        if (config->ReadConfigFile()) {
             CopyMemory(this->Configuration, config->GetSoundSettings(), sizeof(SoundConfig));
         }
 

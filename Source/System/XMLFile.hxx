@@ -49,6 +49,8 @@ public:
 
 protected:
     u32 GetFileLineNumber();
+    XML_Status Parse(const char* content, u32 length, s32 final);
+    XML_Error GetErrorCode();
     const char* GetAttributeValue(const char** atts, const char* name);
 
 protected:

@@ -120,6 +120,59 @@ u32 ConfigFile::GetActionCount() {
     return result;
 }
 
+// 0x0ff613b0
+bool ConfigFile::ReadConfigFile() {
+    this->Method0x98(0);
+
+    this->Keys.DoubleTap = false;
+    this->Keys.Codes[0] = 0;
+    this->Keys.Codes[1] = 0;
+    this->Keys.Codes[2] = 0;
+    this->Keys.Codes[3] = 0;
+    this->Keys.Count = 0;
+
+    this->Sound.UseEAX = true;
+    this->Sound.UseHW = true;
+    this->Sound.SfxVolume = 80;
+    this->Sound.MusicVolume = 80;
+    this->Sound.SpeechVolume = 90;
+    this->Sound.UseStreaming = true;
+    this->Sound.MusicQuality = 1;
+    this->Sound.NumBuffers = 8;
+
+    this->Mouse.Speed = 4;
+    this->Mouse.Invert = false;
+
+    this->State = CONFIGFILESTATE_INIT;
+
+    const u32 size = g_pSysFile->GetSize("Hitman.cfg", false);
+
+    if (size != INVALID_FILE_SIZE || size == 0) {
+        return false;
+    }
+
+    char* value = new char[size];
+
+    g_pSysFile->ReadAt("Hitman.cfg", value, size, 0, false);
+
+    const bool ok = this->Parse(value, size, 1) != XML_STATUS_ERROR;
+
+    delete[] value;
+
+    if (!ok) {
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 210)
+            ->LogMessage("Error in config file %s line %d (code %d)",
+                "Hitman.cfg", this->GetFileLineNumber(), this->GetErrorCode());
+    }
+
+    this->Mouse.Speed = max(1, min(70, this->Mouse.Speed));
+    this->Sound.SfxVolume = max(0, min(100, this->Sound.SfxVolume));
+    this->Sound.MusicVolume = max(0, min(100, this->Sound.MusicVolume));
+    this->Sound.SpeechVolume = max(0, min(100, this->Sound.SpeechVolume));
+
+    return ok;
+}
+
 // 0x0ff61f30
 void ConfigFile::HandleStartElement(const char* name, const char** atts) {
     switch (this->State) {
