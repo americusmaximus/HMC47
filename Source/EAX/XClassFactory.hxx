@@ -34,7 +34,7 @@ public:
     virtual HRESULT STDMETHODCALLTYPE QueryInterface(const IID& riid, LPVOID* ppvObj);
     virtual ULONG STDMETHODCALLTYPE AddRef();
     virtual ULONG STDMETHODCALLTYPE Release();
-    virtual HRESULT STDMETHODCALLTYPE  CreateInstance(LPUNKNOWN pUnkOuter, const IID& riid, LPVOID* ppvObject);
+    virtual HRESULT STDMETHODCALLTYPE CreateInstance(LPUNKNOWN pUnkOuter, const IID& riid, LPVOID* ppvObject);
     virtual HRESULT STDMETHODCALLTYPE LockServer(BOOL fLock);
 
 protected:
