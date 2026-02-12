@@ -57,11 +57,11 @@ public:
     virtual void Method0x50();                                                              // 0x50
     virtual BOOL Method0x54(u32);                                                           // 0x54
     virtual void Method0x58();                                                              // 0x58
-    virtual void Method0x5C();                                                              // 0x5C
+    virtual void SetMusicVolume(f32 volume);                                                // 0x5C
     virtual void Method0x60();                                                              // 0x60
-    virtual void Method0x64();                                                              // 0x64
-    virtual void Method0x68();                                                              // 0x68
-    virtual void Method0x6C();                                                              // 0x6C
+    virtual void SetSpeechVolume(f32 volume, bool todo);                                    // 0x64
+    virtual void SetMusicQuality(s32 value);                                                // 0x68
+    virtual void SetSfxVolume(f32 volume);                                                  // 0x6C
     virtual void Method0x70();                                                              // 0x70
     virtual void Method0x74();                                                              // 0x74
     virtual void Method0x78();                                                              // 0x78
@@ -106,7 +106,7 @@ public:
     virtual void Method0x114();                                                             // 0x114
     virtual void Method0x118();                                                             // 0x118
     virtual void Method0x11C();                                                             // 0x11C
-    virtual void Method0x120();                                                             // 0x120
+    virtual void SetStreaming(bool value);                                                  // 0x120
     virtual void Method0x124();                                                             // 0x124
     virtual void Method0x128();                                                             // 0x128
     virtual void Method0x12C();                                                             // 0x12C
@@ -166,8 +166,12 @@ protected:
     bool Unk0xDF;                                                                           // 0xDF
 
     // TODO
-
+    f32 MusicVolume;                                                                        // 0xE8
+    // TODO
+    f32 SfxVolume;                                                                          // 0xF0
+    f32 SpeechVolume;                                                                       // 0xF4
     bool Unk0xF8;                                                                           // 0xF8
+    bool UseStreaming;                                                                      // 0xF9
 
     // TODO
 
@@ -179,7 +183,7 @@ protected:
     // TODO
 
     bool Unk0x140;                                                                          // 0x140
-    u32 Unk0x141;                                                                           // 0x141
+    void* Unk0x141;                                                                         // 0x141
 };
 
 #pragma pack(pop)

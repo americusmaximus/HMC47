@@ -23,6 +23,7 @@ SOFTWARE.
 #include "Common.hxx"
 
 // 0x0ff7a2af
+// 0x0ff63600
 void* operator new(size_t size) {
     if (g_pSysMem != nullptr) {
         return g_pSysMem->Allocate(size);

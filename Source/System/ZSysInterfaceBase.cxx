@@ -45,7 +45,7 @@ ZSysInterfaceBase::ZSysInterfaceBase() {
 
     this->Unk0x3A27 = 0; // TODO
     this->Unk0x3A2B = 0; // TODO
-    this->Unk0x37DD = 0; // TODO
+    this->MouseSpeed = 1.0;
     this->ProcessorCounter = 0.0;
 
     this->Unk0x3A2F = 0; // TODO
@@ -70,8 +70,7 @@ ZSysInterfaceBase::ZSysInterfaceBase() {
     this->LevelOfDetail = GRAPHICSLEVELOFDETAIL_1;
     this->ShadowDetail = GRAPHICSSHADOWQUALITY_ALL;
     this->DisableOptions = false;
-    this->Unk0x37E1 = 1.875f;
-    this->Unk0x38F3 = false;
+    this->MouseInvert = false;
     this->DebugVideo = false;
     this->Blood = true;
     this->PathfinderInfo = false;

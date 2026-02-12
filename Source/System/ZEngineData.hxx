@@ -42,8 +42,8 @@ public:
     virtual void Method0x20();                                                              // 0x20
     virtual void Method0x24();                                                              // 0x24
     virtual void Method0x28();                                                              // 0x28
-    virtual void Method0x2C();                                                              // 0x2C
-    virtual void Method0x30();                                                              // 0x30
+    virtual void* Method0x2C();                                                             // 0x2C
+    virtual void* Method0x30();                                                             // 0x30
     virtual void Method0x34();                                                              // 0x34
     virtual void Method0x38();                                                              // 0x38
     virtual void Method0x3C();                                                              // 0x3C
@@ -157,7 +157,7 @@ protected:
     bool Unk_4_17[17]; // TODO
 
     void* Unk0x165;                                                                         // 0x165
-    u32 Unk0x169;                                                                           // 0x169
+    void* Unk0x169;                                                                         // 0x169
     u32 Unk0x16D;                                                                           // 0x16D
     u32 Unk0x171;                                                                           // 0x171
     void* Unk0x175;                                                                         // 0x175

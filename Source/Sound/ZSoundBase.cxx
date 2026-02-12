@@ -51,7 +51,39 @@ bool ZSoundBase::Method0x1B0() {
 
 // 0x0ff3aae0
 bool ZSoundBase::Method0x1B4() {
-    return this->Unk0x141 != 0; // TODO
+    return this->Unk0x141 != nullptr;
+}
+
+// 0x0ff3ae20
+void ZSoundBase::SetStreaming(bool value) {
+    this->UseStreaming = value;
+}
+
+// 0x0ff3c180
+void ZSoundBase::SetSpeechVolume(f32 volume, bool todo) {
+    this->Unk0xF8 = todo;
+    this->SpeechVolume = volume * 0.01f;
+}
+
+// 0x0ff3c1a0
+void ZSoundBase::SetMusicVolume(f32 volume) {
+    this->MusicVolume = volume * 0.01f;
+
+    if (this->Unk0x141 != nullptr) {
+        // TODO NOT IMPLEMENTED
+    }
+}
+
+// 0x0ff3c210
+void ZSoundBase::SetMusicQuality(s32 value) {
+    if (this->Unk0x141 != nullptr) {
+        // TODO NOT IMPLEMENTED
+    }
+}
+
+// 0x0ff3c250
+void ZSoundBase::SetSfxVolume(f32 volume) {
+    this->SfxVolume = volume * 0.01f;
 }
 
 // 0x0ff3d5b0

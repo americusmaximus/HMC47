@@ -48,6 +48,10 @@ public:
     virtual void HandleEndNamespaceDecl(const char* prefix);                                    // 0x28
 
 protected:
+    u32 GetFileLineNumber();
+    const char* GetAttributeValue(const char** atts, const char* name);
+
+protected:
     XML_Parser Parser;                                                                          // 0x4
 };
 

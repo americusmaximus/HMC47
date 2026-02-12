@@ -21,7 +21,9 @@
   <ItemGroup>
     <ClCompile Include="Common.cxx" />
     <ClCompile Include="ConfigFile.cxx" />
+    <ClCompile Include="LinkRefTab.cxx" />
     <ClCompile Include="Main.cxx" />
+    <ClCompile Include="RefTab.cxx" />
     <ClCompile Include="XMLFile.cxx" />
     <ClCompile Include="ZEngineData.cxx" />
     <ClCompile Include="ZEngineDataModule.cxx" />

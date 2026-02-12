@@ -237,8 +237,7 @@ public:
     u32 Unk0x37D1;                                                              // 0x37D1
     u32 Unk0x37D5;                                                              // 0x37D5
     u32 Unk0x37D9;                                                              // 0x37D9
-    u32 Unk0x37DD;                                                              // 0x37DD
-    f32 Unk0x37E1;                                                              // 0x37E1
+    f64 MouseSpeed;                                                             // 0x37DD
     ZRender* Render;                                                            // 0x37E5
     ZMasterControl* MasterControl;                                              // 0x37E9
     ZString MasterProject;                                                      // 0x37ED
@@ -249,7 +248,7 @@ public:
     bool IsEngineRunning;                                                       // 0x38F0
     bool Unk0x38F1;                                                             // 0x38F1
     bool DisableConfig;                                                         // 0x38F2
-    bool Unk0x38F3;                                                             // 0x38F3
+    bool MouseInvert;                                                           // 0x38F3
     bool Unk0x38F4;                                                             // 0x38F4
     ZSoundModule* SoundModule;                                                  // 0x38F5
     ZRenderModule* RenderModule;                                                // 0x38F9

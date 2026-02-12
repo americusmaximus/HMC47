@@ -20,21 +20,524 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <System/ConfigFile.hxx>
+#include "Globals.hxx"
+
+static const char* Actions[] = {
+    "WalkForward", "Run", "WalkLeft", "WalkRight", "WalkBackWard",
+    "TurnLeft", "TurnRight", "LeanOutLeft", "LeanOutRight",
+    "DoAction", "Sneak", "ToggleMouseControl", "DropItemInHand",
+    "Binoculars", "EmptyHands", "FireWeapon", "ReloadWeapon",
+    "ToggleWeaponMode", "SelectNext2", "SelectPrev2",
+    "ShowMap", "ShowLaptop", "ShowStatus", nullptr
+};
 
 // 0x0ff61040
 // 0x0ff90150
 ConfigFile::ConfigFile()
-    : XMLFile(true), Unk0x8(8, 39) {
-
-    this->Unk0x34 = this->Unk0x38;
-    this->Unk0x38[0] = NULL;
-
+    : XMLFile(true), Items(8, 39 /* KeyMapping */) {
     this->Unk0xF1 = 0;
 }
 
 // 0x0ff611e0
 // 0x0ff61220
-ConfigFile::~ConfigFile() {
+ConfigFile::~ConfigFile() {}
+
+// 0x0ff610b0
+s32 ConfigFile::GetMouseSpeed() {
+    return this->Mouse.Speed;
+}
+
+// 0x0ff610c0
+void ConfigFile::SetMouseSpeed(s32 value) {
+    this->Mouse.Speed = value;
+}
+
+// 0x0ff610d0
+void ConfigFile::SetSoundSfxVolume(s32 value) {
+    this->Sound.SfxVolume = max(0, min(100, value));
+}
+
+// 0x0ff61100
+void ConfigFile::SetSoundMusicVolume(s32 value) {
+    this->Sound.MusicVolume = max(0, min(100, value));
+}
+
+// 0x0ff61130
+void ConfigFile::SetSoundSpeechVolume(s32 value) {
+    this->Sound.SpeechVolume = max(0, min(100, value));
+}
+
+// 0x0ff61160
+void ConfigFile::SetSoundUseEAX(bool value) {
+    this->Sound.UseEAX = value;
+}
+
+// 0x0ff61170
+void ConfigFile::SetSoundUseHW(bool value) {
+    this->Sound.UseHW = value;
+}
+
+// 0x0ff61180
+void ConfigFile::SetSoundMusicQuality(s32 value) {
+    this->Sound.MusicQuality = value;
+}
+
+// 0x0ff61190
+void ConfigFile::SetSoundUseStreaming(bool value) {
+    this->Sound.UseStreaming = value;
+}
+
+// 0x0ff611a0
+void ConfigFile::SetSoundNumBuffers(s32 value) {
+    this->Sound.NumBuffers = value;
+}
+
+// 0x0ff611b0
+SoundConfig* ConfigFile::GetSoundSettings() {
+    return &this->Sound;
+}
+
+// 0x0ff611c0
+bool ConfigFile::GetMouseInvert() {
+    return this->Mouse.Invert;
+}
+
+// 0x0ff611d0
+void ConfigFile::SetMouseInvert(bool value) {
+    this->Mouse.Invert = value;
+}
+
+// 0x0ff612a0
+u32 ConfigFile::GetActionCount() {
+    u32 result = 0;
+
+    if (Actions != nullptr) {
+        for (u32 i = 0; Actions[i] != nullptr; i++) {
+            result++;
+        }
+    }
+
+    return result;
+}
+
+// 0x0ff61f30
+void ConfigFile::HandleStartElement(const char* name, const char** atts) {
+    switch (this->State) {
+    case CONFIGFILESTATE_INIT: {
+        if (strcmp(name, "Controls") == 0) {
+            this->State = CONFIGFILESTATE_CONTROLS;
+
+            return;
+        }
+
+        if (strcmp(name, "Sound") == 0) {
+            const char* attr = this->GetAttributeValue(atts, "SfxVol");
+
+            if (attr != nullptr) {
+                const s32 value = atoi(attr);
+                this->Sound.SfxVolume = min(max(0, value), 100);
+            }
+
+            attr = this->GetAttributeValue(atts, "MusicVol");
+
+            if (attr != nullptr) {
+                const s32 value = atoi(attr);
+                this->Sound.MusicVolume = min(max(0, value), 100);
+            }
+
+            attr = this->GetAttributeValue(atts, "SpeechVol");
+
+            if (attr != nullptr) {
+                const s32 value = atoi(attr);
+                this->Sound.SpeechVolume = min(max(0, value), 100);
+            }
+
+            attr = this->GetAttributeValue(atts, "UseEAX");
+
+            if (attr != nullptr) {
+                this->Sound.UseEAX = atoi(attr) != 0;
+            }
+
+            attr = this->GetAttributeValue(atts, "MusicQuality");
+
+            if (attr != nullptr) {
+                const s32 value = atoi(attr);
+                this->Sound.MusicQuality = min(max(0, value), 2);
+            }
+
+            attr = this->GetAttributeValue(atts, "NumBuffers");
+
+            if (attr != nullptr) {
+                const s32 value = atoi(attr);
+                this->Sound.NumBuffers = min(max(3, value), 16);
+            }
+
+            attr = this->GetAttributeValue(atts, "UseHW");
+
+            if (attr != nullptr) {
+                this->Sound.UseHW = atoi(attr) != 0;
+            }
+
+            attr = this->GetAttributeValue(atts, "UseStreaming");
+
+            if (attr != nullptr) {
+                this->Sound.UseStreaming = atoi(attr) != 0;
+            }
+
+            this->State = CONFIGFILESTATE_SOUND;
+
+            return;
+        }
+
+        if (strcmp(name, "Display") == 0) {
+            this->State = CONFIGFILESTATE_DISPLAY;
+
+            return;
+        }
+
+        if (strcmp(name, "Settings") == 0) {
+            return;
+        }
+
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 631)
+            ->LogMessage("Error in config file %s, line %d : %s", "Hitman.cfg",
+                this->GetFileLineNumber(), "Unknown start tag");
+
+        return;
+    }
+    case CONFIGFILESTATE_CONTROLS: {
+        if (strcmp(name, "Mapping") == 0) {
+            ZString action = this->GetAttributeValue(atts, "Action");
+
+            const char* attr = this->GetAttributeValue(atts, "DoubleTap");
+
+            if (attr != nullptr) {
+                this->Keys.DoubleTap = atoi(attr) != 0;
+            }
+
+            this->State = CONFIGFILESTATE_CONTROLS_KEY;
+
+            return;
+        }
+
+        if (strcmp(name, "Mouse") == 0) {
+            const char* attr = this->GetAttributeValue(atts, "Speed");
+
+            if (attr != nullptr) {
+                this->Mouse.Speed = atoi(attr);
+            }
+
+            attr = this->GetAttributeValue(atts, "Invert");
+
+            if (attr != nullptr) {
+                this->Mouse.Invert = atoi(attr) != 0;
+            }
+
+            this->State = CONFIGFILESTATE_CONTROLS_MOUSE;
+
+            return;
+        }
+
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 631)
+            ->LogMessage("Error in config file %s, line %d : %s", "Hitman.cfg",
+                this->GetFileLineNumber(), "Invalid start tag inside Controls section");
+
+        return;
+    }
+    case CONFIGFILESTATE_CONTROLS_KEY: {
+        if (strcmp(name, "Key") == 0) {
+            const char* attr = this->GetAttributeValue(atts, "SCode");
+
+            if (attr != nullptr) {
+                if (this->Keys.Count < CONFIGFILE_MAX_KEY_COUNT) {
+                    this->Keys.Codes[this->Keys.Count] = atoi(attr);
+                    this->Keys.Count++;
+
+                    this->State = CONFIGFILESTATE_CONTROLS_KEYS;
+
+                    return;
+                }
+
+                g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 535)
+                    ->LogMessage("ERROR: Too many keys defined for action %s", this->Keys.Action.AsString());
+            }
+
+            this->State = CONFIGFILESTATE_CONTROLS_KEYS;
+
+            return;
+        }
+
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 631)
+            ->LogMessage("Error in config file %s, line %d : %s", "Hitman.cfg",
+                this->GetFileLineNumber(), "Invalid start tag inside Controls section");
+
+        return;
+    }
+    case CONFIGFILESTATE_CONTROLS_KEYS: {
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 631)
+            ->LogMessage("Error in config file %s, line %d : %s", "Hitman.cfg",
+                this->GetFileLineNumber(), "Invalid start tag inside Key section");
+
+        return;
+    }
+    case CONFIGFILESTATE_SOUND:
+    case CONFIGFILESTATE_DISPLAY: {
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 631)
+            ->LogMessage("Error in config file %s, line %d : %s", "Hitman.cfg",
+                this->GetFileLineNumber(), "Unexpected start tag inside Sound section");
+
+        return;
+    }
+    }
+}
+
+// 0x0ff62690
+void ConfigFile::HandleEndElement(const char* name) {
+    switch (this->State) {
+    case CONFIGFILESTATE_INIT: {
+        if (strcmp(name, "Settings") == 0) {
+            return;
+        }
+
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 631)
+            ->LogMessage("Error in config file %s, line %d : %s", "Hitman.cfg",
+                this->GetFileLineNumber(), "Unexpected </> token outside all sections");
+
+        return;
+    }
+    case CONFIGFILESTATE_CONTROLS: {
+        if (strcmp(name, "Controls") == 0) {
+            this->State = CONFIGFILESTATE_INIT;
+
+            return;
+        }
+
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 631)
+            ->LogMessage("Error in config file %s, line %d : %s", "Hitman.cfg",
+                this->GetFileLineNumber(), "Misplaced end token");
+
+        return;
+    }
+    case CONFIGFILESTATE_CONTROLS_KEY: {
+        if (strcmp(name, "Mapping") == 0) {
+            if (strlen(this->Keys.Action.AsString()) != 0) {
+                if (this->Keys.Codes[0] != 0) {
+                    this->AddMapping(this->Keys.Action.AsString(), this->Keys.DoubleTap,
+                        this->Keys.Codes[0], this->Keys.Codes[1], this->Keys.Codes[2], this->Keys.Codes[3]);
+                }
+            }
+
+            this->Keys.DoubleTap = false;
+
+            this->Keys.Codes[0] = 0;
+            this->Keys.Codes[1] = 0;
+            this->Keys.Codes[2] = 0;
+            this->Keys.Codes[3] = 0;
+
+            this->Keys.Count = 0;
+
+            this->State = CONFIGFILESTATE_CONTROLS;
+
+            return;
+        }
+
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 631)
+            ->LogMessage("Error in config file %s, line %d : %s", "Hitman.cfg",
+                this->GetFileLineNumber(), "Misplaced end token");
+
+        return;
+    }
+    case CONFIGFILESTATE_CONTROLS_MOUSE: {
+        if (strcmp(name, "Mouse") == 0) {
+            this->State = CONFIGFILESTATE_CONTROLS;
+
+            return;
+        }
+
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 631)
+            ->LogMessage("Error in config file %s, line %d : %s", "Hitman.cfg",
+                this->GetFileLineNumber(), "Misplaced end token");
+
+        return;
+    }
+    case CONFIGFILESTATE_CONTROLS_KEYS: {
+        if (strcmp(name, "Key") == 0) {
+            this->State = CONFIGFILESTATE_CONTROLS_KEY;
+
+            return;
+        }
+
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 631)
+            ->LogMessage("Error in config file %s, line %d : %s", "Hitman.cfg",
+                this->GetFileLineNumber(), "Misplaced end token");
+
+        return;
+    }
+    case CONFIGFILESTATE_SOUND:
+    case CONFIGFILESTATE_DISPLAY: {
+        this->State = CONFIGFILESTATE_INIT;
+
+        return;
+    }
+    }
+}
+
+// 0x0ff62910
+u32 ConfigFile::AddMapping(const char* action, bool dbl, s32 code1, s32 code2, s32 code3, s32 code4) {
+    u32 index = 0;
+
+    if (code1 < 0) {
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 640)
+            ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 640);
+
+        __asm { int 3 }
+    }
+
+    if (code2 < 0) {
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 641)
+            ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 641);
+
+        __asm { int 3 }
+    }
+
+    if (code3 < 0) {
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 642)
+            ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 642);
+
+        __asm { int 3 }
+    }
+
+    if (code4 < 0) {
+        g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 643)
+            ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 643);
+
+        __asm { int 3 }
+    }
+
+    RefLink link;
+    this->Items.GetStart(&link);
+
+    KeyMapping* item = (KeyMapping*)this->Items.GetNext(&link);
+
+    bool found = false;
+    while (item != nullptr) {
+        if (strcmp(item->Action, action) == 0) {
+            index++;
+
+            if (code1 == item->Code1 && code2 == item->Code2
+                && code3 == item->Code3 && code4 == item->Code4) {
+                found = true;
+            }
+        }
+
+        item = (KeyMapping*)this->Items.GetNext(&link);
+    }
+
+    if (found) {
+        return index;
+    }
+
+    KeyMapping* item = (KeyMapping*)this->Items.Insert(0);
+
+    item->Action = ZString(action);
+
+    item->DoubleTap = dbl;
+
+    item->Code1 = code1;
+    item->Code2 = code2;
+    item->Code3 = code3;
+    item->Code4 = code4;
+
+    return index + 1;
+}
+
+// 0x0ff62d20
+void ConfigFile::RemoveMapping(KeyMapping* value) {
+    RefLink link;
+    this->Items.GetStart(&link);
+
+    KeyMapping* item = (KeyMapping*)this->Items.GetNext(&link);
+
+    while (item != nullptr) {
+        if (item->Code1 == value->Code1 && item->Code2 == value->Code2 && item->Code3 == value->Code3
+            && item->Code4 == value->Code4 && item->DoubleTap == value->DoubleTap
+            && strcmpi(item->Action.AsString(), value->Action.AsString()) == 0) {
+            this->Items.Remove(&link);
+            return;
+        }
+
+        item = (KeyMapping*)this->Items.GetNext(&link);
+    }
+
+    g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 703)
+        ->LogMessage("WARNING unable to remove mapping for %s (keys %d and %d%s)",
+            value->Action.AsString(), value->Code1, value->Code2, value->DoubleTap ? " DBL" : "");
+}
+
+// 0x0ff632b0
+void ConfigFile::ApplyMouseSettings() {
+    g_pSysInterface->MouseSpeed = this->Mouse.Speed * 0.1;
+    g_pSysInterface->MouseInvert = this->Mouse.Invert;
+
     // TODO NOT IMPLEMENTED
 }
+
+// 0x0ff63340
+void ConfigFile::ApplySoundSettings() {
+    if (g_pSysInterface->SoundModule != nullptr) {
+        ZSound* sound = g_pSysInterface->SoundModule->GetSound();
+
+        if (sound != nullptr) {
+            sound->SetSpeechVolume((f32)this->Sound.SpeechVolume, false);
+            sound->SetMusicVolume((f32)this->Sound.MusicVolume);
+            sound->SetSfxVolume((f32)this->Sound.SfxVolume);
+            sound->SetStreaming(this->Sound.UseStreaming);
+            sound->SetMusicQuality(this->Sound.MusicQuality);
+
+            g_pSysInterface->SoundModule->SetConfiguration(this->Sound.UseHW,
+                this->Sound.UseEAX, this->Sound.NumBuffers);
+        }
+    }
+}
+
+// 0x0ff63420
+void ConfigFile::ApplyAllSettings() {
+    this->ApplyKeySettings();
+    this->ApplyMouseSettings();
+    this->ApplySoundSettings();
+    this->Method0x94();
+}
+
+// 0x0ff63450
+const char** ConfigFile::GetActions() {
+    return Actions;
+}
+
+// 0x0ff84730
+void ConfigFile::HandleCharacterData(const char*, s32) {}
+
+// 0x0ff84730
+void ConfigFile::HandleProcessingInstruction(const char*, const char*) {}
+
+// 0x0ff84730
+void ConfigFile::HandleSetDefault(const char*, s32) {}
+
+// 0x0ff84740
+s32 ConfigFile::HandleNotStandalone() {
+    return 0;
+}
+
+// 0x0ff84750
+void ConfigFile::HandleUnparsedEntityDecl(const char*, const char*, const char*, const char*, const char*) {}
+
+// 0x0ff84760
+void ConfigFile::HandleNotationDecl(const char*, const char*, const char*, const char*) {}
+
+// 0x0ff84730
+void ConfigFile::HandleStartNamespaceDecl(const char*, const char*) {}
+
+// 0x0ff8e220
+void ConfigFile::HandleEndNamespaceDecl(const char*) {}
+
+// 0x0ff8e230
+void ConfigFile::Method0x94() {}

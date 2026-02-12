@@ -55,6 +55,7 @@ XMLFile::XMLFile(bool initialize) {
 }
 
 // 0x0ff845c0
+// 0x0ff845f0
 XMLFile::~XMLFile() {
     if (this->Parser != nullptr) {
         XML_ParserFree(this->Parser);
@@ -111,4 +112,20 @@ void XMLCALL XMLStartNamespaceDeclHandler(void* userData, const char* prefix, co
 // 0x0ff84660
 void XMLCALL XMLEndNamespaceDeclHandler(void* userData, const char* prefix) {
     return ((XMLFile*)userData)->HandleEndNamespaceDecl(prefix);
+}
+
+// 0x0ff84770
+const char* GetAttributeValue(const char** atts, const char* name) {
+    for (u32 i = 0; atts[i] != nullptr; i += 2) {
+        if (strcmp(atts[i], name) == 0) {
+            return atts[i + 1];
+        }
+    }
+
+    return nullptr;
+}
+
+// 0x0ff84810
+u32 XMLFile::GetFileLineNumber() {
+    return XML_GetCurrentLineNumber(this->Parser);
 }

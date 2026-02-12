@@ -22,6 +22,16 @@ SOFTWARE.
 
 #include <System/ZEngineData.hxx>
 
+// 0x0ff64660
+void* ZEngineData::Method0x2C() {
+    return this->Unk0x165;
+}
+
+// 0x0ff64670
+void* ZEngineData::Method0x30() {
+    return this->Unk0x169;
+}
+
 // 0x0ff753f0
 ConfigFile* ZEngineData::GetConfigFile() {
     return new ConfigFile();
