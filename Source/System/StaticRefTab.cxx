@@ -21,7 +21,6 @@ SOFTWARE.
 */
 
 #include "Globals.hxx"
-#include "StaticRefTab.hxx"
 
 #define STATICREFTAB_REF(X)     \
             (*(Ref**)((size_t)X + (this->BlockSize - 1) * 4))
