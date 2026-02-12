@@ -97,7 +97,7 @@ void ZSoundModule::Initialize() {
 }
 
 // 0x0ff35420
-void ZSoundModule::SetConfiguration(u8 hw, u8 eax, u32 buffers) {
+void ZSoundModule::SetConfiguration(bool hw, bool eax, s32 buffers) {
     RefTab tab(8, 0);
 
     u32 uVar5 = 0; // TODO

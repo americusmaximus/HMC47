@@ -33,9 +33,9 @@ struct ZSoundModuleConfiguration {
     u32 Unk0x4;                                                                 // 0x4
     u32 Unk0x8;                                                                 // 0x8
     u32 Unk0xC;                                                                 // 0xC
-    u32 Buffers;                                                                // 0x10
-    u8 HW;                                                                      // 0x14
-    u8 EAX;                                                                     // 0x15
+    s32 Buffers;                                                                // 0x10
+    bool HW;                                                                    // 0x14
+    bool EAX;                                                                   // 0x15
     u8 Unk0x16;                                                                 // 0x16
 };
 
@@ -55,7 +55,7 @@ public:
     virtual void Method0x28();                                                  // 0x28
     virtual void Method0x34();                                                  // 0x34
     virtual bool RenderFrame();                                                 // 0x38
-    virtual void SetConfiguration(u8 hw, u8 eax, u32 buffers);                  // 0x3C
+    virtual void SetConfiguration(bool hw, bool eax, s32 buffers);              // 0x3C
     virtual s32 Method0x40();                                                   // 0x40
 
 public:

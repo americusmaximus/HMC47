@@ -177,8 +177,8 @@ void* StaticRefTab::GetByKey(u32) {
 
 // 0x0ffbfb90
 u32 StaticRefTab::GetKeyByIndex(u32 i) {
-    //g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\RefTab.cpp", 678)
-//    ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\ZStdLib\\Source\\RefTab.cpp", 678);
+    g_pSysCom->Log("Z:\\Engine\\ZStdLib\\Source\\RefTab.cpp", 678)
+        ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\ZStdLib\\Source\\RefTab.cpp", 678);
 
     __asm { int 3 }
 }
