@@ -48,9 +48,9 @@ struct SoundConfig {
     s32 SpeechVolume;                                                                           // 0x8
     s32 MusicQuality;                                                                           // 0xC
     s32 NumBuffers;                                                                             // 0x10
-    bool UseHW;                                                                                 // 0x11
-    bool UseEAX;                                                                                // 0x12
-    bool UseStreaming;                                                                          // 0x13
+    bool UseHW;                                                                                 // 0x14
+    bool UseEAX;                                                                                // 0x15
+    bool UseStreaming;                                                                          // 0x16
 };
 
 struct KeyConfig {
@@ -139,4 +139,5 @@ protected:
 
 #if defined(_DEBUG) && !defined(_WIN64)
 static_assert(sizeof(ConfigFile)    == 0xF5,    "ConfigFile size mismatch.");
+static_assert(sizeof(SoundConfig)   == 0x17,    "SoundConfig size mismatch.");
 #endif

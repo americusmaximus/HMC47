@@ -28,17 +28,6 @@ SOFTWARE.
 
 #pragma pack(push, 1)
 
-struct ZSoundModuleConfiguration {
-    u32 Unk0x0;                                                                 // 0x0
-    u32 Unk0x4;                                                                 // 0x4
-    u32 Unk0x8;                                                                 // 0x8
-    u32 Unk0xC;                                                                 // 0xC
-    s32 Buffers;                                                                // 0x10
-    bool HW;                                                                    // 0x14
-    bool EAX;                                                                   // 0x15
-    u8 Unk0x16;                                                                 // 0x16
-};
-
 class ZSoundModule : public ZModule {
 public:
     ZSoundModule();
@@ -64,9 +53,9 @@ public:
     }
 
 protected:
-    ZSoundModuleConfiguration* Configuration;                                   // 0xC
+    SoundConfig* Configuration;                                                 // 0xC
     s32 Unk0x10;                                                                // 0x10
-    u32 Unk0x14;                                                                // 0x14
+    void* Unk0x14;                                                              // 0x14
     LinkRefTab* Unk0x18;                                                        // 0x18
     ZSound* Sound;                                                              // 0x1C
 };
@@ -75,5 +64,4 @@ protected:
 
 #if defined(_DEBUG) && !defined(_WIN64)
 static_assert(sizeof(ZSoundModule)              == 0x20,    "ZSoundModule size mismatch.");
-static_assert(sizeof(ZSoundModuleConfiguration) == 0x17,    "ZSoundModuleConfiguration size mismatch.");
 #endif

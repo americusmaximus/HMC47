@@ -26,17 +26,17 @@ SOFTWARE.
 ZSoundModule::ZSoundModule() {
     this->Sound = nullptr;
     this->Unk0x18 = new LinkRefTab(8, 0);
-    this->Configuration = new ZSoundModuleConfiguration();
+    this->Configuration = new SoundConfig();
 
-    this->Configuration->Unk0x16 = true;
-    this->Configuration->EAX = 0;
-    this->Configuration->HW = 0;
+    this->Configuration->UseStreaming = true;
+    this->Configuration->UseEAX = false;
+    this->Configuration->UseHW = false;
 
-    this->Configuration->Unk0xC = 0;
-    this->Configuration->Unk0x4 = 50;
-    this->Configuration->Buffers = 8;
-    this->Configuration->Unk0x0 = 50;
-    this->Configuration->Unk0x8 = 30;
+    this->Configuration->MusicQuality = 0;
+    this->Configuration->MusicVolume = 50;
+    this->Configuration->NumBuffers = 8;
+    this->Configuration->SfxVolume = 50;
+    this->Configuration->SpeechVolume = 30;
 }
 
 // 0x0ff35130
@@ -65,31 +65,31 @@ ZSoundModule::~ZSoundModule() {
 // 0x0ff35270
 void ZSoundModule::Initialize() {
     if (!g_pSysInterface->Unk0x38F1) {
-        void* todo_1 = g_pSysInterface->EngineData->Method0x10(); // TODO
+        ConfigFile* config = g_pSysInterface->EngineData->GetConfigFile();
 
-        if (todo_1->Method0x78()) {
-            CopyMemory(this->Configuration, todo_1->Method0x6C(), sizeof(ZSoundConfiguration));
+        if (config->Method0x78()) {
+            CopyMemory(this->Configuration, config->GetSoundSettings(), sizeof(SoundConfig));
         }
 
-        if (todo_1 != nullptr) {
-            delete todo_1;
+        if (config != nullptr) {
+            delete config;
         }
 
         g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\Sound.cpp", 82)->LogMessage("config");
 
         g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\Sound.cpp", 83)
-            ->LogMessage("HW %d", this->Configuration->HW);
+            ->LogMessage("HW %d", this->Configuration->UseHW);
 
         g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\Sound.cpp", 84)
-            ->LogMessage("EAX %d", this->Configuration->EAX);
+            ->LogMessage("EAX %d", this->Configuration->UseEAX);
 
         g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\Sound.cpp", 85)
-            ->LogMessage("buffers %d", this->Configuration->Buffers);
+            ->LogMessage("buffers %d", this->Configuration->NumBuffers);
 
-        this->Configuration->Buffers = max(this->Configuration->Buffers, 14);
+        this->Configuration->NumBuffers = max(this->Configuration->NumBuffers, 14);
 
-        this->SetConfiguration(this->Configuration->HW,
-            this->Configuration->EAX, this->Configuration->Buffers);
+        this->SetConfiguration(this->Configuration->UseHW,
+            this->Configuration->UseEAX, this->Configuration->NumBuffers);
     }
     else {
         this->Sound = new ZSound();
