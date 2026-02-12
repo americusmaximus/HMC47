@@ -24,12 +24,12 @@ SOFTWARE.
 
 static s32 __cdecl StringRefTabStringCompareCallback(void const* a, void const* b);
 
-// 0x0ffc0d30
-// 0x0ffd419c
+// 0x0ff86670
+// 0x0ff90f9c
 StringRefTab::StringRefTab(u32 count, u32 size) : RefTab(count, size) {}
 
-// 0x0ffc0d70
-// 0x0ffc0db0
+// 0x0ff866b0
+// 0x0ff866f0
 StringRefTab::~StringRefTab() {
     RefLink link;
 
@@ -45,13 +45,13 @@ StringRefTab::~StringRefTab() {
     }
 }
 
-// 0x0ffc0e80
+// 0x0ff867c0
 void StringRefTab::Clear() {
     this->Clear2();
     RefTab::Clear();
 }
 
-// 0x0ffc0ec0
+// 0x0ff86800
 void StringRefTab::Clear2() {
     RefLink link;
 
@@ -69,7 +69,7 @@ void StringRefTab::Clear2() {
     this->BlockCount = this->BlockCount | REFTAB_LOCK;
 }
 
-// 0x0ffc0f30
+// 0x0ff86870
 char* StringRefTab::InsertString(const char* value) {
     char* str = new char[strlen(value) + 1];
     strcpy(str, value);
@@ -77,7 +77,7 @@ char* StringRefTab::InsertString(const char* value) {
     return (char*)RefTab::Insert(REFTAB_PTR_TO_KEY(str));
 }
 
-// 0x0ffc0fa0
+// 0x0ff868e0
 char* StringRefTab::TryInsertString(const char* value) {
     if (!this->ContainsString(value)) {
         return this->InsertString(value);
@@ -86,7 +86,7 @@ char* StringRefTab::TryInsertString(const char* value) {
     return nullptr;
 }
 
-// 0x0ffc0fd0
+// 0x0ff86910
 void StringRefTab::RemoveString(const char* value) {
     RefLink link;
 
@@ -109,7 +109,7 @@ void StringRefTab::RemoveString(const char* value) {
         ->LogMessage("WARNING: unable to remove string %s\n", value);
 }
 
-// 0x0ffc1070
+// 0x0ff869b0
 RefKeyValue* StringRefTab::GetString(const char* value) {
     RefLink link;
 
@@ -131,7 +131,7 @@ RefKeyValue* StringRefTab::GetString(const char* value) {
     return nullptr;
 }
 
-// 0x0ffc10e0
+// 0x0ff86a20
 void StringRefTab::Remove(RefLink* link) {
     char* value = nullptr;
 
@@ -152,7 +152,7 @@ void StringRefTab::Remove(RefLink* link) {
     RefTab::Remove(link);
 }
 
-// 0x0ffc1150
+// 0x0ff86a90
 bool StringRefTab::ContainsString(const char* value) {
     RefLink link;
 
@@ -172,7 +172,7 @@ bool StringRefTab::ContainsString(const char* value) {
     return false;
 }
 
-// 0x0ffc11c0
+// 0x0ff86b00
 void StringRefTab::PrintStatus() {
     RefLink link;
 
@@ -189,7 +189,7 @@ void StringRefTab::PrintStatus() {
     }
 }
 
-// 0x0ffc1230
+// 0x0ff86b70
 void StringRefTab::SortStrings() {
     RefLink link;
 
@@ -231,7 +231,7 @@ void StringRefTab::SortStrings() {
     delete[] values;
 }
 
-// 0x0ffc8850
+// 0x0ff86e30
 bool StringRefTabStringComparator(const char* a, const char* b) {
     if (_strcmpi(a, b) == 0) {
         return false;
@@ -270,7 +270,7 @@ bool StringRefTabStringComparator(const char* a, const char* b) {
     return b[m] == NULL;
 }
 
-// 0x0ffc88e0
+// 0x0ff86ec0
 static s32 __cdecl StringRefTabStringCompareCallback(void const* a, void const* b) {
     return StringRefTabStringComparator(*(const char**)a, *(const char**)b) ? 1 : -1;
 }

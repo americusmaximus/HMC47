@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <System/ZEngineData.hxx>
+#include "Globals.hxx"
 
 // 0x0ff64660
 void* ZEngineData::Method0x2C() {
@@ -30,6 +30,29 @@ void* ZEngineData::Method0x2C() {
 // 0x0ff64670
 void* ZEngineData::Method0x30() {
     return this->Unk0x169;
+}
+
+// 0x0ff67480
+void* ZEngineData::Method0x128() {
+    return this->Unk0x171;
+}
+
+// 0x0ff69e90
+void ZEngineData::Method0xB0() {
+    this->Method0xB4();
+    this->Unk0x16D = new RefTab(32, 2);
+}
+
+// 0x0ff6e980
+void ZEngineData::Method0x68() {
+    if (g_pSysInterface->SoundModule != nullptr
+        && g_pSysInterface->SoundModule->GetSound() != nullptr) {
+        void* todo = g_pSysInterface->EngineData->Method0x128();
+
+        if (todo != nullptr) {
+            // TODO NOT IMPLEMENTED
+        }
+    }
 }
 
 // 0x0ff753f0

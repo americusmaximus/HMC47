@@ -105,7 +105,7 @@ public:
     virtual void Method0x11C();                                                             // 0x11C
     virtual void Method0x120();                                                             // 0x120
     virtual void Method0x124();                                                             // 0x124
-    virtual void Method0x128();                                                             // 0x128
+    virtual void* Method0x128();                                                            // 0x128
     virtual void Method0x12C();                                                             // 0x12C
     virtual void Method0x130();                                                             // 0x130
     virtual void Method0x134();                                                             // 0x134
@@ -158,9 +158,9 @@ protected:
 
     void* Unk0x165;                                                                         // 0x165
     void* Unk0x169;                                                                         // 0x169
-    u32 Unk0x16D;                                                                           // 0x16D
-    u32 Unk0x171;                                                                           // 0x171
-    void* Unk0x175;                                                                         // 0x175
+    RefTab* Unk0x16D;                                                                       // 0x16D
+    void* Unk0x171;                                                                         // 0x171
+    StringRefTab* Unk0x175;                                                                 // 0x175
 
     bool Unk_5_72[72]; // TODO
 };
