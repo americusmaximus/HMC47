@@ -22,6 +22,8 @@ SOFTWARE.
 
 #include "Globals.hxx"
 
+#define CONFIGFILE_MAX_FILE_LENGTH  10000
+
 static const char* Actions[] = {
     "WalkForward", "Run", "WalkLeft", "WalkRight", "WalkBackWard",
     "TurnLeft", "TurnRight", "LeanOutLeft", "LeanOutRight",
@@ -171,6 +173,88 @@ bool ConfigFile::ReadConfigFile() {
     this->Sound.SpeechVolume = max(0, min(100, this->Sound.SpeechVolume));
 
     return ok;
+}
+
+// 0x0ff615a0
+bool ConfigFile::WriteConfigFile() {
+    if (g_pSysInterface->DisableOptions) {
+        return true;
+    }
+
+    char* value = new char[CONFIGFILE_MAX_FILE_LENGTH];
+    value[0] = NULL;
+
+    char* current = value + sprintf(value, "<%s", "Settings");
+    current = current + sprintf(current, ">\n");
+
+    current = current + sprintf(current, "<%s", "Controls");
+    current = current + sprintf(current, ">\n");
+
+    {
+        RefLink link;
+        this->Items.GetStart(&link);
+
+        KeyMapping* item = (KeyMapping*)this->Items.GetNext(&link);
+
+        while (item != nullptr) {
+            current = current + sprintf(current, "<%s", "Mapping");
+            current = current + sprintf(current, " %s=\"%s\"", "Action", item->Action.AsString());
+
+            if (item->DoubleTap) {
+                current = current + sprintf(current, " %s=\"%d\"", "DoubleTap", 1);
+            }
+
+            current = current + sprintf(current, ">\n");
+
+            for (u32 i = 0; i < CONFIGFILE_MAX_KEY_COUNT; i++) {
+                current = current + sprintf(current, "<%s", "Key");
+                current = current + sprintf(current, " %s=\"%d\"", "SCode", item->Codes[i]);
+                current = current + sprintf(current, "/>\n");
+            }
+
+            current = current + sprintf(current, "</%s>\n", "Mapping");
+
+            item = (KeyMapping*)this->Items.GetNext(&link);
+        }
+    }
+
+    current = current + sprintf(current, "<%s", "Mouse");
+    current = current + sprintf(current, " %s=\"%d\"", "Speed", this->Mouse.Speed);
+    current = current + sprintf(current, " %s=\"%d\"", "Invert", this->Mouse.Invert);
+    current = current + sprintf(current, "/>\n");
+
+    current = current + sprintf(current, "</%s>\n", "Controls");
+
+    current = current + sprintf(current, "<%s", "Sound");
+    current = current + sprintf(current, " %s=\"%d\"", "SfxVol", this->Sound.SfxVolume);
+    current = current + sprintf(current, " %s=\"%d\"", "MusicVol", this->Sound.MusicVolume);
+    current = current + sprintf(current, " %s=\"%d\"", "SpeechVol", this->Sound.SpeechVolume);
+    current = current + sprintf(current, " %s=\"%d\"", "UseEAX", this->Sound.UseEAX != false);
+    current = current + sprintf(current, " %s=\"%d\"", "UseHW", this->Sound.UseHW != false);
+    current = current + sprintf(current, " %s=\"%d\"", "UseStreaming", this->Sound.UseStreaming != false);
+    current = current + sprintf(current, " %s=\"%d\"", "MusicQuality", this->Sound.MusicQuality);
+    current = current + sprintf(current, " %s=\"%d\"", "NumBuffers", this->Sound.NumBuffers);
+    current = current + sprintf(current, "/>\n");
+
+    current = current + sprintf(current, "</%s>\n", "Settings");
+
+    HANDLE file = g_pSysFile->Create("Hitman.cfg");
+
+    if (file != NULL) {
+        g_pSysFile->WriteTo(file, value, current - value);
+        g_pSysFile->Close(file);
+
+        delete[] value;
+
+        return true;
+    }
+
+    g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 291)
+        ->LogMessage("ERROR: Unable to write to file %s", "Hitman.cfg");
+
+    delete[] value;
+
+    return false;
 }
 
 // 0x0ff61f30
@@ -477,8 +561,8 @@ u32 ConfigFile::AddMapping(const char* action, bool dbl, s32 code1, s32 code2, s
         if (strcmp(item->Action, action) == 0) {
             index++;
 
-            if (code1 == item->Code1 && code2 == item->Code2
-                && code3 == item->Code3 && code4 == item->Code4) {
+            if (code1 == item->Codes[0] && code2 == item->Codes[1]
+                && code3 == item->Codes[2] && code4 == item->Codes[3]) {
                 found = true;
             }
         }
@@ -496,10 +580,10 @@ u32 ConfigFile::AddMapping(const char* action, bool dbl, s32 code1, s32 code2, s
 
     item->DoubleTap = dbl;
 
-    item->Code1 = code1;
-    item->Code2 = code2;
-    item->Code3 = code3;
-    item->Code4 = code4;
+    item->Codes[0] = code1;
+    item->Codes[1] = code2;
+    item->Codes[2] = code3;
+    item->Codes[3] = code4;
 
     return index + 1;
 }
@@ -512,8 +596,10 @@ void ConfigFile::RemoveMapping(KeyMapping* value) {
     KeyMapping* item = (KeyMapping*)this->Items.GetNext(&link);
 
     while (item != nullptr) {
-        if (item->Code1 == value->Code1 && item->Code2 == value->Code2 && item->Code3 == value->Code3
-            && item->Code4 == value->Code4 && item->DoubleTap == value->DoubleTap
+        if (item->Codes[0] == value->Codes[0]
+            && item->Codes[1] == value->Codes[1]
+            && item->Codes[2] == value->Codes[2]
+            && item->Codes[3] == value->Codes[4] && item->DoubleTap == value->DoubleTap
             && strcmpi(item->Action.AsString(), value->Action.AsString()) == 0) {
             this->Items.Remove(&link);
             return;
@@ -524,7 +610,7 @@ void ConfigFile::RemoveMapping(KeyMapping* value) {
 
     g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 703)
         ->LogMessage("WARNING unable to remove mapping for %s (keys %d and %d%s)",
-            value->Action.AsString(), value->Code1, value->Code2, value->DoubleTap ? " DBL" : "");
+            value->Action.AsString(), value->Codes[0], value->Codes[1], value->DoubleTap ? " DBL" : "");
 }
 
 // 0x0ff632b0
