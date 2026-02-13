@@ -23,6 +23,7 @@ SOFTWARE.
 #include "Globals.hxx"
 #include "ZExceptionRender.hxx"
 
+#include <eh.h>
 #include <stdio.h>
 
 #define MAIN_WINDOW_CLASS_NAME_LENGTH   15
@@ -136,10 +137,8 @@ ZSysInterface::ZSysInterface(HMODULE module) {
         this->UseTryCatchMainLoop = false;
         this->ExceptionCount = 0;
 
-        FUN_0ffb408e(FUN_0ffaa860);
+        _set_se_translator(FUN_0ffaa860);
     }
-
-    TODO
 }
 
 // 0x0ffab510
