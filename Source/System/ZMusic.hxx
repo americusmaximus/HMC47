@@ -1,0 +1,74 @@
+/*
+Copyright (c) 2026 Americus Maximus
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+#pragma once
+
+#include "RefTab.hxx"
+
+#include <dmusicc.h>
+#include <dmusici.h>
+
+#pragma pack(push, 1)
+
+class ZMusic {
+public:
+    ZMusic();
+
+public:
+    virtual BOOL CreateStreamingBuffer();                                           // 0x0
+    virtual ~ZMusic();                                                              // 0x4
+    virtual BOOL Initialize(LPDIRECTSOUND ds, HWND window);                         // 0x8
+    virtual void Method0xC();                                                       // 0xC
+    virtual void StopPerformance(u32);                                              // 0x10
+    virtual void Method0x14();                                                      // 0x14
+    virtual void Method0x18();                                                      // 0x18
+    virtual void Method0x1C();                                                      // 0x1C
+    virtual void Method0x20();                                                      // 0x20
+    virtual void Method0x24();                                                      // 0x24
+    virtual void Method0x28();                                                      // 0x28
+    virtual bool IsInit();                                                          // 0x2C
+    virtual void PrintStatus();                                                     // 0x30
+    virtual void Method0x34();                                                      // 0x34
+    virtual void SetVolume(f32 value);                                              // 0x38
+
+protected:
+    IDirectMusicPort* CreateDirectMusicPort();
+
+protected:
+    s32 Unk0x4;                                                                     // 0x4
+    LPDIRECTSOUND DirectSound;                                                      // 0x8
+    LPDIRECTSOUNDBUFFER DirectSoundBuffer;                                          // 0xC
+    u32 Unk0x10;                                                                    // 0x10
+    bool Init;                                                                      // 0x14
+    bool Unk0x15;                                                                   // 0x15
+    IDirectMusicPerformance* DirectMusicPerformance;                                // 0x16
+    IDirectMusicLoader* DirectMusicLoader;                                          // 0x1A
+    RefTab* Segments;                                                               // 0x1E
+    LPDIRECTMUSIC DirectMusic;                                                      // 0x22
+    IDirectMusicPort* DirectMusicPort;                                              // 0x26
+};
+
+#pragma pack(pop)
+
+#if defined(_DEBUG) && !defined(_WIN64)
+static_assert(sizeof(ZMusic)    == 0x2A,    "ZMusic size mismatch.");
+#endif

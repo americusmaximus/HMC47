@@ -71,16 +71,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/EAX;DX70/Include;../../SDK/zlib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/EAX;../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/EAX;DX70/Include;../../SDK/zlib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/EAX;../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/EAX;DX70/Include;../../SDK/zlib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/EAX;../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/EAX;DX70/Include;../../SDK/zlib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../;../../SDK/EAX;../../SDK/DX70/Include;../../SDK/zlib;</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -189,7 +189,7 @@
     <ClCompile Include="ZSoundBase.cxx" />
     <ClCompile Include="ZSoundBuffer.cxx" />
     <ClCompile Include="ZSoundListener.cxx" />
-    <ClCompile Include="ZSoundLoader.cxx" />
+    <ClCompile Include="ZMusic.cxx" />
     <ClCompile Include="ZSoundModule.cxx" />
   </ItemGroup>
   <ItemGroup>

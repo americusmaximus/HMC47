@@ -25,3 +25,4 @@ SOFTWARE.
 #include "Common.hxx"
 
 void DirectSoundLogMessage(HRESULT hr, const char* message);
+void DirectMusicLogMessage(HRESULT hr, const char* message);

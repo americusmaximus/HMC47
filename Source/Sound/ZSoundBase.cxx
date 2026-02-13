@@ -50,8 +50,8 @@ bool ZSoundBase::Method0x1B0() {
 }
 
 // 0x0ff3aae0
-bool ZSoundBase::HasSoundLoader() {
-    return this->SoundLoader != nullptr;
+bool ZSoundBase::HasMusic() {
+    return this->Music != nullptr;
 }
 
 // 0x0ff3ae20
@@ -69,14 +69,14 @@ void ZSoundBase::SetSpeechVolume(f32 volume, bool todo) {
 void ZSoundBase::SetMusicVolume(f32 volume) {
     this->MusicVolume = volume * 0.01f;
 
-    if (this->SoundLoader != nullptr) {
+    if (this->Music != nullptr) {
         // TODO NOT IMPLEMENTED
     }
 }
 
 // 0x0ff3c210
 void ZSoundBase::SetMusicQuality(s32 value) {
-    if (this->SoundLoader != nullptr) {
+    if (this->Music != nullptr) {
         // TODO NOT IMPLEMENTED
     }
 }
