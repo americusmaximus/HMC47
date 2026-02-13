@@ -30,6 +30,11 @@ SOFTWARE.
 
 #pragma pack(push, 1)
 
+struct DefaultKeyMapping {
+    const char* Name;
+    s32 Code[2];
+};
+
 struct IniFileItem {
     bool Set;
     const char* Name;
@@ -45,7 +50,40 @@ static const char* Actions[] = {
     "Binoculars", "EmptyHands", "FireWeapon", "ReloadWeapon",
     "ToggleWeaponMode", "SelectNext2", "SelectPrev2",
     "ShowMap", "ShowLaptop", "ShowStatus", nullptr
-};
+}; // 0x0ff93068
+
+static const DefaultKeyMapping DefaultKeyMappings[] = {
+    { "WalkForward",        { 0x4C,   0x1F  }},
+    { "WalkBackWard",       { 0x50,   0x2D  }},
+    { "WalkLeft",           { 0x4F,   0x2C  }},
+    { "WalkRight",          { 0x51,   0x2E  }},
+    { "Run",                { 0x48,   0x11  }},
+    { "TurnLeft",           { 0x4B,   0x1E  }},
+    { "TurnRight",          { 0x4D,   0x20  }},
+    { "LeanOutLeft",        { 0x47,   0x10  }},
+    { "LeanOutRight",       { 0x49,   0x12  }},
+    { "Sneak",              { 0x4E,   0x05  }},
+    { "ToggleMouseControl", { 0x135,  0x04  }},
+    { "FireWeapon",         { 0x164,  0x164 }},
+    { "ReloadWeapon",       { 0x147,  0x02  }},
+    { "ToggleWeaponMode",   { 0x14F,  0x0F  }},
+    { "SelectNext2",        { 0x151,  0x22  }},
+    { "SelectPrev2",        { 0x149,  0x14  }},
+    { "DropItemInHand",     { 0x4A,   0x21  }},
+    { "DoAction",           { 0x11C,  0x39  }},
+    { "ShowMap",            { 0x32,   0x32  }},
+    { "ShowLaptop",         { 0x3B,   0x3B  }},
+    { "ShowStatus",         { 0x3C,   0x3C  }},
+    { "Binoculars",         { 0x37,   0x03  }},
+    { "EmptyHands",         { 0x152,  0x13  }},
+    { nullptr,              { 0x0,    0x0   }}
+}; // 0x0ff930c8
+
+static const char* MouseActions[] = {
+    "LeanOutLeft", "LeanOutLeftShoot",
+    "LeanOutRight", "LeanOutRightShoot",
+    "FireWeapon", "Select", nullptr
+}; // 0x0ff93308
 
 // 0x0ff61040
 // 0x0ff90150
@@ -136,9 +174,52 @@ u32 ConfigFile::GetActionCount() {
     return result;
 }
 
+// 0x0ff612c0
+u32 ConfigFile::GetKeyMappingIndex(const char* name) {
+    RefLink link;
+    this->Items.GetStart(&link);
+
+    u32 index = 0;
+    KeyMapping* item = (KeyMapping*)this->Items.GetNext(&link);
+
+    while (item != nullptr) {
+        if (FUN_0ff86c90(item->Action.AsString(), name) == 0) {
+            index++;
+        }
+
+        item = (KeyMapping*)this->Items.GetNext(&link);
+    }
+
+    return index;
+}
+
+// 0x0ff61330
+KeyMapping* ConfigFile::GetKeyMapping(const char* name, KeyMapping* mapping) {
+    RefLink link;
+    this->Items.GetStart(&link);
+
+    bool match = mapping == nullptr;
+
+    KeyMapping* item = (KeyMapping*)this->Items.GetNext(&link);
+
+    while (item != nullptr) {
+        if (FUN_0ff86c90(item->Action.AsString(), name) == 0) {
+            if (match) {
+                return item;
+            }
+
+            match = mapping == item;
+        }
+
+        item = (KeyMapping*)this->Items.GetNext(&link);
+    }
+
+    return nullptr;
+}
+
 // 0x0ff613b0
 bool ConfigFile::ReadConfigFile() {
-    this->Method0x98(0);
+    this->ApplyDefaultMappings(0);
 
     this->Keys.DoubleTap = false;
     this->Keys.Codes[0] = 0;
@@ -764,6 +845,95 @@ void ConfigFile::RemoveMapping(KeyMapping* value) {
     g_pSysCom->Log("Z:\\Engine\\EngineData\\Source\\ConfigFile.cpp", 703)
         ->LogMessage("WARNING unable to remove mapping for %s (keys %d and %d%s)",
             value->Action.AsString(), value->Codes[0], value->Codes[1], value->DoubleTap ? " DBL" : "");
+}
+
+// 0x0ff62e30
+void ConfigFile::ApplyDefaultMappings(s32 set) {
+    if (-1 < set && set < 2) {
+        KeyMapping* mapping = this->GetKeyMapping("*", nullptr);
+
+        while (mapping != nullptr) {
+            this->RemoveMapping(mapping);
+            mapping = this->GetKeyMapping("*", nullptr);
+        }
+
+        for (u32 i = 0; DefaultKeyMappings[i].Name != nullptr; i++) {
+            this->AddMapping(DefaultKeyMappings[i].Name, false,
+                DefaultKeyMappings[i].Code[set], 0, 0, 0);
+        }
+    }
+}
+
+// 0x0ff62eb0
+void ConfigFile::ApplyKeySettings() {
+    StringRefTab actions = StringRefTab(16, 0);
+
+    for (u32 i = 0; Actions[i] != nullptr; i++) {
+        actions.TryInsertString(Actions[i]);
+    }
+
+    {
+        RefLink link;
+        this->Items.GetStart(&link);
+
+        RefKeyValue* item = this->Items.GetNext(&link);
+
+        while (item != nullptr) {
+            const char* name = (const char*)REFTAB_KEY_TO_PTR(item->Key);
+            RefKeyValue* kv = actions.GetString(name);
+
+            if (kv != nullptr) {
+                actions.RemoveString(name);
+            }
+
+            item = this->Items.GetNext(&link);
+        }
+    }
+
+    {
+        RefLink link;
+        actions.GetStart(&link);
+        const char* name = (const char*)REFTAB_KEY_TO_PTR(actions.GetNextKey(&link));
+
+        while (link.Next != nullptr) {
+            this->AddMapping(name, false, 0x1FF, 0, 0, 0);
+            name = (const char*)REFTAB_KEY_TO_PTR(actions.GetNextKey(&link));
+        }
+    }
+
+    g_pSysInterface->Actions->Method0x0(&this->Items);
+
+    {
+        RefLink link;
+        this->Items.GetStart(&link);
+        KeyMapping* item = (KeyMapping*)this->Items.GetNext(&link);
+
+        while (item != nullptr) {
+            const char* name = (const char*)REFTAB_KEY_TO_PTR(item);
+
+            for (u32 i = 0; MouseActions[i] != nullptr; i++) {
+                if (strcmpi(MouseActions[i], name) == 0) {
+                    KeyMapping mapping;
+
+                    mapping.Action = ZString(MouseActions[i]);
+
+                    mapping.Codes[0] = item->Codes[0];
+                    mapping.Codes[1] = item->Codes[1];
+                    mapping.Codes[2] = item->Codes[2];
+                    mapping.Codes[3] = item->Codes[3];
+
+                    mapping.DoubleTap = true;
+
+                    mapping.Unk0x91 = item->Unk0x91;
+                    mapping.Unk0x95 = item->Unk0x95;
+
+                    g_pSysInterface->Actions->Method0x4(&mapping);
+                }
+            }
+
+            item = (KeyMapping*)this->Items.GetNext(&link);
+        }
+    }
 }
 
 // 0x0ff632b0

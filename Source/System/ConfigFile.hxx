@@ -96,8 +96,8 @@ public:
     virtual u32 AddMapping(const char* action,
         bool dbl, s32 code1, s32 code2, s32 code3, s32 code4);                                  // 0x34
     virtual void RemoveMapping(KeyMapping* value);                                              // 0x38
-    virtual u32 Method0x3C(const char*, u32);                                                   // 0x3C
-    virtual void Method0x40();                                                                  // 0x40
+    virtual KeyMapping* GetKeyMapping(const char* name, KeyMapping* mapping);                   // 0x3C
+    virtual u32 GetKeyMappingIndex(const char* name);                                           // 0x40
     virtual s32 GetMouseSpeed();                                                                // 0x44
     virtual void SetMouseSpeed(s32 value);                                                      // 0x48
     virtual void SetSoundSfxVolume(s32 value);                                                  // 0x4C
@@ -119,7 +119,7 @@ public:
     virtual void ApplyMouseSettings();                                                          // 0x8C
     virtual void ApplySoundSettings();                                                          // 0x90
     virtual void Method0x94();                                                                  // 0x94
-    virtual void Method0x98(s32 value);                                                         // 0x98
+    virtual void ApplyDefaultMappings(s32 set);                                                 // 0x98
     virtual void ApplyAllSettings();                                                            // 0x9C
 
 protected:

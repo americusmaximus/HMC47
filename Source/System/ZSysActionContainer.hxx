@@ -22,6 +22,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "ConfigFile.hxx"
 #include "FastLookup.hxx"
 
 #pragma pack(push, 1)
@@ -32,8 +33,8 @@ public:
     ~ZSysActionContainer();
 
 public:
-    virtual void Method0x0();                                                       // 0x0
-    virtual void Method0x4();                                                       // 0x4
+    virtual void Method0x0(LinkRefTab* actions);                                    // 0x0
+    virtual void Method0x4(KeyMapping* mapping);                                    // 0x4
     virtual void Method0x8();                                                       // 0x8
     virtual void Method0xC();                                                       // 0xC
     virtual void Method0x10();                                                      // 0x10
