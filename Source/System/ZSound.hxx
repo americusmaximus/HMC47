@@ -56,16 +56,12 @@ protected:
     LPDIRECTSOUNDBUFFER InitSoundBuffer(u32 flags, const char* name, u32 size);
 
 protected:
-    // TODO
-
     bool Unk0x3F1;                                                                          // 0x3F1
     LPDIRECTSOUND DirectSound;                                                              // 0x3F2
     bool Unk0x3F6;                                                                          // 0x3F6
     DSCAPS Caps;                                                                            // 0x3F7
     LPDIRECTSOUNDBUFFER DirectSoundBuffer;                                                  // 0x457
-
-    // TODO
-
+    u32 Unk0x45B;                                                                           // 0x45B
 };
 
 #pragma pack(pop)

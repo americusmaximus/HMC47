@@ -177,6 +177,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BlockRefTab.cxx" />
     <ClCompile Include="Common.cxx" />
     <ClCompile Include="DirectSound.cxx" />
     <ClCompile Include="LinkRefTab.cxx" />

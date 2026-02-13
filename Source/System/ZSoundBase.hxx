@@ -22,6 +22,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "BlockRefTab.hxx"
 #include "LinkRefTab.hxx"
 #include "ZMusic.hxx"
 
@@ -152,47 +153,63 @@ public:
     virtual void Method0x1C8();                                                             // 0x1C8
 
 protected:
-
-    // TODO
-
+    u32 Unk0x4;                                                                             // 0x4
+    bool Unk0x8;                                                                            // 0x8
+    u32 Unk0x9;                                                                             // 0x9
+    u32 Unk0xD;                                                                             // 0xD
+    u32 Unk0x11;                                                                            // 0x11
+    u32 Unk0x15;                                                                            // 0x15
+    u32 Unk0x19;                                                                            // 0x19
+    BlockRefTab Unk0x1D;                                                                    // 0x1D
     u32 SpatialStreamingBuffers;                                                            // 0xC5
     bool Unk0xC9;                                                                           // 0xC9
-
-    // TODO
-
+    LinkRefTab* Unk0xCA;                                                                    // 0xCA
+    BlockRefTab* Unk0xCE;                                                                   // 0xCE
+    u32 Unk0xD2;                                                                            // 0xD2
+    u32 Unk0xD6;                                                                            // 0xD6
     bool Unk0xDA;                                                                           // 0xDA
-
-    // TOOD
-
+    u32 Unk0xDB;                                                                            // 0xDB
     bool Unk0xDF;                                                                           // 0xDF
-
-    // TODO
+    u32 Unk0xE0;                                                                            // 0xE0
+    f32 Unk0xE4;                                                                            // 0xE4
     f32 MusicVolume;                                                                        // 0xE8
-    // TODO
+    u32 Unk0xEC;                                                                            // 0xEC
     f32 SfxVolume;                                                                          // 0xF0
     f32 SpeechVolume;                                                                       // 0xF4
     bool Unk0xF8;                                                                           // 0xF8
     bool UseStreaming;                                                                      // 0xF9
-
-    // TODO
-
+    u32 Unk0xFA;                                                                            // 0xFA
     u32 Unk0xFE;                                                                            // 0xFE
     u32 Unk0x102;                                                                           // 0x102
     u32 Unk0x106;                                                                           // 0x106
     bool Unk0x10A;                                                                          // 0x10A
-
-    // TODO
-
+    bool Unk0x10B;                                                                          // 0x10B
+    u32 Unk0x10C;                                                                           // 0x10C
+    u32 Unk0x110;                                                                           // 0x110
+    u32 Unk0x114;                                                                           // 0x114
+    u32 Unk0x118;                                                                           // 0x118
+    u32 Unk0x11C;                                                                           // 0x11C
+    u32 Unk0x120;                                                                           // 0x120
+    u32 Unk0x124;                                                                           // 0x124
     LinkRefTab* Unk0x128;                                                                   // 0x128
-
-    // TODO
-
+    u32 Unk0x12C;                                                                           // 0x12C
+    u32 Unk0x130;                                                                           // 0x130
+    u32 Unk0x134;                                                                           // 0x134
+    u32 Unk0x138;                                                                           // 0x138
+    u32 Unk0x13C;                                                                           // 0x13C
     bool Unk0x140;                                                                          // 0x140
     ZMusic* Music;                                                                          // 0x141
+    u32 Unk0x145;                                                                           // 0x145
+    u32 Unk0x149;                                                                           // 0x149
+    u32 Unk0x14D;                                                                           // 0x14D
+    BlockRefTab Unk0x151;                                                                   // 0x151
+    BlockRefTab Unk0x1F9;                                                                   // 0x1F9
+    BlockRefTab Unk0x2A1;                                                                   // 0x2A1
+    BlockRefTab Unk0x349;                                                                   // 0x349
 };
 
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZSoundBase) == TODO, "ZSoundBase size mismatch.");
+static_assert(sizeof(ZSoundBase)    == 0x3F1,   "ZSoundBase size mismatch.");
 #endif

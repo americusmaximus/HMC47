@@ -175,6 +175,23 @@ BOOL ZMusic::Initialize(LPDIRECTSOUND ds, HWND window) {
     return TRUE;
 }
 
+// 0x0ff31c70
+void ZMusic::Method0x18(u32 param_5) {
+    if (!this->Init) {
+        return;
+    }
+
+    if (this->Method0x28(param_5) != nullptr) { // TODO
+        return;
+    }
+
+
+    // ZMusicSegment is inherited from BlockRefTab
+
+
+    TODO
+}
+
 // 0x0ff323d0
 BOOL ZMusic::CreateStreamingBuffer() {
     WAVEFORMATEX format;

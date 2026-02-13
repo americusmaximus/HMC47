@@ -25,14 +25,57 @@ SOFTWARE.
 // 0x0ff3a7e0
 // 0x0ff51024
 ZSoundBase::ZSoundBase() {
-    // TODO
+    this->Unk0x149 = 0;
+    this->Unk0x10A = 0;
+    this->Unk0x12C = 0;
+    this->Unk0x145 = 0;
+    this->Unk0x124 = 0;
+    this->Unk0x118 = 0;
+    this->Unk0x11C = 0;
+    this->Unk0x120 = 0;
+    this->Unk0x110 = 0;
+    this->Unk0xCE = nullptr;
+
+    this->Unk0x128 = new LinkRefTab(8, 0);
+    this->Music = new ZMusic();
+
+    this->Unk0x10B = false;
+    this->Unk0x15 = 0;
+    this->Unk0x10A = false;
+    this->Unk0x138 = 0;
+    this->Unk0xFA = 0;
+    this->Unk0x10C = 0;
+    this->Unk0x19 = 0;
+    this->Unk0x4 = 0;
+    this->Unk0x9 = 0;
+    this->Unk0xDF = false;
+    this->SfxVolume = 0.5f;
+    this->Unk0xEC = 0;
+    this->Unk0xE4 = 0.2f;
+    this->MusicVolume = 0.5f;
+    this->SpeechVolume = 0.1f;
+    this->Unk0x8 = true;
+    this->UseStreaming = true;
+    this->Unk0xDB = 0;
+
+    this->Unk0xCE = new BlockRefTab();
+
+    this->Unk0xD2 = 0;
+    this->Unk0x14D = 0;
+    this->Unk0xE0 = 8;
+    this->Unk0xD6 = 16384;
+    this->Unk0xDA = false;
+    this->SpatialStreamingBuffers = 0;
+    this->Unk0xC9 = false;
+    this->Unk0xF8 = false;
+    this->Unk0x13C = 0;
+
+    this->Unk0xCA = new LinkRefTab(16, 0);
 }
 
 // 0x0ff3aa70
 // 0x0ff3aaf0
-ZSoundBase::~ZSoundBase() {
-    // TODO
-}
+ZSoundBase::~ZSoundBase() {}
 
 // 0x0ff35860
 bool ZSoundBase::Method0x30() {
