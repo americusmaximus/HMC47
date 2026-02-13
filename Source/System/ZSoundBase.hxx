@@ -22,7 +22,8 @@ SOFTWARE.
 
 #pragma once
 
-#include "Common.hxx"
+#include "LinkRefTab.hxx"
+#include "ZSoundLoader.hxx"
 
 #define DIRECTSOUND_VERSION 0x0600 
 #include <dsound.h>
@@ -143,7 +144,7 @@ public:
     virtual void Method0x1A8();                                                             // 0x1A8
     virtual s32 Method0x1AC();                                                              // 0x1AC
     virtual bool Method0x1B0();                                                             // 0x1B0
-    virtual bool Method0x1B4();                                                             // 0x1B4
+    virtual bool HasSoundLoader();                                                          // 0x1B4
     virtual void Method0x1B8();                                                             // 0x1B8
     virtual bool Method0x1BC();                                                             // 0x1BC
     virtual void Method0x1C0();                                                             // 0x1C0
@@ -182,8 +183,12 @@ protected:
 
     // TODO
 
+    LinkRefTab* Unk0x128;                                                                   // 0x128
+
+    // TODO
+
     bool Unk0x140;                                                                          // 0x140
-    void* Unk0x141;                                                                         // 0x141
+    ZSoundLoader* SoundLoader;                                                              // 0x141
 };
 
 #pragma pack(pop)

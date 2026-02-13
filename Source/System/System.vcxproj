@@ -241,6 +241,7 @@
     <ClInclude Include="ZSettings.hxx" />
     <ClInclude Include="ZSound.hxx" />
     <ClInclude Include="ZSoundBase.hxx" />
+    <ClInclude Include="ZSoundLoader.hxx" />
     <ClInclude Include="ZSoundModule.hxx" />
     <ClInclude Include="ZString.hxx" />
     <ClInclude Include="ZSysAction.hxx" />
