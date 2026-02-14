@@ -34,7 +34,7 @@ The Direct Play module serves as a simple wrapper around Microsoft DirectPlay in
 Globals module serves as a glue for DLL linking of a few game-wide objects used to communicate between different part of the game for a multitude of reasons.
 
 ### Sound
-The Sound module is a sound management module that handles sound and sound effects output via DirectSound and EAX.
+The Sound module is a sound management module that handles sound playback and sound effects output via DirectSound, DirectMusic, and EAX.
 
 ### System
 System module owns creation and management of the objects that are then being used by other modules via Globals to communicate with each other. These objects include functionality that glues different modules together, and provide low-level functionality such as tracked memory allocation, access to zip files, and various output.
