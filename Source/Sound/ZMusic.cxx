@@ -21,10 +21,13 @@ SOFTWARE.
 */
 
 #include "DirectSound.hxx"
+#include "ZMusicSegment.hxx"
 
 #include <System/ZMusic.hxx>
 
 #include <math.h>
+
+#define ZMUSIC_MAX_BAND_COUNT   10
 
 // 0x0ff311c0
 // 0x0ff5098c
@@ -40,7 +43,7 @@ ZMusic::ZMusic() {
     this->Unk0x4 = -1;
     this->Unk0x10 = 0;
     this->Segments = new RefTab(8, 0);
-    this->Unk0x15 = false;
+    this->Quality = ZMUSICQUALITY_NORMAL;
 }
 
 // 0x0ff31250
@@ -71,7 +74,7 @@ void ZMusic::PrintStatus() {
             segment = FUN_0ff313e0(todo);
 
             if (segment != 0) { // TODO
-                // TODO NT IMPLEMENTED
+                // TODO NOT IMPLEMENTED
 
                 g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\DMusic.cpp", 145)
                     ->LogMessage("Name %s dir %s chapter id %d segmentid %d",
@@ -176,7 +179,7 @@ BOOL ZMusic::Initialize(LPDIRECTSOUND ds, HWND window) {
 }
 
 // 0x0ff31c70
-void ZMusic::Method0x18(u32 param_5) {
+void ZMusic::CreateSegment(const char* directory, const char* file, u32 param_4, u32 param_5) {
     if (!this->Init) {
         return;
     }
@@ -185,11 +188,94 @@ void ZMusic::Method0x18(u32 param_5) {
         return;
     }
 
+    ZMusicSegment* segment = new ZMusicSegment();
 
-    // ZMusicSegment is inherited from BlockRefTab
+    segment->File = file;
+    segment->Unk0xB0 = param_5;
+    segment->Unk0xB4 = param_4;
+    segment->Directory = directory;
 
+    // TODO NOT IMPLEMENTED
 
-    TODO
+    g_pSysMem->Index(segment);
+    this->Segments->Insert(TODO);
+
+    // TODO NOT IMPLEMENTED
+
+    char dir[MAX_PATH];
+    GetCurrentDirectoryA(MAX_PATH, dir);
+
+    strcat(dir, "\\");
+    strcat(dir, "Music\\");
+
+    if (this->Quality == ZMUSICQUALITY_LOW) {
+        strcat(dir, "Low\\");
+    }
+
+    strcat(dir, directory);
+
+    MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, dir, -1, aWStack_e1c, MAX_PATH);
+    MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, file, -1, aWStack_c14, MAX_PATH);
+
+    this->DirectMusicLoader->SetSearchDirectory(GUID_DirectMusicAllTypes, aWStack_e1c, FALSE);
+
+    DMUS_OBJECTDESC segdesc;
+    ZeroMemory(&segdesc, sizeof(DMUS_OBJECTDESC));
+
+    segdesc.dwSize = sizeof(DMUS_OBJECTDESC);
+    segdesc.dwValidData = DMUS_OBJ_FILENAME | DMUS_OBJ_CLASS;
+    segdesc.guidClass = CLSID_DirectMusicSegment;
+
+    wcscpy(segdesc.wszFileName, aWStack_c14);
+
+    HRESULT hr = DS_OK;
+    if (FAILED(hr = this->DirectMusicLoader->GetObject(&segdesc,
+        IID_IDirectMusicSegment, (LPVOID*)&segment->Segment))) {
+        g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\DMusic.cpp", 377)
+            ->LogMessage("Load segment %s\\%s failed", dir, file);
+        DirectMusicLogMessage(hr, "Load segment");
+    }
+
+    if (segment->Segment != nullptr) {
+        segment->Segment->SetRepeats(1000);
+    }
+
+    WCHAR style[MAX_PATH];
+    MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, "style1.sty", -1, style, MAX_PATH);
+
+    DMUS_OBJECTDESC stdesc;
+    ZeroMemory(&stdesc, sizeof(DMUS_OBJECTDESC));
+
+    stdesc.dwSize = sizeof(DMUS_OBJECTDESC);
+    stdesc.dwValidData = DMUS_OBJ_FILENAME | DMUS_OBJ_CLASS;
+    segdesc.guidClass = CLSID_DirectMusicStyle;
+
+    wcscpy(stdesc.wszName, style);
+    wcscpy(stdesc.wszFileName, style);
+
+    if (FAILED(hr = this->DirectMusicLoader->GetObject(&stdesc,
+        IID_IDirectMusicStyle, (LPVOID*)&segment->Style))) {
+        DirectMusicLogMessage(hr, "Failed to load style");
+    }
+
+    if (segment->Style != nullptr) {
+        WCHAR name[MAX_PATH];
+
+        for (u32 i = 0; i < ZMUSIC_MAX_BAND_COUNT; i++) {
+            if (SUCCEEDED(segment->Style->EnumBand(i, name))) {
+                IDirectMusicBand* band = nullptr;
+                segment->Style->GetBand(name, &band);
+
+                if (band != nullptr) {
+                    segment->Bands.Insert(REFTAB_PTR_TO_KEY(band));
+
+                    if (FAILED(hr = band->Download(this->DirectMusicPerformance))) {
+                        DirectMusicLogMessage(hr, "Download failed");
+                    }
+                }
+            }
+        }
+    }
 }
 
 // 0x0ff323d0

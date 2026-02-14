@@ -121,13 +121,14 @@ BOOL ZSound::Init(HWND window) {
                     g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\SoundConDS.cpp", 337)
                         ->LogMessage("Direct sound init ok");
 
-                    if ((*(int**)&this->field_0x141 != (int*)0x0) &&
-                        (iVar4 = (**(code**)(**(int**)&this->field_0x141 + 8))(*ds, uVar9), iVar4 == 0)) {
-                        if (*(int**)&this->field_0x141 != (int*)0x0) {
-                            (**(code**)(**(int**)&this->field_0x141 + 4))(1);
-                        }
+                    if (this->Music != nullptr) {
+                        if (!this->Music->Initialize(this->DirectSound, window)) {
+                            if (this->Music != nullptr) {
+                                delete this->Music;
+                            }
 
-                        *(undefined4*)&this->field_0x141 = 0;
+                            this->Music = nullptr;
+                        }
                     }
 
                     g_SoundThread = FUN_0ff42817(FUN_0ff374e0, 0, this); // TODO

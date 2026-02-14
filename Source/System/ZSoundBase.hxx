@@ -156,7 +156,7 @@ protected:
     u32 Unk0x4;                                                                             // 0x4
     bool Unk0x8;                                                                            // 0x8
     u32 Unk0x9;                                                                             // 0x9
-    u32 Unk0xD;                                                                             // 0xD
+    f32 Unk0xD;                                                                             // 0xD
     u32 Unk0x11;                                                                            // 0x11
     u32 Unk0x15;                                                                            // 0x15
     u32 Unk0x19;                                                                            // 0x19

@@ -20,23 +20,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Common.hxx"
+#include "ZMusicSegment.hxx"
 
-// 0x0ff31a70
-void* operator new(size_t size) {
-    if (g_pSysMem != nullptr) {
-        return g_pSysMem->Allocate(size);
-    }
-
-    return malloc(size & ZMEM_SIZE_MASK);
+// 0x0ff50980
+ZMusicSegment::ZMusicSegment() {
+    this->Segment = nullptr;
+    this->Unk0xB0 = 0;
+    this->Unk0xB4 = 0;
+    this->Style = nullptr;
 }
 
-// 0x0ff310f0
-void operator delete(void* ptr) noexcept {
-    if (g_pSysMem != nullptr) {
-        g_pSysMem->Delete(ptr);
-        return;
-    }
-
-    free(ptr);
-}

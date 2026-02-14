@@ -185,6 +185,7 @@
     <ClCompile Include="RefTab.cxx" />
     <ClCompile Include="ZDirectSound.cxx" />
     <ClCompile Include="ZModule.cxx" />
+    <ClCompile Include="ZMusicSegment.cxx" />
     <ClCompile Include="ZPropertySet.cxx" />
     <ClCompile Include="ZSound.cxx" />
     <ClCompile Include="ZSoundBase.cxx" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Common.hxx" />
     <ClInclude Include="DirectSound.hxx" />
     <ClInclude Include="Globals.hxx" />
+    <ClInclude Include="ZMusicSegment.hxx" />
     <ClInclude Include="ZPropertySet.hxx" />
     <ClInclude Include="ZSoundBuffer.hxx" />
     <ClInclude Include="ZSoundListener.hxx" />
