@@ -30,6 +30,9 @@ A simple game launcher that loads the system module and passes the control flow 
 ### ✔ Direct Play
 The Direct Play module serves as a simple wrapper around Microsoft DirectPlay interface.
 
+### Engine Data
+The Engine Data module is responsible for a number of shared functionality used by other modules such as game configuration, and others.
+
 ### ✔ Globals
 Globals module serves as a glue for DLL linking of a few game-wide objects used to communicate between different part of the game for a multitude of reasons.
 
