@@ -41,7 +41,7 @@ ZMusic::ZMusic() {
     this->DirectSoundBuffer = nullptr;
 
     this->Unk0x4 = -1;
-    this->Unk0x10 = 0;
+    this->Unk0x10 = nullptr;
     this->Segments = new RefTab(8, 0);
     this->Quality = ZMUSICQUALITY_NORMAL;
 }
@@ -54,7 +54,43 @@ bool ZMusic::IsInit() {
 // 0x0ff31260
 // 0x0ff31410
 ZMusic::~ZMusic() {
-    // TODO NOT IMPLEMENTED
+    this->Method0x1C(nullptr);
+
+    if (this->Segments != nullptr) {
+        delete this->Segments;
+    }
+
+    if (this->DirectMusicPort != nullptr) {
+        this->DirectMusicPort->Activate(FALSE);
+        this->DirectMusicPort->Release();
+    }
+
+    if (this->DirectMusicPerformance != nullptr) {
+        this->DirectMusicPerformance->Stop(nullptr, nullptr, 0, 0);
+    }
+
+    if (this->DirectSoundBuffer != nullptr) {
+        this->DirectSoundBuffer->Release();
+        this->DirectSoundBuffer = nullptr;
+    }
+
+    if (this->Unk0x10 != nullptr) {
+        this->Unk0x10->Release();
+        this->Unk0x10 = nullptr;
+    }
+
+    if (this->DirectMusic != nullptr) {
+        this->DirectMusic->Release();
+    }
+
+    if (this->DirectMusicPerformance != nullptr) {
+        this->DirectMusicPerformance->CloseDown();
+        this->DirectMusicPerformance->Release();
+    }
+
+    if (this->DirectMusicLoader != nullptr) {
+        this->DirectMusicLoader->Release();
+    }
 
     CoUninitialize();
 }
@@ -169,6 +205,13 @@ bool ZMusic::Initialize(LPDIRECTSOUND ds, HWND window) {
     return true;
 }
 
+// 0x0ff31b40
+void ZMusic::Method0x24(void* todo) {
+    if (todo != nullptr) {
+        // TODO NOT IMPLEMENTED
+    }
+}
+
 // 0x0ff31c70
 void ZMusic::CreateSegment(const char* directory, const char* file, u32 param_4, u32 param_5) {
     if (!this->Init) {
@@ -269,8 +312,42 @@ void ZMusic::CreateSegment(const char* directory, const char* file, u32 param_4,
     }
 }
 
+// 0x0ff32300
+void* ZMusic::Method0x28(s32 todo) {
+    if (this->Segments != nullptr) {
+        // TODO NOT IMPLEMENTED
+    }
+
+    return nullptr;
+}
+
+// 0x0ff32360
+void ZMusic::Method0x14() {
+    if (this->Unk0x4 != -1) {
+        void* todo_1 = this->Method0x28(this->Unk0x4);
+
+        if (todo_1 != nullptr) {
+            todo_1->Method0x8(this->DirectMusicPerformance);
+            this->Unk0x4 = -1;
+        }
+    }
+}
+
+// 0x0ff32390
+void ZMusic::Method0xC(s32 todo) {
+    if (this->Unk0x4 != todo) {
+        this->Method0x14();
+
+        void* todo_1 = this->Method0x28(todo);
+        if (todo_1 != nullptr) {
+            todo_1->Method0x4(this->DirectMusicPerformance);
+            this->Unk0x4 = todo;
+        }
+    }
+}
+
 // 0x0ff323d0
-BOOL ZMusic::CreateStreamingBuffer() {
+bool ZMusic::CreateStreamingBuffer() {
     WAVEFORMATEX format;
     ZeroMemory(&format, sizeof(WAVEFORMATEX));
 
@@ -293,10 +370,10 @@ BOOL ZMusic::CreateStreamingBuffer() {
     HRESULT hr = DS_OK;
     if (FAILED(hr = this->DirectSound->CreateSoundBuffer(&desc, &this->DirectSoundBuffer, nullptr))) {
         DirectSoundLogMessage(hr, "Dmusic create streaming buffer failed");
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 // 0x0ff322e0

@@ -128,26 +128,26 @@ public:
     virtual void Method0x16C();                                                             // 0x16C
     virtual void Method0x170();                                                             // 0x170
     virtual void Method0x174();                                                             // 0x174
-    virtual void Method0x178();                                                             // 0x178
+    virtual void Method0x178(u32 todo);                                                     // 0x178
     virtual void* Method0x17C();                                                            // 0x17C
     virtual BlockRefTab* Method0x180();                                                     // 0x180
-    virtual void Method0x184();                                                             // 0x184
+    virtual bool Method0x184();                                                             // 0x184
     virtual ZSoundListener* GetListener();                                                  // 0x188
     virtual void Method0x18C();                                                             // 0x18C
     virtual void Method0x190();                                                             // 0x190
     virtual void Method0x194();                                                             // 0x194
     virtual void Method0x198();                                                             // 0x198
     virtual void Method0x19C();                                                             // 0x19C
-    virtual void Method0x1A0();                                                             // 0x1A0
-    virtual void Method0x1A4();                                                             // 0x1A4
-    virtual void Method0x1A8();                                                             // 0x1A8
+    virtual void Method0x1A0(u32 todo);                                                     // 0x1A0
+    virtual void Method0x1A4(u32 todo);                                                     // 0x1A4
+    virtual void Method0x1A8(bool todo);                                                    // 0x1A8
     virtual s32 Method0x1AC();                                                              // 0x1AC
     virtual bool Method0x1B0();                                                             // 0x1B0
     virtual bool HasMusic();                                                                // 0x1B4
-    virtual void Method0x1B8();                                                             // 0x1B8
+    virtual void Method0x1B8(u32 todo);                                                     // 0x1B8
     virtual bool Method0x1BC();                                                             // 0x1BC
     virtual void Method0x1C0();                                                             // 0x1C0
-    virtual void Method0x1C4();                                                             // 0x1C4
+    virtual void Method0x1C4(BlockRefTab* todo);                                            // 0x1C4
     virtual void Method0x1C8();                                                             // 0x1C8
 
 public:
@@ -173,7 +173,7 @@ protected:
     u32 Unk0xE0;                                                                            // 0xE0
     f32 Unk0xE4;                                                                            // 0xE4
     f32 MusicVolume;                                                                        // 0xE8
-    u32 Unk0xEC;                                                                            // 0xEC
+    f32 Unk0xEC;                                                                            // 0xEC
     f32 SfxVolume;                                                                          // 0xF0
     f32 SpeechVolume;                                                                       // 0xF4
     bool Unk0xF8;                                                                           // 0xF8
@@ -199,7 +199,7 @@ protected:
     u32 Unk0x13C;                                                                           // 0x13C
     bool Unk0x140;                                                                          // 0x140
     ZMusic* Music;                                                                          // 0x141
-    u32 Unk0x145;                                                                           // 0x145
+    void* Unk0x145;                                                                         // 0x145
     u32 Unk0x149;                                                                           // 0x149
     u32 Unk0x14D;                                                                           // 0x14D
     BlockRefTab Unk0x151;                                                                   // 0x151

@@ -39,17 +39,17 @@ public:
     ZMusic();
 
 public:
-    virtual BOOL CreateStreamingBuffer();                                               // 0x0
+    virtual bool CreateStreamingBuffer();                                               // 0x0
     virtual ~ZMusic();                                                                  // 0x4
     virtual bool Initialize(LPDIRECTSOUND ds, HWND window);                             // 0x8
-    virtual void Method0xC(u32 todo);                                                   // 0xC
+    virtual void Method0xC(s32 todo);                                                   // 0xC
     virtual void StopPerformance(u32);                                                  // 0x10
     virtual void Method0x14();                                                          // 0x14
     virtual void CreateSegment(const char* dir, const char* file, u32 todo, u32 todo);  // 0x18
-    virtual void Method0x1C();                                                          // 0x1C
+    virtual void Method0x1C(void* todo);                                                // 0x1C
     virtual void Method0x20();                                                          // 0x20
-    virtual void Method0x24();                                                          // 0x24
-    virtual void Method0x28();                                                          // 0x28
+    virtual void Method0x24(void* todo);                                                // 0x24
+    virtual void* Method0x28(s32 todo);                                                 // 0x28
     virtual bool IsInit();                                                              // 0x2C
     virtual void PrintStatus();                                                         // 0x30
     virtual void SetQuality(ZMUSICQUALITY value);                                       // 0x34
@@ -62,7 +62,7 @@ protected:
     s32 Unk0x4;                                                                         // 0x4
     LPDIRECTSOUND DirectSound;                                                          // 0x8
     LPDIRECTSOUNDBUFFER DirectSoundBuffer;                                              // 0xC
-    u32 Unk0x10;                                                                        // 0x10
+    void* Unk0x10;                                                                      // 0x10
     bool Init;                                                                          // 0x14
     ZMUSICQUALITY Quality;                                                              // 0x15
     IDirectMusicPerformance* DirectMusicPerformance;                                    // 0x16
