@@ -24,6 +24,16 @@ SOFTWARE.
 
 #define DIRECTSOUND_MAX_LOGMESSAGE_LENGTH   512
 
+const char* SoundEnvironments[] = {
+    "GENERIC", "PADDEDCELL", "ROOM", "BATHROOM",
+    "LIVINGROOM", "STONEROOM", "AUDITORIUM", "CONCERTHALL",
+    "CAVE", "ARENA", "HANGAR", "CARPETEDHALLWAY", 
+    "HALLWAY", "STONECORRIDOR", "ALLEY", "FOREST",
+    "CITY", "MOUNTAINS", "QUARRY", "PLAIN",
+    "PARKINGLOT", "SEWERPIPE", "UNDERWATER", "DRUGGED",
+    "DIZZY", "PSYCHOTIC"
+}; // 0x0ff55cbc
+
 // 0x0ff34d70
 void DirectSoundLogMessage(HRESULT hr, const char* message) {
     char buffer[DIRECTSOUND_MAX_LOGMESSAGE_LENGTH];

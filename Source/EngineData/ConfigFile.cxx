@@ -280,10 +280,10 @@ bool ConfigFile::WriteConfigFile() {
     value[0] = NULL;
 
     char* current = value + sprintf(value, "<%s", "Settings");
-    current = current + sprintf(current, ">\n");
+    current += sprintf(current, ">\n");
 
-    current = current + sprintf(current, "<%s", "Controls");
-    current = current + sprintf(current, ">\n");
+    current += sprintf(current, "<%s", "Controls");
+    current += sprintf(current, ">\n");
 
     {
         RefLink link;
@@ -292,46 +292,46 @@ bool ConfigFile::WriteConfigFile() {
         KeyMapping* item = (KeyMapping*)this->Items.GetNext(&link);
 
         while (item != nullptr) {
-            current = current + sprintf(current, "<%s", "Mapping");
-            current = current + sprintf(current, " %s=\"%s\"", "Action", item->Action.AsString());
+            current += sprintf(current, "<%s", "Mapping");
+            current += sprintf(current, " %s=\"%s\"", "Action", item->Action.AsString());
 
             if (item->DoubleTap) {
-                current = current + sprintf(current, " %s=\"%d\"", "DoubleTap", 1);
+                current += sprintf(current, " %s=\"%d\"", "DoubleTap", 1);
             }
 
-            current = current + sprintf(current, ">\n");
+            current += sprintf(current, ">\n");
 
             for (u32 i = 0; i < CONFIGFILE_MAX_KEY_COUNT; i++) {
-                current = current + sprintf(current, "<%s", "Key");
-                current = current + sprintf(current, " %s=\"%d\"", "SCode", item->Codes[i]);
-                current = current + sprintf(current, "/>\n");
+                current += sprintf(current, "<%s", "Key");
+                current += sprintf(current, " %s=\"%d\"", "SCode", item->Codes[i]);
+                current += sprintf(current, "/>\n");
             }
 
-            current = current + sprintf(current, "</%s>\n", "Mapping");
+            current += sprintf(current, "</%s>\n", "Mapping");
 
             item = (KeyMapping*)this->Items.GetNext(&link);
         }
     }
 
-    current = current + sprintf(current, "<%s", "Mouse");
-    current = current + sprintf(current, " %s=\"%d\"", "Speed", this->Mouse.Speed);
-    current = current + sprintf(current, " %s=\"%d\"", "Invert", this->Mouse.Invert);
-    current = current + sprintf(current, "/>\n");
+    current += sprintf(current, "<%s", "Mouse");
+    current += sprintf(current, " %s=\"%d\"", "Speed", this->Mouse.Speed);
+    current += sprintf(current, " %s=\"%d\"", "Invert", this->Mouse.Invert);
+    current += sprintf(current, "/>\n");
 
-    current = current + sprintf(current, "</%s>\n", "Controls");
+    current += sprintf(current, "</%s>\n", "Controls");
 
-    current = current + sprintf(current, "<%s", "Sound");
-    current = current + sprintf(current, " %s=\"%d\"", "SfxVol", this->Sound.SfxVolume);
-    current = current + sprintf(current, " %s=\"%d\"", "MusicVol", this->Sound.MusicVolume);
-    current = current + sprintf(current, " %s=\"%d\"", "SpeechVol", this->Sound.SpeechVolume);
-    current = current + sprintf(current, " %s=\"%d\"", "UseEAX", this->Sound.UseEAX != false);
-    current = current + sprintf(current, " %s=\"%d\"", "UseHW", this->Sound.UseHW != false);
-    current = current + sprintf(current, " %s=\"%d\"", "UseStreaming", this->Sound.UseStreaming != false);
-    current = current + sprintf(current, " %s=\"%d\"", "MusicQuality", this->Sound.MusicQuality);
-    current = current + sprintf(current, " %s=\"%d\"", "NumBuffers", this->Sound.NumBuffers);
-    current = current + sprintf(current, "/>\n");
+    current += sprintf(current, "<%s", "Sound");
+    current += sprintf(current, " %s=\"%d\"", "SfxVol", this->Sound.SfxVolume);
+    current += sprintf(current, " %s=\"%d\"", "MusicVol", this->Sound.MusicVolume);
+    current += sprintf(current, " %s=\"%d\"", "SpeechVol", this->Sound.SpeechVolume);
+    current += sprintf(current, " %s=\"%d\"", "UseEAX", this->Sound.UseEAX != false);
+    current += sprintf(current, " %s=\"%d\"", "UseHW", this->Sound.UseHW != false);
+    current += sprintf(current, " %s=\"%d\"", "UseStreaming", this->Sound.UseStreaming != false);
+    current += sprintf(current, " %s=\"%d\"", "MusicQuality", this->Sound.MusicQuality);
+    current += sprintf(current, " %s=\"%d\"", "NumBuffers", this->Sound.NumBuffers);
+    current += sprintf(current, "/>\n");
 
-    current = current + sprintf(current, "</%s>\n", "Settings");
+    current += sprintf(current, "</%s>\n", "Settings");
 
     HANDLE file = g_pSysFile->Create("Hitman.cfg");
 

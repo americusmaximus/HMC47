@@ -33,10 +33,10 @@ public:
 public:
     virtual bool Method0xC();                                                               // 0xC
     virtual ~ZSound();                                                                      // 0x2C
-    virtual BOOL Init(HWND window);                                                         // 0x34
-    virtual BOOL EndInit(const char* path);                                                 // 0x3C
-    virtual BOOL RenderFrame();                                                             // 0x44
-    virtual BOOL Method0x54(u32);                                                           // 0x54
+    virtual bool Init(HWND window);                                                         // 0x34
+    virtual bool EndInit(const char* path);                                                 // 0x3C
+    virtual bool RenderFrame();                                                             // 0x44
+    virtual bool Method0x54(u32);                                                           // 0x54
     virtual void Method0xF4();                                                              // 0xF4
     virtual void Method0x114();                                                             // 0x114
     virtual void Method0x118();                                                             // 0x118
@@ -52,7 +52,8 @@ public:
     virtual void Method0x1E0();                                                             // 0x1E0
 
 protected:
-    BOOL FUN_0ff3d660(); // TODO
+    bool FUN_0ff3d660();
+    bool FUN_0ff3ed50();
     LPDIRECTSOUNDBUFFER InitSoundBuffer(u32 flags, const char* name, u32 size);
 
 protected:

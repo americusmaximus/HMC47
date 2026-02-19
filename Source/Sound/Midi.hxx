@@ -24,7 +24,4 @@ SOFTWARE.
 
 #include "Common.hxx"
 
-extern const char* SoundEnvironments[];
-
-void DirectSoundLogMessage(HRESULT hr, const char* message);
-void DirectMusicLogMessage(HRESULT hr, const char* message);
+void InitializeMidi();

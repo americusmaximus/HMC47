@@ -87,17 +87,17 @@ void ZMusic::PrintStatus() {
 }
 
 // 0x0ff31590
-BOOL ZMusic::Initialize(LPDIRECTSOUND ds, HWND window) {
+bool ZMusic::Initialize(LPDIRECTSOUND ds, HWND window) {
+    HRESULT hr = S_OK;
+
     this->DirectSound = ds;
 
     CoInitialize(nullptr);
 
-    HRESULT hr = CoCreateInstance(CLSID_DirectMusic, nullptr,
-        CLSCTX_INPROC_SERVER, IID_IDirectMusic, (LPVOID*)&this->DirectMusic);
-
-    if (FAILED(hr)) {
+    if (FAILED(hr = CoCreateInstance(CLSID_DirectMusic, nullptr,
+        CLSCTX_INPROC_SERVER, IID_IDirectMusic, (LPVOID*)&this->DirectMusic))) {
         DirectMusicLogMessage(hr, "Create Direct music failed");
-        return FALSE;
+        return false;
     }
 
     u32 index = 0;
@@ -110,42 +110,33 @@ BOOL ZMusic::Initialize(LPDIRECTSOUND ds, HWND window) {
         index++;
     }
 
-    hr = CoCreateInstance(CLSID_DirectMusicLoader, nullptr,
-        CLSCTX_INPROC_HANDLER | CLSCTX_INPROC_SERVER, IID_IDirectMusicLoader, (LPVOID*)&this->DirectMusicLoader);
-
-    if (FAILED(hr)) {
+    if (FAILED(hr = CoCreateInstance(CLSID_DirectMusicLoader, nullptr,
+        CLSCTX_INPROC_HANDLER | CLSCTX_INPROC_SERVER, IID_IDirectMusicLoader, (LPVOID*)&this->DirectMusicLoader))) {
         DirectMusicLogMessage(hr, "Create loader failed");
-        return FALSE;
+        return false;
     }
 
-    hr = this->DirectMusic->SetDirectSound(ds, NULL);
-
-    if (FAILED(hr)) {
+    if (FAILED(hr = this->DirectMusic->SetDirectSound(ds, NULL))) {
         DirectMusicLogMessage(hr, "Set directsound failed");
-        return FALSE;
+        return false;
     }
 
-    hr = CoCreateInstance(CLSID_DirectMusicPerformance, nullptr,
-        CLSCTX_INPROC_HANDLER | CLSCTX_INPROC_SERVER, IID_IDirectMusicPerformance, (LPVOID*)&this->DirectMusicPerformance);
-
-    if (FAILED(hr)) {
+    if (FAILED(hr = CoCreateInstance(CLSID_DirectMusicPerformance, nullptr,
+        CLSCTX_INPROC_HANDLER | CLSCTX_INPROC_SERVER, IID_IDirectMusicPerformance, (LPVOID*)&this->DirectMusicPerformance))) {
         DirectMusicLogMessage(hr, "Create performance failed");
-        return FALSE;
+        return false;
     }
 
-    hr = this->DirectMusicPerformance->Init(&this->DirectMusic, this->DirectSound, window);
-
-    if (FAILED(hr)) {
+    if (FAILED(hr = this->DirectMusicPerformance->Init(&this->DirectMusic, this->DirectSound, window))) {
         DirectMusicLogMessage(hr, "Performance init failed");
-        return FALSE;
+        return false;
     }
 
     this->DirectMusicPort = this->CreateDirectMusicPort();
-    hr = this->DirectMusicPerformance->AddPort(this->DirectMusicPort);
 
-    if (FAILED(hr)) {
+    if (FAILED(hr = this->DirectMusicPerformance->AddPort(this->DirectMusicPort))) {
         DirectMusicLogMessage(hr, "Add Port failed");
-        return FALSE;
+        return false;
     }
 
     if (this->DirectMusicPort != nullptr) {
@@ -156,14 +147,14 @@ BOOL ZMusic::Initialize(LPDIRECTSOUND ds, HWND window) {
         else {
             if (FAILED(hr = this->DirectMusicPort->SetDirectSound(this->DirectSound, this->DirectSoundBuffer))) {
                 DirectMusicLogMessage(hr, "Port->SetDirectSound Failed");
-                return FALSE;
+                return false;
             }
         }
     }
 
     if (FAILED(hr = this->DirectMusicPerformance->AssignPChannelBlock(0, this->DirectMusicPort, 1))) {
         DirectMusicLogMessage(hr, "Assign channel block failed");
-        return FALSE;
+        return false;
     }
 
     this->DirectMusicPort->Activate(TRUE);
@@ -175,7 +166,7 @@ BOOL ZMusic::Initialize(LPDIRECTSOUND ds, HWND window) {
     g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\DMusic.cpp", 239)
         ->LogMessage("Direct music init ok");
 
-    return TRUE;
+    return true;
 }
 
 // 0x0ff31c70

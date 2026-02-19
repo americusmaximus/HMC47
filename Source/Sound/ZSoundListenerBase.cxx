@@ -20,11 +20,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#include <System/ZSoundListener.hxx>
 
-#include "Common.hxx"
+// 0x0ff50e40
+ZSoundListenerBaseBase::ZSoundListenerBaseBase() {
+    this->Unk0x1C = 0;
+    this->Unk0x10 = 0;
+    this->Unk0x14 = 0;
+    this->Unk0x18 = 0;
+    this->Unk0x4 = 0;
+    this->Unk0x8 = 0;
+    this->Unk0xC = 0;
+}
 
-extern const char* SoundEnvironments[];
+// 0x0ff38f40
+ZSoundListenerBaseBase::~ZSoundListenerBaseBase() {}
 
-void DirectSoundLogMessage(HRESULT hr, const char* message);
-void DirectMusicLogMessage(HRESULT hr, const char* message);
+// 0x0ff38ec0
+// 0x0ff50e50
+ZSoundListenerBase::ZSoundListenerBase() {
+    this->Unk0x24 = 0; // TODO
+}
+
+// 0x0ff35932
+bool ZSoundListenerBase::SetRoomSize(f32) {
+    return true;
+}
+
+// 0x0ff35930
+void ZSoundListenerBase::SetRoom(DWORD) {}
+
+// 0x0ff35940
+u32 ZSoundListenerBase::Method0x24() {
+    return this->Unk0x24;
+}
+
+// 0x0ff38ef0
+ZSoundListenerBase::~ZSoundListenerBase() {}
+
+// 0x0ff38f30
+void ZSoundListenerBase::Method0x20(u32 todo) {
+    this->Unk0x24 = todo;
+}

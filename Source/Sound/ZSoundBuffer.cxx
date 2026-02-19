@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ZSoundBuffer.hxx"
+#include <System/ZSoundBuffer.hxx>
 
 // 0x0ff33ed0
 // 0x0ff50a08

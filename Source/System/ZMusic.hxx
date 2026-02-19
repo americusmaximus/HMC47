@@ -41,8 +41,8 @@ public:
 public:
     virtual BOOL CreateStreamingBuffer();                                               // 0x0
     virtual ~ZMusic();                                                                  // 0x4
-    virtual BOOL Initialize(LPDIRECTSOUND ds, HWND window);                             // 0x8
-    virtual void Method0xC();                                                           // 0xC
+    virtual bool Initialize(LPDIRECTSOUND ds, HWND window);                             // 0x8
+    virtual void Method0xC(u32 todo);                                                   // 0xC
     virtual void StopPerformance(u32);                                                  // 0x10
     virtual void Method0x14();                                                          // 0x14
     virtual void CreateSegment(const char* dir, const char* file, u32 todo, u32 todo);  // 0x18

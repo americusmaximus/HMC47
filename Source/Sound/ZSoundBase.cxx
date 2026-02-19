@@ -42,11 +42,11 @@ ZSoundBase::ZSoundBase() {
     this->Unk0x10B = false;
     this->Unk0x15 = 0;
     this->Unk0x10A = false;
-    this->Unk0x138 = 0;
+    this->Unk0x138 = nullptr;
     this->Unk0xFA = 0;
     this->Unk0x10C = 0;
-    this->Unk0x19 = 0;
-    this->Unk0x4 = 0;
+    this->Unk0x19 = 0.0f;
+    this->Unk0x4 = 0.0f;
     this->Unk0x9 = 0;
     this->Unk0xDF = false;
     this->SfxVolume = 0.5f;
@@ -97,6 +97,11 @@ bool ZSoundBase::HasMusic() {
     return this->Music != nullptr;
 }
 
+// 0x0ff3ae10
+ZSoundListener* ZSoundBase::GetListener() {
+    return this->Unk0x138;
+}
+
 // 0x0ff3ae20
 void ZSoundBase::SetStreaming(bool value) {
     this->UseStreaming = value;
@@ -130,13 +135,13 @@ void ZSoundBase::SetSfxVolume(f32 volume) {
 }
 
 // 0x0ff3d5b0
-BOOL ZSoundBase::EndInit(const char*) {
-    return TRUE;
+bool ZSoundBase::EndInit(const char*) {
+    return true;
 }
 
 // 0x0ff3d5b0
-BOOL ZSoundBase::Method0x54(u32) {
-    return TRUE; // TODO
+bool ZSoundBase::Method0x54(u32) {
+    return true;
 }
 
 // 0x0ff3d6a0

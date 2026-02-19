@@ -26,13 +26,14 @@ SOFTWARE.
 
 #include <eax2.h>
 
+#define DIRECTSOUND_VERSION 0x0600 
+#include <dsound.h>
+
 #pragma pack(push, 1)
 
 class ZPropertySet {
 public:
-    ZPropertySet() {
-        this->PropertySet = nullptr;
-    }
+    ZPropertySet();
 
 public:
     virtual ~ZPropertySet();                                                            // 0x0

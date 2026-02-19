@@ -26,20 +26,20 @@ SOFTWARE.
 
 #pragma pack(push, 1)
 
-class ZSoundListener : public ZPropertySet {
+class ZSpatialSoundBuffer : public ZPropertySet {
 public:
-    ZSoundListener();
+    ZSpatialSoundBuffer();
 
 public:
-    virtual ~ZSoundListener();                                                          // 0x0
+    virtual ~ZSpatialSoundBuffer();                                                     // 0x0
     virtual void Method0x8();                                                           // 0x8
-    virtual BOOL Method0x10();                                                          // 0x10
-    virtual BOOL Method0x14();                                                          // 0x14
-    virtual bool Method0x18();                                                          // 0x18
-    virtual void Method0x1C();                                                          // 0x1C
+    virtual bool Initialize(LPDIRECTSOUND ds, LPDIRECTSOUNDBUFFER buffer);              // 0x10
+    virtual bool SetRoom(DWORD environment);                                            // 0x14
+    virtual bool SetRoomSize(f32 size);                                                 // 0x18
+    virtual void Method0x1C(u32 todo);                                                  // 0x1C
 
 protected:
-    u32 Unk0x8;                                                                         // 0x8
+    LPDIRECTSOUNDBUFFER Buffer;                                                         // 0x8
     u32 Unk0xC;                                                                         // 0xC
     EAXLISTENERPROPERTIES Properties;                                                   // 0x10
     u32 Unk0x48;                                                                        // 0x48
@@ -48,5 +48,5 @@ protected:
 #pragma pack(pop)
 
 #if defined(_DEBUG) && !defined(_WIN64)
-static_assert(sizeof(ZSoundListener)    == 0x4C,    "ZSoundListener size mismatch.");
+static_assert(sizeof(ZSpatialSoundBuffer) == 0x4C, "ZSpatialSoundBuffer size mismatch.");
 #endif

@@ -25,9 +25,7 @@ SOFTWARE.
 #include "BlockRefTab.hxx"
 #include "LinkRefTab.hxx"
 #include "ZMusic.hxx"
-
-#define DIRECTSOUND_VERSION 0x0600 
-#include <dsound.h>
+#include "ZSoundListener.hxx"
 
 #pragma pack(push, 1)
 
@@ -49,15 +47,15 @@ public:
     virtual void Method0x28();                                                              // 0x28
     virtual ~ZSoundBase();                                                                  // 0x2C
     virtual bool Method0x30();                                                              // 0x30
-    virtual BOOL Init(HWND) = 0;                                                            // 0x34
+    virtual bool Init(HWND) = 0;                                                            // 0x34
     virtual bool Method0x38();                                                              // 0x38
-    virtual BOOL EndInit(const char*);                                                      // 0x3C
+    virtual bool EndInit(const char*);                                                      // 0x3C
     virtual void Method0x40();                                                              // 0x40
-    virtual BOOL RenderFrame() = 0;                                                         // 0x44
+    virtual bool RenderFrame() = 0;                                                         // 0x44
     virtual void Method0x48();                                                              // 0x48
     virtual void Method0x4C();                                                              // 0x4C
     virtual void Method0x50();                                                              // 0x50
-    virtual BOOL Method0x54(u32);                                                           // 0x54
+    virtual bool Method0x54(u32);                                                           // 0x54
     virtual void Method0x58();                                                              // 0x58
     virtual void SetMusicVolume(f32 volume);                                                // 0x5C
     virtual void Method0x60();                                                              // 0x60
@@ -131,10 +129,10 @@ public:
     virtual void Method0x170();                                                             // 0x170
     virtual void Method0x174();                                                             // 0x174
     virtual void Method0x178();                                                             // 0x178
-    virtual void Method0x17C();                                                             // 0x17C
-    virtual void Method0x180();                                                             // 0x180
+    virtual void* Method0x17C();                                                            // 0x17C
+    virtual BlockRefTab* Method0x180();                                                     // 0x180
     virtual void Method0x184();                                                             // 0x184
-    virtual void Method0x188();                                                             // 0x188
+    virtual ZSoundListener* GetListener();                                                  // 0x188
     virtual void Method0x18C();                                                             // 0x18C
     virtual void Method0x190();                                                             // 0x190
     virtual void Method0x194();                                                             // 0x194
@@ -152,14 +150,16 @@ public:
     virtual void Method0x1C4();                                                             // 0x1C4
     virtual void Method0x1C8();                                                             // 0x1C8
 
+public:
+    f32 Unk0x4;                                                                             // 0x4
+
 protected:
-    u32 Unk0x4;                                                                             // 0x4
     bool Unk0x8;                                                                            // 0x8
     u32 Unk0x9;                                                                             // 0x9
     f32 Unk0xD;                                                                             // 0xD
     u32 Unk0x11;                                                                            // 0x11
     u32 Unk0x15;                                                                            // 0x15
-    u32 Unk0x19;                                                                            // 0x19
+    f32 Unk0x19;                                                                            // 0x19
     BlockRefTab Unk0x1D;                                                                    // 0x1D
     u32 SpatialStreamingBuffers;                                                            // 0xC5
     bool Unk0xC9;                                                                           // 0xC9
@@ -195,7 +195,7 @@ protected:
     u32 Unk0x12C;                                                                           // 0x12C
     u32 Unk0x130;                                                                           // 0x130
     u32 Unk0x134;                                                                           // 0x134
-    u32 Unk0x138;                                                                           // 0x138
+    ZSoundListener* Unk0x138;                                                               // 0x138
     u32 Unk0x13C;                                                                           // 0x13C
     bool Unk0x140;                                                                          // 0x140
     ZMusic* Music;                                                                          // 0x141

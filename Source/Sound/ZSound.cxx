@@ -21,9 +21,9 @@ SOFTWARE.
 */
 
 #include "DirectSound.hxx"
-#include "ZSoundBuffer.hxx"
 
 #include <System/ZSound.hxx>
+#include <System/ZSoundBuffer.hxx>
 
 static HANDLE g_SoundThread;                                                                    // 0x0ff5a738
 
@@ -52,18 +52,17 @@ bool ZSound::Method0x1CC() {
 }
 
 // 0x0ff36170
-BOOL ZSound::Init(HWND window) {
+bool ZSound::Init(HWND window) {
     this->Unk0x106 = 0;
 
     if (this->Unk0x10A) {
-        return TRUE;
+        return true;
     }
 
     this->Unk0x10A = true;
 
     if (DirectSoundEnumerateA(ZSoundEnumerateCallback, nullptr) == DS_OK) {
         HRESULT hr = DS_OK;
-
         if ((hr = EAXDirectSoundCreate(nullptr, &this->DirectSound, nullptr)) == DS_OK) {
             g_pDirectSound = this->DirectSound;
 
@@ -134,7 +133,7 @@ BOOL ZSound::Init(HWND window) {
                     g_SoundThread = FUN_0ff42817(FUN_0ff374e0, 0, this); // TODO
                     SetThreadPriority(g_SoundThread, THREAD_PRIORITY_TIME_CRITICAL);
 
-                    return TRUE;
+                    return true;
                 }
                 else {
                     DirectSoundLogMessage(hr, "Get caps failed");
@@ -153,24 +152,23 @@ BOOL ZSound::Init(HWND window) {
             ->LogMessage("dsEnumerate failed");
     }
 
-    return FALSE;
+    return false;
 }
 
 // 0x0ff36420
-BOOL ZSound::EndInit(const char* path) {
+bool ZSound::EndInit(const char* path) {
     return ZSoundBase::EndInit(path);
 }
 
 // 0x0ff36430
 bool ZSound::CreatePrimaryBuffer() {
-    HRESULT hr = DS_OK;
-
     DSBUFFERDESC desc;
     ZeroMemory(&desc, sizeof(DSBUFFERDESC));
 
     desc.dwSize = sizeof(DSBUFFERDESC);
     desc.dwFlags = DSBCAPS_CTRLVOLUME | DSBCAPS_CTRL3D | DSBCAPS_PRIMARYBUFFER;
 
+    HRESULT hr = DS_OK;
     if ((hr = this->DirectSound->CreateSoundBuffer(&desc, &this->DirectSoundBuffer, nullptr)) != DS_OK) {
         DirectSoundLogMessage(hr, "create primary buffer failed");
         return false;
@@ -200,13 +198,60 @@ bool ZSound::CreatePrimaryBuffer() {
 }
 
 // 0x0ff36b20
-BOOL ZSound::RenderFrame() {
-    // TODO NOT IMPLEMENTED
+bool ZSound::RenderFrame() {
+    if (!this->FUN_0ff3ed50()) {
+        return false;
+    }
+
+    if (this->DirectSound == nullptr) {
+        g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\SoundConDS.cpp", 558)
+            ->LogMessage("ERROR: ZSoundConDS::RenderFrame() was called after DS Object has been freed");
+
+        g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\SoundConDS.cpp", 559)
+            ->LogMessage("INT3 in %s at line %d", "Z:\\Engine\\Sound\\_Wintel\\Source\\SoundConDS.cpp", 559);
+
+        __asm { int 3 }
+    }
+
+    if (this->Unk0xD != -1.0f) {
+        this->Music->Method0x14();
+        this->Music->Method0xC((s32)this->Unk0xD); // TODO
+        this->Unk0xD = -1.0f;
+    }
+
+    if (this->Unk0x19 != 0.0f) {
+        DSCAPS caps;
+        ZeroMemory(&caps, sizeof(DSCAPS));
+
+        caps.dwSize = sizeof(DSCAPS);
+
+        HRESULT hr = DS_OK;
+        if (FAILED(hr = this->DirectSound->GetCaps(&caps))) {
+            DirectSoundLogMessage(hr, "Get caps failed");
+            return false;
+        }
+
+        g_pSysInterface->DisplayDebugString(70, 32, "Transfer %d", caps.dwUnlockTransferRateHwBuffers);
+        g_pSysInterface->DisplayDebugString(70, 33, "Total Mem on board %d", caps.dwTotalHwMemBytes);
+        g_pSysInterface->DisplayDebugString(70, 34, "Free mem %d", caps.dwFreeHwMemBytes);
+        g_pSysInterface->DisplayDebugString(70, 35, "Largest block %d", caps.dwMaxContigFreeHwMemBytes);
+        g_pSysInterface->DisplayDebugString(70, 36, "Free 3D hw buffers %d", caps.dwFreeHw3DAllBuffers);
+        g_pSysInterface->DisplayDebugString(70, 37, "Free 3D hw static  buffers %d", caps.dwFreeHw3DStaticBuffers);
+        g_pSysInterface->DisplayDebugString(70, 38, "Free 3D hw streaming buffers %d", caps.dwFreeHw3DStreamingBuffers);
+        g_pSysInterface->DisplayDebugString(70, 39, this->Unk0xDA ? "hardware" : "software");
+    }
+
+    return true;
 }
 
 // 0x0ff36d30
 bool ZSound::Method0xC() {
-    // TODO NOT IMPLEMENTED
+    this->Unk0x138 = new ZSoundListener();
+
+    this->Unk0x138->SetBuffer(this->DirectSoundBuffer);
+    this->Unk0x138->SetSound(this);
+
+    return this->Unk0x138->Initialize();
 }
 
 // 0x0ff370d0
@@ -314,7 +359,7 @@ LPDIRECTSOUNDBUFFER ZSound::InitSoundBuffer(u32 flags, const char* name, u32 siz
 }
 
 // 0x0ff3d660
-BOOL ZSound::FUN_0ff3d660() {
+bool ZSound::FUN_0ff3d660() {
     this->Unk0x102 = 0;
     this->Unk0x106 = 0;
     this->Unk0xFE = 0;
@@ -325,5 +370,18 @@ BOOL ZSound::FUN_0ff3d660() {
 
     this->Unk0xDF = true;
 
-    return TRUE;
+    return true;
+}
+
+// 0x0ff3ed50
+bool ZSound::FUN_0ff3ed50() {
+    if (!this->Unk0xDF) {
+        return false;
+    }
+
+    if (this->Method0x17C() == nullptr) {
+        return false;
+    }
+
+    TODO
 }

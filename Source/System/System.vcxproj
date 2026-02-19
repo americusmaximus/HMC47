@@ -71,16 +71,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;../../SDK/libexpat/expat/lib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/EAX;../../SDK/DX70/Include;../../SDK/zlib;../../SDK/libexpat/expat/lib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;../../SDK/libexpat/expat/lib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/EAX;../../SDK/DX70/Include;../../SDK/zlib;../../SDK/libexpat/expat/lib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;../../SDK/libexpat/expat/lib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/EAX;../../SDK/DX70/Include;../../SDK/zlib;../../SDK/libexpat/expat/lib;</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/DX70/Include;../../SDK/zlib;../../SDK/libexpat/expat/lib;</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../../SDK/EAX;../../SDK/DX70/Include;../../SDK/zlib;../../SDK/libexpat/expat/lib;</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -236,13 +236,17 @@
     <ClInclude Include="ZList.hxx" />
     <ClInclude Include="ZMalloc.hxx" />
     <ClInclude Include="ZModule.hxx" />
+    <ClInclude Include="ZPropertySet.hxx" />
     <ClInclude Include="ZRender.hxx" />
     <ClInclude Include="ZRenderModule.hxx" />
     <ClInclude Include="ZSettings.hxx" />
     <ClInclude Include="ZSound.hxx" />
     <ClInclude Include="ZSoundBase.hxx" />
     <ClInclude Include="ZMusic.hxx" />
+    <ClInclude Include="ZSoundBuffer.hxx" />
+    <ClInclude Include="ZSoundListener.hxx" />
     <ClInclude Include="ZSoundModule.hxx" />
+    <ClInclude Include="ZSpatialSoundBuffer.hxx" />
     <ClInclude Include="ZString.hxx" />
     <ClInclude Include="ZSysAction.hxx" />
     <ClInclude Include="ZSysActionContainer.hxx" />

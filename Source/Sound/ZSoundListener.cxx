@@ -20,23 +20,108 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ZSoundListener.hxx"
+#include "DirectSound.hxx"
 
-// 0x0ff336a0
-// 0x0ff509e8
+#include <System/ZSound.hxx>
+
+// 0x0ff50bd0
 ZSoundListener::ZSoundListener() {
-    this->Unk0x8 = nullptr;
+    this->SpatialBuffer = nullptr;
+    this->Listener = nullptr;
 }
 
-// 0x0ff336c0
-// 0x0ff33700
+// 0x0ff359b0
+// 0x0ff359f0
 ZSoundListener::~ZSoundListener() {
-    if (this->Unk0x8 != nullptr) {
-        this->Unk0x8->Release();
+    if (this->SpatialBuffer != nullptr) {
+        delete this->SpatialBuffer;
+    }
+
+    this->SpatialBuffer = nullptr;
+
+    if (this->Listener != nullptr) {
+        this->Listener->Release();
+    }
+
+    this->Listener = nullptr;
+}
+
+// 0x0ff35bb0
+void ZSoundListener::Release() {
+    if (this->SpatialBuffer != nullptr) {
+        delete this->SpatialBuffer;
+    }
+
+    this->SpatialBuffer = nullptr;
+
+    if (this->Listener != nullptr) {
+        this->Listener->Release();
+    }
+
+    this->Listener = nullptr;
+}
+
+// 0x0ff35be0
+bool ZSoundListener::Method0x4() {
+    void* todo_1 = this->Sound->Method0x17C(); // TODO
+
+    if (todo_1 == nullptr) {
+        return false;
+    }
+
+
+
+
+    TODO
+}
+
+// 0x0ff35d40
+bool ZSoundListener::SetRoomSize(f32 size) {
+    if (this->SpatialBuffer == nullptr) {
+        return false;
+    }
+
+    return this->SpatialBuffer->SetRoomSize(size);
+}
+
+// 0x0ff35a80
+bool ZSoundListener::Initialize() {
+    HRESULT hr = DS_OK;
+    if (FAILED(hr = this->Buffer->QueryInterface(IID_IDirectSound3DListener, (LPVOID*)&this->Listener))) {
+        DirectSoundLogMessage(hr, "Query listener failed");
+        return false;
+    }
+
+    if (this->Sound->Method0x1CC()) {
+        this->SpatialBuffer = new ZSpatialSoundBuffer();
+
+        BlockRefTab* todo_1 = this->Sound->Method0x180(); // TODO
+
+        TODO
+    }
+
+    this->SetRoom(EAX_ENVIRONMENT_GENERIC);
+
+    return true;
+}
+
+// 0x0ff35d60
+void ZSoundListener::Method0x20(u32 todo) {
+    ZSoundListenerBase::Method0x20(todo);
+
+    if (this->SpatialBuffer != nullptr) {
+        this->SpatialBuffer->Method0x1C(todo);
     }
 }
 
-// 0x0ff33890
-void ZSoundListener::Method0x8() {
-    // TODO NOT IMPLEMENTED
+// 0x0ff35b90
+void ZSoundListener::SetRoom(DWORD environment) {
+    if (this->SpatialBuffer != nullptr) {
+        this->SpatialBuffer->SetRoom(environment);
+    }
+}
+
+// 0x0ff35a70
+void ZSoundListener::SetBuffer(LPDIRECTSOUNDBUFFER buffer) {
+    this->Buffer = buffer;
 }

@@ -182,6 +182,7 @@
     <ClCompile Include="DirectSound.cxx" />
     <ClCompile Include="LinkRefTab.cxx" />
     <ClCompile Include="Main.cxx" />
+    <ClCompile Include="Midi.cxx" />
     <ClCompile Include="RefTab.cxx" />
     <ClCompile Include="ZDirectSound.cxx" />
     <ClCompile Include="ZModule.cxx" />
@@ -191,7 +192,9 @@
     <ClCompile Include="ZSoundBase.cxx" />
     <ClCompile Include="ZSoundBuffer.cxx" />
     <ClCompile Include="ZSoundListener.cxx" />
+    <ClCompile Include="ZSpatialSoundBuffer.cxx" />
     <ClCompile Include="ZMusic.cxx" />
+    <ClCompile Include="ZSoundListenerBase.cxx" />
     <ClCompile Include="ZSoundModule.cxx" />
   </ItemGroup>
   <ItemGroup>
@@ -201,10 +204,8 @@
     <ClInclude Include="Common.hxx" />
     <ClInclude Include="DirectSound.hxx" />
     <ClInclude Include="Globals.hxx" />
+    <ClInclude Include="Midi.hxx" />
     <ClInclude Include="ZMusicSegment.hxx" />
-    <ClInclude Include="ZPropertySet.hxx" />
-    <ClInclude Include="ZSoundBuffer.hxx" />
-    <ClInclude Include="ZSoundListener.hxx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

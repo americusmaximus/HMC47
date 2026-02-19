@@ -20,7 +20,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ZPropertySet.hxx"
+#include "Globals.hxx"
+
+#include <System/ZPropertySet.hxx>
+
+// 0x0ff509d8
+ZPropertySet::ZPropertySet() {
+    this->PropertySet = nullptr;
+}
 
 // 0x0ff335d0
 ZPropertySet::~ZPropertySet() {
@@ -47,7 +54,7 @@ bool ZPropertySet::Query() {
     }
 
     ULONG support = 0;
-    HRESULT hr = this->PropertySet->QuerySupport(DSPROPSETID_EAX20_ListenerProperties,
+    const HRESULT hr = this->PropertySet->QuerySupport(DSPROPSETID_EAX20_ListenerProperties,
         DSPROPERTY_EAXLISTENER_ALLPARAMETERS, &support);
 
     return SUCCEEDED(hr)
