@@ -41,6 +41,46 @@ ZSound::~ZSound() {
     // TODO
 }
 
+// 0x0ff35fa0
+void ZSound::PrintStatus() {
+    ZSoundBase::PrintStatus();
+
+    DSCAPS caps;
+    ZeroMemory(&caps, sizeof(DSCAPS));
+
+    caps.dwSize = sizeof(DSCAPS);
+
+    HRESULT hr = DS_OK;
+    if ((hr = this->DirectSound->GetCaps(&caps)) != DS_OK) {
+        DirectSoundLogMessage(hr, "Get caps failed");
+        return;
+    }
+
+    g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\SoundConDS.cpp", 222)
+        ->LogMessage("Transfer %d", caps.dwUnlockTransferRateHwBuffers);
+
+    g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\SoundConDS.cpp", 223)
+        ->LogMessage("Total Mem on board %d", caps.dwTotalHwMemBytes);
+
+    g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\SoundConDS.cpp", 224)
+        ->LogMessage("Free mem %d", caps.dwFreeHwMemBytes);
+
+    g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\SoundConDS.cpp", 225)
+        ->LogMessage("Largest block %d", caps.dwMaxContigFreeHwMemBytes);
+
+    g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\SoundConDS.cpp", 226)
+        ->LogMessage("Buffers %d", caps.dwFreeHwMixingStaticBuffers);
+
+    g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\SoundConDS.cpp", 227)
+        ->LogMessage("3d buffers %d", caps.dwFreeHw3DStaticBuffers);
+
+    g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\SoundConDS.cpp", 229)
+        ->LogMessage("FreeHwMixingStreamingBuffers %d", caps.dwFreeHwMixingStreamingBuffers);
+
+    g_pSysCom->Log("Z:\\Engine\\Sound\\_Wintel\\Source\\SoundConDS.cpp", 230)
+        ->LogMessage("MaxHw3DStreamingBuffers %d", caps.dwMaxHw3DStreamingBuffers);
+}
+
 // 0x0ff36130
 BOOL CALLBACK ZSoundEnumerateCallback(LPGUID, LPCSTR, LPCSTR, LPVOID) {
     return TRUE;

@@ -169,9 +169,9 @@ void ZSoundModule::Method0x28() {
 }
 
 // 0x0ff35830
-void ZSoundModule::Method0x34() {
+void ZSoundModule::PrintStatus() {
     if (this->Sound != nullptr) {
-        this->Sound->Method0x128();
+        this->Sound->PrintStatus();
     }
 }
 

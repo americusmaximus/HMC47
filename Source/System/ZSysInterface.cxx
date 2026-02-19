@@ -194,7 +194,7 @@ void ZSysInterface::Method0x14(WPARAM wParam, void* value, u32 size) {
 }
 
 // 0x0ffab8c0
-void ZSysInterface::Method0x20(bool todo) {
+void ZSysInterface::PrintStatus(bool todo) {
     g_pSysFile->Method0x8();
 
     if (!this->Unk0x6) {
@@ -522,6 +522,121 @@ void ZSysInterface::SetEngineData(ZEngineData* value) {
     }
 
     this->EngineData = value;
+}
+
+// 0x0ffae5b0
+bool ZSysInterface::FUN_0ffae5b0(const char* command, const char* value) {
+    if (strcmpi("reloadengine", command) == 0) {
+        this->Continue = true;
+        return true;
+    }
+
+    if (strcmpi("exit", command) == 0) {
+        PostQuitMessage(EXIT_SUCCESS);
+        return true;
+    }
+
+    if (strcmpi("startscene", command) == 0) {
+        if (this->EngineData != nullptr) {
+            this->EngineData->Method0x44(2, value, nullptr);// TODO
+            return true;
+        }
+    }
+    else {
+        if (strcmpi("printstatus", command) == 0) {
+            this->PrintStatus(false);
+            return true;
+        }
+
+        if (strcmpi("bigs", command) == 0) {
+            g_pSysFile->PrintStatus();
+            return true;
+        }
+
+        if (strcmpi("info", command) == 0) {
+            this->Unk0xA79 = this->Unk0xA79 == 0; // TODO
+            return true;
+        }
+
+        if (strcmpi("?", command) == 0) {
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1474)
+                ->LogMessage("Commandline:");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1475)
+                ->LogMessage("ProjectFile=[str],");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1476)
+                ->LogMessage("AnimFile=[str],");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1477)
+                ->LogMessage("SoundBank=[str],");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1478)
+                ->LogMessage("DefaultScene=[str],");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1479)
+                ->LogMessage("Include=[str],");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1480)
+                ->LogMessage("LoadFilter=[.ext;.ext...]");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1481)
+                ->LogMessage("AutoDumpName=[str],");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1482)
+                ->LogMessage("Packfile=[str],");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1483)
+                ->LogMessage("EnableDebugOptions");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1484)
+                ->LogMessage("DisablePack");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1485)
+                ->LogMessage("DisableLight");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1486)
+                ->LogMessage("DisableTextures");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1487)
+                ->LogMessage("EnableTimers");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1488)
+                ->LogMessage("Resolution");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1489)
+                ->LogMessage("BackColor");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1490)
+                ->LogMessage("Window");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1491)
+                ->LogMessage("EnableConsole");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1492)
+                ->LogMessage("DisableConfig");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1493)
+                ->LogMessage("Ingame:");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1494)
+                ->LogMessage("PrintStatus, DoAllocCheck ?,");
+
+            g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysInterfaceWintel.cpp", 1495)
+                ->LogMessage("ReloadEngine, Exit, StartScene=[str]");
+
+            return true;
+        }
+
+        if (strcmpi("doalloccheck", command) == 0) {
+            g_pSysMem->AllocCheck();
+            return true;
+        }
+
+        return false;
+    }
+
+    return true;
 }
 
 // 0x0ffb0270

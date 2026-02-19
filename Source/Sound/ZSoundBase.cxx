@@ -221,6 +221,18 @@ void ZSoundBase::Method0x14C() {
     // TODO NOT IMLEMETED
 }
 
+// 0x0ff3e550
+void ZSoundBase::PrintStatus() {
+    g_pSysCom->Log("Z:\\Engine\\Sound\\Source\\ZSoundCon.cpp", 2050)
+        ->LogMessage("SoundDll Status:");
+
+    g_pSysCom->Log("Z:\\Engine\\Sound\\Source\\ZSoundCon.cpp", 2051)
+        ->LogMessage("---------------------------");
+
+    g_pSysCom->Log("Z:\\Engine\\Sound\\Source\\ZSoundCon.cpp", 2052)
+        ->LogMessage("Wave data size %d", this->WaveDataSize / 1024);
+}
+
 // 0x0ff3e6a0
 void ZSoundBase::Method0x1C0() {
     switch (param_3) {

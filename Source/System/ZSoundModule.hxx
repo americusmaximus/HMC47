@@ -42,7 +42,7 @@ public:
     virtual void EndInit();                                                     // 0x1C
     virtual void Method0x20();                                                  // 0x20
     virtual void Method0x28();                                                  // 0x28
-    virtual void Method0x34();                                                  // 0x34
+    virtual void PrintStatus();                                                 // 0x34
     virtual bool RenderFrame();                                                 // 0x38
     virtual void SetConfiguration(bool hw, bool eax, s32 buffers);              // 0x3C
     virtual s32 Method0x40();                                                   // 0x40

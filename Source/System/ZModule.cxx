@@ -85,4 +85,4 @@ FARPROC ZModule::GetFunctionAddress(const char* name) {
 }
 
 // 0x0ffc7520
-void ZModule::Method0x34() {}
+void ZModule::PrintStatus() {}

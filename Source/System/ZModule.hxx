@@ -44,7 +44,7 @@ public:
     virtual void Method0x28();                                                  // 0x28
     virtual void SetModule(HMODULE module, const char* name);                   // 0x2C
     virtual FARPROC GetFunctionAddress(const char* name);                       // 0x30
-    virtual void Method0x34();                                                  // 0x34
+    virtual void PrintStatus();                                                 // 0x34
 
 public:
     char* ModuleName;                                                           // 0x4

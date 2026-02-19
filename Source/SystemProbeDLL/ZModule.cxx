@@ -23,7 +23,7 @@ SOFTWARE.
 #include <System/ZModule.hxx>
 
 // 0x0fbb1830
-void ZModule::Method0x34() {}
+void ZModule::PrintStatus() {}
 
 // 0x0fbb2ba0
 // 0x0fbbb1a8

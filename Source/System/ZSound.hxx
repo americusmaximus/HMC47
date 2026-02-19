@@ -41,7 +41,7 @@ public:
     virtual void Method0x114();                                                             // 0x114
     virtual void Method0x118();                                                             // 0x118
     virtual void Method0x11C();                                                             // 0x11C
-    virtual void Method0x128();                                                             // 0x128
+    virtual void PrintStatus();                                                             // 0x128
     virtual void Method0x198();                                                             // 0x198
     virtual void Method0x19C();                                                             // 0x19C
     virtual bool Method0x1CC();                                                             // 0x1CC

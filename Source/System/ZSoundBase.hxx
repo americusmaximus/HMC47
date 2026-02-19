@@ -108,7 +108,7 @@ public:
     virtual void Method0x11C();                                                             // 0x11C
     virtual void SetStreaming(bool value);                                                  // 0x120
     virtual void Method0x124();                                                             // 0x124
-    virtual void Method0x128();                                                             // 0x128
+    virtual void PrintStatus();                                                             // 0x128
     virtual void Method0x12C();                                                             // 0x12C
     virtual void Method0x130();                                                             // 0x130
     virtual void Method0x134();                                                             // 0x134
@@ -179,7 +179,7 @@ protected:
     bool Unk0xF8;                                                                           // 0xF8
     bool UseStreaming;                                                                      // 0xF9
     u32 Unk0xFA;                                                                            // 0xFA
-    u32 Unk0xFE;                                                                            // 0xFE
+    u32 WaveDataSize;                                                                       // 0xFE
     u32 Unk0x102;                                                                           // 0x102
     u32 Unk0x106;                                                                           // 0x106
     bool Unk0x10A;                                                                          // 0x10A

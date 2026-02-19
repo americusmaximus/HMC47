@@ -74,9 +74,9 @@ public:
     virtual void Method0x14(WPARAM, void*, u32) = 0;                                    // 0x14
     virtual bool Method0x18(const char*, u32) = 0;                                      // 0x18
     virtual void RestoreDisplaySettings() = 0;                                          // 0x1C
-    virtual void Method0x20(bool) = 0;                                                  // 0x20
-    virtual void Method0x24() = 0;                                                      // 0x24
-    virtual void Method0x28() = 0;                                                      // 0x28
+    virtual void PrintStatus(bool) = 0;                                                 // 0x20
+    virtual void ReleaseRender() = 0;                                                   // 0x24
+    virtual void ReleaseScriptModule() = 0;                                             // 0x28
     virtual void InitializeSystemActions() = 0;                                         // 0x2C
     virtual void ReleaseSystemActions() = 0;                                            // 0x30
     virtual void Method0x34() = 0;                                                      // 0x34
@@ -296,7 +296,7 @@ public:
     virtual void Method0x14(WPARAM wParam, void* value, u32 size);                      // 0x14
     virtual bool Method0x18(const char*, u32 /* TODO */);                               // 0x18
     virtual void RestoreDisplaySettings();                                              // 0x1C
-    virtual void Method0x20(bool);                                                      // 0x20
+    virtual void PrintStatus(bool todo);                                                // 0x20
     virtual void ReleaseRender();                                                       // 0x24
     virtual void ReleaseScriptModule();                                                 // 0x28
     virtual void InitializeSystemActions();                                             // 0x2C
@@ -354,7 +354,8 @@ public:
 protected:
     bool CreateMainWindow();
     void SetCommandLine(const char* ini);
-    void ExecuteEngine(u32 code);   // TODO
+    void ExecuteEngine(u32 code); // TODO
+    bool FUN_0ffae5b0(const char* command, const char* value); // TODO
 
 public:
     ZString LogPath;                                                            // 0x3A45

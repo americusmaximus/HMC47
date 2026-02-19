@@ -53,7 +53,7 @@ void ZModule::Method0x28() {}
 void ZModule::Method0x10(const char*) {}
 
 // 0x0ff33f60
-void ZModule::Method0x34() {}
+void ZModule::PrintStatus() {}
 
 // 0x0ff4bcc0
 // 0x0ff51f40
