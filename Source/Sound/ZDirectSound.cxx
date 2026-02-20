@@ -31,7 +31,7 @@ ZDirectSound::ZDirectSound() {
 }
 
 // 0x0ff40190
-// 0-x0ff401d0
+// 0x0ff401d0
 ZDirectSound::~ZDirectSound() {
     // TODO
 }
