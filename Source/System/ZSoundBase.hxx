@@ -96,8 +96,8 @@ public:
     virtual void Method0xEC();                                                              // 0xEC
     virtual void Method0xF0();                                                              // 0xF0
     virtual void Method0xF4();                                                              // 0xF4
-    virtual void Method0xF8();                                                              // 0xF8
-    virtual void Method0xFC();                                                              // 0xFC
+    virtual s32 Method0xF8(RefTab* todo);                                                  // 0xF8
+    virtual void Method0xFC(RefTab* todo);                                                  // 0xFC
     virtual void Method0x100();                                                             // 0x100
     virtual void Method0x104();                                                             // 0x104
     virtual void Method0x108();                                                             // 0x108
@@ -106,8 +106,8 @@ public:
     virtual void Method0x114();                                                             // 0x114
     virtual void Method0x118();                                                             // 0x118
     virtual void Method0x11C();                                                             // 0x11C
-    virtual void SetStreaming(bool value);                                                  // 0x120
-    virtual void Method0x124();                                                             // 0x124
+    virtual void SetUseStreaming(bool value);                                               // 0x120
+    virtual bool GetUseStreaming();                                                         // 0x124
     virtual void PrintStatus();                                                             // 0x128
     virtual void Method0x12C();                                                             // 0x12C
     virtual void Method0x130();                                                             // 0x130
@@ -131,14 +131,14 @@ public:
     virtual void Method0x178(u32 todo);                                                     // 0x178
     virtual void* Method0x17C();                                                            // 0x17C
     virtual BlockRefTab* Method0x180();                                                     // 0x180
-    virtual bool Method0x184();                                                             // 0x184
+    virtual bool GetUseHW();                                                                // 0x184
     virtual ZSoundListener* GetListener();                                                  // 0x188
     virtual void Method0x18C();                                                             // 0x18C
     virtual void Method0x190();                                                             // 0x190
     virtual void Method0x194();                                                             // 0x194
     virtual void Method0x198();                                                             // 0x198
     virtual void Method0x19C();                                                             // 0x19C
-    virtual void Method0x1A0(u32 todo);                                                     // 0x1A0
+    virtual void SetBuffers(s32 buffers);                                                   // 0x1A0
     virtual void Method0x1A4(u32 todo);                                                     // 0x1A4
     virtual void Method0x1A8(bool todo);                                                    // 0x1A8
     virtual s32 Method0x1AC();                                                              // 0x1AC
@@ -167,10 +167,10 @@ protected:
     BlockRefTab* Unk0xCE;                                                                   // 0xCE
     u32 Unk0xD2;                                                                            // 0xD2
     u32 Unk0xD6;                                                                            // 0xD6
-    bool Unk0xDA;                                                                           // 0xDA
+    bool UseHW;                                                                             // 0xDA
     u32 Unk0xDB;                                                                            // 0xDB
     bool Unk0xDF;                                                                           // 0xDF
-    u32 Unk0xE0;                                                                            // 0xE0
+    s32 NumBuffers;                                                                         // 0xE0
     f32 Unk0xE4;                                                                            // 0xE4
     f32 MusicVolume;                                                                        // 0xE8
     f32 Unk0xEC;                                                                            // 0xEC

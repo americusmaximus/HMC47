@@ -47,8 +47,8 @@ public:
     virtual void Method0x14();                                                          // 0x14
     virtual void CreateSegment(const char* dir, const char* file, u32 todo, u32 todo);  // 0x18
     virtual void Method0x1C(void* todo);                                                // 0x1C
-    virtual void Method0x20();                                                          // 0x20
-    virtual void Method0x24(void* todo);                                                // 0x24
+    virtual s32 Method0x20(RefTab* todo);                                              // 0x20
+    virtual void Method0x24(RefTab* todo);                                              // 0x24
     virtual void* Method0x28(s32 todo);                                                 // 0x28
     virtual bool IsInit();                                                              // 0x2C
     virtual void PrintStatus();                                                         // 0x30

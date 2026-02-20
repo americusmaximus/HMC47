@@ -87,8 +87,18 @@ BOOL CALLBACK ZSoundEnumerateCallback(LPGUID, LPCSTR, LPCSTR, LPVOID) {
 }
 
 // 0x0ff36140
-bool ZSound::Method0x1CC() {
-    return this->Unk0x3F1;
+bool ZSound::GetUseEAX() {
+    return this->UseEAX;
+}
+
+// 0x0ff36150
+void ZSound::SetUseHW(bool value) {
+    this->UseHW = value;
+}
+
+// 0x0ff36160
+void ZSound::SetUseEAX(bool value) {
+    this->UseEAX = value;
 }
 
 // 0x0ff36170
@@ -113,7 +123,7 @@ bool ZSound::Init(HWND window) {
                     this->SpatialStreamingBuffers = this->Caps.dwMaxHw3DStreamingBuffers;
 
                     if (this->SpatialStreamingBuffers == 0) {
-                        this->Unk0xDA = false;
+                        this->UseHW = false;
                     }
                     else {
                         LPDIRECTSOUNDBUFFER dsb =
@@ -129,11 +139,11 @@ bool ZSound::Init(HWND window) {
                                 }
                                 else {
                                     this->Unk0xC9 = false;
-                                    this->Unk0x3F1 = false;
+                                    this->UseEAX = false;
                                 }
                             }
 
-                            if (this->Method0x1B0() && !this->Method0x1CC()) {
+                            if (this->Method0x1B0() && !this->GetUseEAX()) {
                                 EAXLISTENERPROPERTIES props;
                                 ZeroMemory(&props, sizeof(EAXLISTENERPROPERTIES));
 
@@ -278,7 +288,7 @@ bool ZSound::RenderFrame() {
         g_pSysInterface->DisplayDebugString(70, 36, "Free 3D hw buffers %d", caps.dwFreeHw3DAllBuffers);
         g_pSysInterface->DisplayDebugString(70, 37, "Free 3D hw static  buffers %d", caps.dwFreeHw3DStaticBuffers);
         g_pSysInterface->DisplayDebugString(70, 38, "Free 3D hw streaming buffers %d", caps.dwFreeHw3DStreamingBuffers);
-        g_pSysInterface->DisplayDebugString(70, 39, this->Unk0xDA ? "hardware" : "software");
+        g_pSysInterface->DisplayDebugString(70, 39, this->UseHW ? "hardware" : "software");
     }
 
     return true;
@@ -398,11 +408,40 @@ LPDIRECTSOUNDBUFFER ZSound::InitSoundBuffer(u32 flags, const char* name, u32 siz
     return buffer;
 }
 
+// 0x0ff37bc0
+void* ZSound::Method0x198() {
+    LPDIRECTSOUNDBUFFER buffer = this->UseHW
+        ? this->InitSoundBuffer(DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLVOLUME
+            | DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRL3D | DSBCAPS_LOCHARDWARE, "HARDWARE", this->Unk0xD6)
+        : this->InitSoundBuffer(DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLVOLUME
+            | DSBCAPS_CTRLPAN | DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRL3D | DSBCAPS_LOCSOFTWARE, "SOFTWARE", this->Unk0xD6);
+
+    void* audio1 = nullptr;
+    void* audio2 = nullptr;
+    DWORD audio1size = 0, audio2size = 0;
+
+    HRESULT hr = DS_OK;
+    if ((hr = buffer->Lock(0, this->Unk0xD6, &audio1, &audio1size, &audio2, &audio2size, 0)) != DS_OK) {
+        DirectSoundLogMessage(hr, "lock on buffer failed");
+        return 0; // TODO
+    }
+
+    ZeroMemory(audio1, this->Unk0xD6);
+
+    if ((hr = buffer->Unlock(audio1, audio1size, audio2, audio2size)) != DS_OK) {
+        DirectSoundLogMessage(hr, "unlock buffer failed");
+        return 0; // TODO
+    }
+
+
+    TODO
+}
+
 // 0x0ff3d660
 bool ZSound::FUN_0ff3d660() {
     this->Unk0x102 = 0;
     this->Unk0x106 = 0;
-    this->Unk0xFE = 0;
+    this->WaveDataSize = 0;
     this->Unk0x10A = true;
 
     this->Method0xC();

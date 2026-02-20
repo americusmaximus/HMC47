@@ -206,7 +206,7 @@ bool ZMusic::Initialize(LPDIRECTSOUND ds, HWND window) {
 }
 
 // 0x0ff31b40
-void ZMusic::Method0x24(void* todo) {
+void ZMusic::Method0x24(RefTab* todo) {
     if (todo != nullptr) {
         // TODO NOT IMPLEMENTED
     }

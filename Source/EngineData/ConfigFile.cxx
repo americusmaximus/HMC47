@@ -955,7 +955,7 @@ void ConfigFile::ApplySoundSettings() {
             sound->SetSpeechVolume((f32)this->Sound.SpeechVolume, false);
             sound->SetMusicVolume((f32)this->Sound.MusicVolume);
             sound->SetSfxVolume((f32)this->Sound.SfxVolume);
-            sound->SetStreaming(this->Sound.UseStreaming);
+            sound->SetUseStreaming(this->Sound.UseStreaming);
             sound->SetMusicQuality(this->Sound.MusicQuality);
 
             g_pSysInterface->SoundModule->SetConfiguration(this->Sound.UseHW,

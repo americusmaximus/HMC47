@@ -64,9 +64,9 @@ ZSoundBase::ZSoundBase() {
 
     this->Unk0xD2 = 0;
     this->Unk0x14D = 0;
-    this->Unk0xE0 = 8;
-    this->Unk0xD6 = 16384;
-    this->Unk0xDA = false;
+    this->NumBuffers = 8;
+    this->Unk0xD6 = 0x4000;
+    this->UseHW = false;
     this->SpatialStreamingBuffers = 0;
     this->Unk0xC9 = false;
     this->Unk0xF8 = false;
@@ -90,8 +90,8 @@ BlockRefTab* ZSoundBase::Method0x180() {
 }
 
 // 0x0ff358f0
-bool ZSoundBase::Method0x184() {
-    return this->Unk0xDA;
+bool ZSoundBase::GetUseHW() {
+    return this->UseHW;
 }
 
 // 0x0ff35900
@@ -100,8 +100,8 @@ bool ZSoundBase::Method0x1BC() {
 }
 
 // 0x0ff3ab80
-void ZSoundBase::Method0x1A0(u32 todo) {
-    this->Unk0xE0 = todo;
+void ZSoundBase::SetBuffers(s32 buffers) {
+    this->NumBuffers = buffers;
 }
 
 // 0x0ff3ab90
@@ -166,8 +166,29 @@ ZSoundListener* ZSoundBase::GetListener() {
 }
 
 // 0x0ff3ae20
-void ZSoundBase::SetStreaming(bool value) {
+void ZSoundBase::SetUseStreaming(bool value) {
     this->UseStreaming = value;
+}
+
+// 0x0ff3ae30
+bool ZSoundBase::GetUseStreaming() {
+    return this->UseStreaming;
+}
+
+// 0x0ff3ae70
+s32 ZSoundBase::Method0xF8(RefTab* todo) {
+    if (this->Music != nullptr) {
+        return this->Music->Method0x20(todo);
+    }
+
+    return 0;
+}
+
+// 0x0ff3ae90
+void ZSoundBase::Method0xFC(RefTab* todo) {
+    if (this->Music != nullptr) {
+        this->Music->Method0x24(todo);
+    }
 }
 
 // 0x0ff3c180

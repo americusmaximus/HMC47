@@ -42,11 +42,11 @@ public:
     virtual void Method0x118();                                                             // 0x118
     virtual void Method0x11C();                                                             // 0x11C
     virtual void PrintStatus();                                                             // 0x128
-    virtual void Method0x198();                                                             // 0x198
+    virtual void* Method0x198();                                                            // 0x198
     virtual void Method0x19C();                                                             // 0x19C
-    virtual bool Method0x1CC();                                                             // 0x1CC
-    virtual void Method0x1D0();                                                             // 0x1D0
-    virtual void Method0x1D4();                                                             // 0x1D4
+    virtual bool GetUseEAX();                                                               // 0x1CC
+    virtual void SetUseHW(bool value);                                                      // 0x1D0
+    virtual void SetUseEAX(bool value);                                                     // 0x1D4
     virtual bool CreatePrimaryBuffer();                                                     // 0x1D8
     virtual void Method0x1DC();                                                             // 0x1DC
     virtual void Method0x1E0();                                                             // 0x1E0
@@ -57,7 +57,7 @@ protected:
     LPDIRECTSOUNDBUFFER InitSoundBuffer(u32 flags, const char* name, u32 size);
 
 protected:
-    bool Unk0x3F1;                                                                          // 0x3F1
+    bool UseEAX;                                                                            // 0x3F1
     LPDIRECTSOUND DirectSound;                                                              // 0x3F2
     bool Unk0x3F6;                                                                          // 0x3F6
     DSCAPS Caps;                                                                            // 0x3F7

@@ -101,9 +101,63 @@ void ZSoundModule::SetConfiguration(bool hw, bool eax, s32 buffers) {
     RefTab tab(8, 0);
 
     u32 uVar5 = 0; // TODO
-    bool bVar2 = false; // TODO
+    bool apply = false;
 
-    // TODO NOT IMPLEMENTED
+    if (this->Sound != nullptr) {
+        if (this->Configuration->UseEAX == eax && this->Configuration->UseHW == hw
+            && this->Configuration->NumBuffers == buffers) {
+            return;
+        }
+
+        uVar5 = this->Sound->Method0xF8(&tab);
+
+        this->Sound->Method0x14C();
+        this->Sound->Method0x48();
+
+        if (this->Sound != nullptr) {
+            delete this->Sound;
+        }
+
+        apply = true;
+    }
+
+    this->Configuration->UseEAX = eax;
+    this->Configuration->UseHW = hw;
+    this->Configuration->NumBuffers = buffers;
+
+    this->Sound = new ZSound();
+
+    this->Sound->Method0x148();
+    this->Sound->Method0x1A4(0x3000);
+    this->Sound->Method0x1A8(true);
+    this->Sound->SetUseHW(false);
+    this->Sound->SetUseEAX(false);
+
+    if (buffers == 0) {
+        buffers = 8;
+    }
+
+    this->Sound->SetBuffers(buffers);
+
+    if (hw) {
+        this->Sound->Method0x1A8(false);
+        this->Sound->SetUseHW(true);
+
+        if (eax) {
+            this->Sound->SetUseEAX(true);
+        }
+    }
+
+    if (apply) {
+        this->BeginInit();
+        this->Sound->Method0x50(this->Unk0x14);
+        this->Sound->SetSfxVolume(this->Configuration->SfxVolume);
+        this->Sound->SetSpeechVolume(this->Configuration->SpeechVolume, false);
+        this->Sound->Method0x78();
+        this->Sound->Method0xFC(&tab);
+        this->Sound->SetMusicVolume(this->Configuration->MusicVolume);
+        this->Sound->Method0x104(uVar5);
+    }
 }
 
 // 0x0ff35640
