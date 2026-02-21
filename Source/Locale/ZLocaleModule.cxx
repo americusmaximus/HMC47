@@ -20,6 +20,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#include <System/ZLocaleModule.hxx>
 
-#include "Globals.hxx"
+// 0x0fbe0154
+ZLocaleModule::ZLocaleModule() {}
+
+// 0x0fbd1080
+// 0x0fbd10a0
+ZLocaleModule::~ZLocaleModule() { }

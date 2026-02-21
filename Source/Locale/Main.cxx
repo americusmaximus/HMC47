@@ -20,6 +20,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#include <System/ZLocaleModule.hxx>
 
-#include "Globals.hxx"
+// 0x0fbdc4e3
+BOOL APIENTRY DllMain(HMODULE, DWORD, LPVOID) {
+    return TRUE;
+}
+
+// 0x0fbd1050
+extern "C"
+ZLocaleModule * Create() {
+    return new ZLocaleModule();
+}

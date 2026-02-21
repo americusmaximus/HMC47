@@ -20,6 +20,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#include "Common.hxx"
 
-#include "Globals.hxx"
+// 0x0fbd39b0
+void* operator new(size_t size) {
+    if (g_pSysMem != nullptr) {
+        return g_pSysMem->Allocate(size);
+    }
+
+    return malloc(size & ZMEM_SIZE_MASK);
+}
+
+// 0x0fbd1e70
+void operator delete(void* ptr) noexcept {
+    if (g_pSysMem != nullptr) {
+        g_pSysMem->Delete(ptr);
+        return;
+    }
+
+    free(ptr);
+}

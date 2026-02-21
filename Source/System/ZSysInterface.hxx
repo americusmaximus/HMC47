@@ -26,6 +26,7 @@ SOFTWARE.
 #include "ZDirectPlayModule.hxx"
 #include "ZEngineData.hxx"
 #include "ZEngineDataModule.hxx"
+#include "ZLocaleModule.hxx"
 #include "ZMasterControl.hxx"
 #include "ZRender.hxx"
 #include "ZRenderModule.hxx"
@@ -254,7 +255,7 @@ public:
     ZRenderModule* RenderModule;                                                        // 0x38F9
     ZModule* ScriptModule;                                                              // 0x38FD
     ZDirectPlayModule* DirectPlayModule;                                                // 0x3901
-    ZModule* LocaleModule;                                                              // 0x3905
+    ZLocaleModule* LocaleModule;                                                        // 0x3905
     ZString Unk0x3909;                                                                  // 0x3909
     bool ScriptDebug;                                                                   // 0x3989
     bool ScriptDebugPrint;                                                              // 0x398A

@@ -45,6 +45,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "STARTW", "Source\STARTW\STA
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xmlparse", "Source\xmlparse\xmlparse.vcxproj", "{70AF5F42-183B-4453-9E3B-EF343E3D06A1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Locale", "Source\Locale\Locale.vcxproj", "{485711C8-8A24-490E-BE55-D78805C24219}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -149,6 +151,14 @@ Global
 		{70AF5F42-183B-4453-9E3B-EF343E3D06A1}.Release|x64.Build.0 = Release|x64
 		{70AF5F42-183B-4453-9E3B-EF343E3D06A1}.Release|x86.ActiveCfg = Release|Win32
 		{70AF5F42-183B-4453-9E3B-EF343E3D06A1}.Release|x86.Build.0 = Release|Win32
+		{485711C8-8A24-490E-BE55-D78805C24219}.Debug|x64.ActiveCfg = Debug|x64
+		{485711C8-8A24-490E-BE55-D78805C24219}.Debug|x64.Build.0 = Debug|x64
+		{485711C8-8A24-490E-BE55-D78805C24219}.Debug|x86.ActiveCfg = Debug|Win32
+		{485711C8-8A24-490E-BE55-D78805C24219}.Debug|x86.Build.0 = Debug|Win32
+		{485711C8-8A24-490E-BE55-D78805C24219}.Release|x64.ActiveCfg = Release|x64
+		{485711C8-8A24-490E-BE55-D78805C24219}.Release|x64.Build.0 = Release|x64
+		{485711C8-8A24-490E-BE55-D78805C24219}.Release|x86.ActiveCfg = Release|Win32
+		{485711C8-8A24-490E-BE55-D78805C24219}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

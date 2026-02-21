@@ -22,4 +22,12 @@ SOFTWARE.
 
 #pragma once
 
-#include "Globals.hxx"
+#include <System/ZSysCom.hxx>
+#include <System/ZSysFile.hxx>
+#include <System/ZSysInterface.hxx>
+#include <System/ZSysMem.hxx>
+
+__declspec(dllimport) ZSysCom* g_pSysCom;
+__declspec(dllimport) ZSysFile* g_pSysFile;
+__declspec(dllimport) ZSysInterface* g_pSysInterface;
+__declspec(dllimport) ZSysMem* g_pSysMem;

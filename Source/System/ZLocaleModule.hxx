@@ -22,4 +22,30 @@ SOFTWARE.
 
 #pragma once
 
-#include "Globals.hxx"
+#include "ZModule.hxx"
+
+#pragma pack(push, 1)
+
+class ZLocaleModule : public ZModule {
+public:
+    ZLocaleModule();
+
+public:
+    virtual ~ZLocaleModule();                                                   // 0x0
+    virtual void Initialize();                                                  // 0x8
+    virtual void Release();                                                     // 0xC
+    virtual void BeginInit();                                                   // 0x18
+    virtual void Method0x38();                                                  // 0x38
+    virtual void Method0x3C();                                                  // 0x3C
+    virtual void Method0x40();                                                  // 0x40
+    virtual void Method0x44();                                                  // 0x44
+
+protected:
+    // TODO
+};
+
+#pragma pack(pop)
+
+#if defined(_DEBUG) && !defined(_WIN64)
+static_assert(sizeof(ZLocaleModule) == 0x15, "ZLocaleModule size mismatch.");
+#endif

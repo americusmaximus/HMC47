@@ -93,7 +93,7 @@ public:
     virtual void Method0xEC();                                                                  // 0xEC
     virtual void Method0xF0();                                                                  // 0xF0
     virtual void Method0xF4();                                                                  // 0xF4
-    virtual void Method0xF8();                                                                  // 0xF8
+    virtual u32 Method0xF8(const char* message, const char* path, u32 line);                    // 0xF8
     virtual void Method0xFC();                                                                  // 0xFC
     virtual void Method0x100();                                                                 // 0x100
     virtual void Method0x104();                                                                 // 0x104
