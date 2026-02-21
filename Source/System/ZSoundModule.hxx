@@ -55,7 +55,7 @@ public:
 protected:
     SoundConfig* Configuration;                                                 // 0xC
     s32 Unk0x10;                                                                // 0x10
-    void* Unk0x14;                                                              // 0x14
+    u32 Unk0x14;                                                                // 0x14
     LinkRefTab* Unk0x18;                                                        // 0x18
     ZSound* Sound;                                                              // 0x1C
 };

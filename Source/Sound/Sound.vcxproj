@@ -185,6 +185,7 @@
     <ClCompile Include="Midi.cxx" />
     <ClCompile Include="RefTab.cxx" />
     <ClCompile Include="ZDirectSound.cxx" />
+    <ClCompile Include="ZMem.cxx" />
     <ClCompile Include="ZModule.cxx" />
     <ClCompile Include="ZMusicSegment.cxx" />
     <ClCompile Include="ZPropertySet.cxx" />

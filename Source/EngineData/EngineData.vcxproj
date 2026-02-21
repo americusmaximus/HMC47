@@ -31,6 +31,7 @@
     <ClCompile Include="XMLFile.cxx" />
     <ClCompile Include="ZEngineData.cxx" />
     <ClCompile Include="ZEngineDataModule.cxx" />
+    <ClCompile Include="ZMem.cxx" />
     <ClCompile Include="ZModule.cxx" />
   </ItemGroup>
   <ItemGroup>

@@ -183,6 +183,7 @@
     <ClCompile Include="RefTab.cxx" />
     <ClCompile Include="ZConsoleCommand.cxx" />
     <ClCompile Include="ZCounter.cxx" />
+    <ClCompile Include="ZMem.cxx" />
     <ClCompile Include="ZModule.cxx" />
     <ClCompile Include="ZRender.cxx" />
     <ClCompile Include="ZRenderBase.cxx" />

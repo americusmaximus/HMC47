@@ -585,40 +585,56 @@ void ZSysMem::DeleteLinks() {
     }
 }
 
-// 0x0ffb2f10
-u32 ZSysMem::Method0x54() {
+// 0x0ffb2e50
+u32 ZSysMem::Method0x58() {
+    RefLink link;
     u32 result = 0;
 
-    RefLink link;
-    if (this->Lights != nullptr) {
-        this->Lights->GetStart(&link);
-
-        u32 item = this->Lights->GetNextKey(&link); // TODO
+    if (this->Textures != nullptr) {
+        this->Textures->GetStart(&link);
+        u32 block = this->Textures->GetNextKey(&link);
 
         while (link.Next != nullptr) {
-            // TODO NOT IMPLEMENTED
+            void* item = IndexMem(block);
 
-            item = this->Lights->GetNextKey(&link);
+            if (item == nullptr) {
+                g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 477)
+                    ->LogMessage("Got Zero Ref\n");
+            }
+            else {
+                g_pSysInterface->RenderModule->Manager->Method0x1C(block);
+
+                // TODO NOT IMPLEMENTED
+            }
+
+            block = this->Textures->GetNextKey(&link);
         }
     }
 
     return result;
 }
 
-// 0x0ffb2e50
+// 0x0ffb2f10
 u32 ZSysMem::Method0x54() {
+    RefLink link;
     u32 result = 0;
 
-    RefLink link;
-    if (this->Textures != nullptr) {
-        this->Textures->GetStart(&link);
-
-        u32 item = this->Textures->GetNextKey(&link); // TODO
+    if (this->Lights != nullptr) {
+        this->Lights->GetStart(&link);
+        u32 block = this->Lights->GetNextKey(&link);
 
         while (link.Next != nullptr) {
-            // TODO NOT IMPLEMENTED
+            void* item = IndexMem(block);
 
-            item = this->Textures->GetNextKey(&link);
+            if (item == nullptr) {
+                g_pSysCom->Log("Z:\\Engine\\System\\_Wintel\\Source\\SysMemWintel.cpp", 494)
+                    ->LogMessage("Got Zero Ref\n");
+            }
+            else {
+                // TODO NOT IMPLEMENTED
+            }
+
+            block = this->Lights->GetNextKey(&link);
         }
     }
 

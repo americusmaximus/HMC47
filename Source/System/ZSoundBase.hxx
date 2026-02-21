@@ -34,7 +34,7 @@ public:
     ZSoundBase();
 
 public:
-    virtual void Method0x0();                                                               // 0x0
+    virtual void* Method0x0();                                                              // 0x0
     virtual void Method0x4();                                                               // 0x4
     virtual void Method0x8();                                                               // 0x8
     virtual bool Method0xC() = 0;                                                           // 0xC

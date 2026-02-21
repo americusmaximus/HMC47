@@ -941,7 +941,7 @@ void ConfigFile::ApplyMouseSettings() {
     g_pSysInterface->MouseSpeed = this->Mouse.Speed * 0.1;
     g_pSysInterface->MouseInvert = this->Mouse.Invert;
 
-    void* todo = g_pSysInterface->EngineData->Method0x30();
+    g_pSysInterface->EngineData->Method0x30()->Method0x9C("rWindows");
 
     // TODO NOT IMPLEMENTED
 }

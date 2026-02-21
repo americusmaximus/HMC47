@@ -191,6 +191,7 @@
     <ClCompile Include="ZCopiableBinTree.cxx" />
     <ClCompile Include="ZHelpConsoleCommand.cxx" />
     <ClCompile Include="ZMalloc.cxx" />
+    <ClCompile Include="ZMem.cxx" />
     <ClCompile Include="ZModule.cxx" />
     <ClCompile Include="ZString.cxx" />
     <ClCompile Include="ZSysAction.cxx" />

@@ -82,6 +82,15 @@ public:
     virtual void Method0x68() = 0;                                                          // 0x68
     virtual void Method0x6C() = 0;                                                          // 0x6C
 
+public:
+    inline u32* GetIndexes() {
+        return this->Indexes;
+    }
+
+    inline void** GetValues() {
+        return this->Values;
+    }
+
 protected:
     bool Init;                                                                              // 0x4
     AllocRefTab* Indx;                                                                      // 0x5
@@ -103,8 +112,6 @@ public:
     virtual void AllocCheck();                                                              // 0x10
     virtual bool IsMemoryLinkBroken(ZMemLink* link);                                        // 0x14
     virtual void DeleteLinks();                                                             // 0x18
-    virtual void Method0x1C();                                                              // 0x1C
-    virtual void Method0x20();                                                              // 0x20
     virtual void* SetMemoryLinkDetails(void* value, const char* path, u32 line);            // 0x24
     virtual void Index(void* value);                                                        // 0x28
     virtual void* Allocate(size_t size);                                                    // 0x2C
@@ -142,6 +149,8 @@ protected:
 };
 
 #pragma pack(pop)
+
+void* IndexMem(u32 block);
 
 #ifdef _WIN64
 #error ZSysMem is incompatible with x64.

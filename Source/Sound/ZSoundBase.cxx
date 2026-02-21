@@ -113,7 +113,7 @@ void ZSoundBase::Method0x1A4(u32 todo) {
 void ZSoundBase::Method0x1B8(u32 todo) {
     this->Unk0x14D = todo;
 
-    void* todo_1 = FUN_0ff3a690(g_pSysInterface->SoundModule->Unk0x14);
+    void* todo_1 = IndexMem(g_pSysInterface->SoundModule->Unk0x14);
 
     if (todo_1 != nullptr) {
         todo_1->Unk0x38 = this->Unk0x14D;
@@ -151,13 +151,13 @@ void ZSoundBase::Method0x178(u32 todo) {
 
 // 0x0ff3add0
 void* ZSoundBase::Method0x17C() {
-    void* todo_1 = FUN_0ff3a690(this->Unk0xDB);
+    void* todo_1 = IndexMem(this->Unk0xDB);
 
     if (todo_1 != nullptr) {
         return todo_1;
     }
 
-    return FUN_0ff3a690(g_pSysInterface->Render->Method0x7C(0)); // TODO
+    return IndexMem(g_pSysInterface->Render->Method0x7C(0)); // TODO
 }
 
 // 0x0ff3ae10
@@ -173,6 +173,12 @@ void ZSoundBase::SetUseStreaming(bool value) {
 // 0x0ff3ae30
 bool ZSoundBase::GetUseStreaming() {
     return this->UseStreaming;
+}
+
+// 0x0ff3ae40
+void* ZSoundBase::Method0x0() {
+    return this->Unk0xCA == nullptr ? nullptr
+        : IndexMem(this->Unk0xCA->GetKeyByIndex(this->Unk0xCA->GetCount() - 1));
 }
 
 // 0x0ff3ae70

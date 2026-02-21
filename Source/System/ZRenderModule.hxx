@@ -42,7 +42,7 @@ public:
     virtual void Method0x44();                                                  // 0x44
     virtual void Method0x48(s32 count);                                         // 0x48
 
-public:
+public: /* TODO make protected */
     u32 Unk0xC;                                                                 // 0xC
     ZTextureManager* Manager;                                                   // 0x10
     s32 Count;                                                                  // 0x14
