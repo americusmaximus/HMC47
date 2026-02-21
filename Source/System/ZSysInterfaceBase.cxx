@@ -39,7 +39,7 @@ ZSysInterfaceBase::ZSysInterfaceBase() {
     this->WindowHasFocus = FALSE;
     this->Unk0x3A1A = 0; // TODO
     this->Unk0x3A16 = nullptr;
-    this->Unk0x3A1E = 0; // TODO
+    this->ReplayFileSize = 0;
 
     ZeroMemory(this->Unk0x3996, 128 /* TODO */);
 
@@ -85,7 +85,7 @@ ZSysInterfaceBase::ZSysInterfaceBase() {
 // 0x0ffa9290
 // 0x0ffa92d0
 ZSysInterfaceBase::~ZSysInterfaceBase() {
-    if (strlen(this->Unk0x7E1) != 0) {
+    if (strlen(this->Unk0x7E1.AsString()) != 0) {
         g_pSysFile->Method0x58(this->Unk0x7E1, this->Unk0x3A16,
             (void*)((size_t)this->Unk0x3A1A - (size_t)this->Unk0x3A16), 0); // TODO
     }
@@ -97,7 +97,7 @@ ZSysInterfaceBase::~ZSysInterfaceBase() {
     this->Unk0x3A16 = nullptr;
 
     this->Unk0x3A1A = 0; // TODO
-    this->Unk0x3A1E = 0; // TODO
+    this->ReplayFileSize = 0;
 
     ZeroMemory(&this->Unk0x3996, 128 /* TODO */);
 
@@ -111,14 +111,49 @@ ZSysInterfaceBase::~ZSysInterfaceBase() {
 }
 
 // 0x0ffa9890
-bool ZSysInterfaceBase::Method0x0() {
+bool ZSysInterfaceBase::IsReplaying() {
     if (!this->Unk0x3995) {
-        if (strlen(this->Unk0x861.AsString()) != 0) {
+        if (strlen(this->ReplayFile.AsString()) != 0) {
             return true;
         }
     }
 
     return false;
+}
+
+// 0x0ffa98c0
+void ZSysInterfaceBase::Method0x104() {
+    if (this->Unk0x3995) {
+        if (strlen(this->ReplayFile.AsString()) != 0) {
+            if (g_pSysInterface->IsKeyPressed(VK_ESCAPE)) {
+                this->Unk0x3995 = true;
+                return;
+            }
+
+            if (this->Unk0x3A16 == nullptr) {
+                this->ReplayFileSize = g_pSysFile->GetSize(this->ReplayFile.AsString(), false);
+
+                if (this->ReplayFileSize == INVALID_FILE_SIZE || this->ReplayFileSize == 0) {
+                    g_pSysCom->Log("Z:\\Engine\\System\\Source\\SysInterface.cpp", 192)
+                        ->LogMessage("WARNING: Error loading replay %s, stuff will go wrong!",
+                            this->ReplayFile.AsString());
+
+                    this->Unk0x3995 = true;
+
+                    return;
+                }
+
+                void* value = new u8[this->ReplayFileSize];
+
+                this->Unk0x3A16 = value;
+                this->Unk0x3A1A = value;
+
+                g_pSysFile->ReadAt(this->ReplayFile.AsString(), value, this->ReplayFileSize, 0, false);
+            }
+
+            // TODO NOT IMPLEMENTED
+        }
+    }
 }
 
 // 0x0ffa95e0

@@ -203,7 +203,7 @@ void ZSysInterface::PrintStatus(bool todo) {
         if (!todo) {
             if (g_pSysInterface->SoundModule != nullptr) {
                 if (g_pSysInterface->SoundModule->GetSound() != nullptr) {
-                    g_pSysInterface->SoundModule->Method0x34();
+                    g_pSysInterface->SoundModule->PrintStatus();
                 }
             }
         }
@@ -400,7 +400,7 @@ bool StartEngine() {
         }
 
         g_pSysInterface->InitializeModule(&g_pSysInterface->EngineModule, "EngineData.dll");
-        g_pSysInterface->InitializeModule(&g_pSysInterface->RenderModule, g_pSysInterface->DrawDll);
+        g_pSysInterface->InitializeModule(&g_pSysInterface->RenderModule, g_pSysInterface->DrawDll.AsString());
 
         if (g_pSysInterface->RenderModule == nullptr) {
             if (g_pSysInterface->DrawDll == nullptr) {
@@ -411,10 +411,14 @@ bool StartEngine() {
             }
         }
 
-        g_pSysInterface->InitializeModule(&g_pSysInterface->ScriptModule, g_pSysInterface->ScriptDll);
-        g_pSysInterface->InitializeModule(&g_pSysInterface->SoundModule, g_pSysInterface->SoundDll);
-        g_pSysInterface->InitializeModule(&g_pSysInterface->DirectPlayModule, g_pSysInterface->DirectPlayDll);
-        g_pSysInterface->InitializeModule(&g_pSysInterface->LocaleModule, g_pSysInterface->LocaleDll);
+        g_pSysInterface->InitializeModule(&g_pSysInterface->ScriptModule, g_pSysInterface->ScriptDll.AsString());
+        g_pSysInterface->InitializeModule(&g_pSysInterface->SoundModule, g_pSysInterface->SoundDll.AsString());
+        g_pSysInterface->InitializeModule(&g_pSysInterface->DirectPlayModule, g_pSysInterface->DirectPlayDll.AsString());
+        g_pSysInterface->InitializeModule(&g_pSysInterface->LocaleModule, g_pSysInterface->LocaleDll.AsString());
+
+        g_pSysInterface->EngineData->Method0x3C();
+        g_pSysInterface->Method0x18(g_pSysInterface->CommandLine.AsString(), 22 /* TODO */);
+        g_pSysInterface->Method0x9C();
 
         // TODO NOT IMPLEMENTED
 
@@ -470,8 +474,9 @@ void ZSysInterface::ExecuteEngineWrapper(u32 code) {
 
 // 0x0ffae110
 void ZSysInterface::ExecuteEngine(u32 code) {
+    MSG msg;
+
     if (!this->Unk0x38F1 && !this->WindowHasFocus) {
-        MSG msg;
         if (!PeekMessageA(&msg, NULL, 0, 0, PM_NOREMOVE)) {
             WaitMessage();
             return;
@@ -522,6 +527,39 @@ void ZSysInterface::SetEngineData(ZEngineData* value) {
     }
 
     this->EngineData = value;
+}
+
+// 0x0ffae360
+bool ZSysInterface::IsInactiveCommand(const char* command) {
+    if (strcmpi("projectfile", command) == 0) { return true; }
+    if (strcmpi("AnimFile", command) == 0) { return true; }
+    if (strcmpi("SoundBank", command) == 0) { return true; }
+    if (strcmpi("DefaultScene", command) == 0) { return true; }
+    if (strcmpi("Include", command) == 0) { return true; }
+    if (strcmpi("LoadFilter", command) == 0) { return true; }
+    if (strcmpi("AutoDumpName", command) == 0) { return true; }
+    if (strcmpi("EnableDebugOptions", command) == 0) { return true; }
+    if (strcmpi("ColorDepth", command) == 0) { return true; }
+    if (strcmpi("DisablePack", command) == 0) { return true; }
+    if (strcmpi("EnableTimers", command) == 0) { return true; }
+    if (strcmpi("DisableLight", command) == 0) { return true; }
+    if (strcmpi("DisableTextures", command) == 0) { return true; }
+    if (strcmpi("Resolution", command) == 0) { return true; }
+    if (strcmpi("BackColor", command) == 0) { return true; }
+    if (strcmpi("PackFile", command) == 0) { return true; }
+    if (strcmpi("DrawDll", command) == 0) { return true; }
+    if (strcmpi("DirectPlayDll", command) == 0) { return true; }
+    if (strcmpi("SoundDll", command) == 0) { return true; }
+    if (strcmpi("ScriptDll", command) == 0) { return true; }
+    if (strcmpi("LocaleDll", command) == 0) { return true; }
+    if (strcmpi("PlayVideo", command) == 0) { return true; }
+    if (strcmpi("Window", command) == 0) { return true; }
+    if (strcmpi("StartUpperPos", command) == 0) { return true; }
+    if (strcmpi("EnableConsole", command) == 0) { return true; }
+    if (strcmpi("DisableConfig", command) == 0) { return true; }
+    if (strcmpi("DebugVideo", command) == 0) { return true; }
+
+    return false;
 }
 
 // 0x0ffae5b0
@@ -681,7 +719,12 @@ void ZSysInterface::Method0xDC(const char* format, ...) {
 
     if (g_pSysInterface->DebugOptionsVisibility != 0.0f) {
         for (ZRenderBase* render = this->Render; render != nullptr; render = render->Current) {
-            // TODO NOT IMPLEMENTED
+            va_list args;
+            va_start(args, format);
+            vsprintf(buffer, format, args);
+            va_end(args);
+
+            render->Method0xEC(buffer);
         }
     }
 }
@@ -710,6 +753,7 @@ void ZSysInterface::ReleaseRender() {
 // 0x0ffb0a00
 bool ZSysInterface::CreateMainWindow() {
     WNDCLASSEXA wndc;
+    ZeroMemory(&wndc, sizeof(WNDCLASSEXA));
 
     for (u32 i = 0; i != 1000; i++) {
         sprintf((char*)&MainWindowClassName[MAIN_WINDOW_CLASS_NAME_LENGTH - 3], "%3d", i);
@@ -730,15 +774,11 @@ bool ZSysInterface::CreateMainWindow() {
     wndc.cbSize = sizeof(WNDCLASSEXA);
     wndc.style = CS_PARENTDC | CS_OWNDC | CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW;
     wndc.lpfnWndProc = MainWindowHandler;
-    wndc.cbClsExtra = 0;
     wndc.cbWndExtra = sizeof(ZSysInterface*);
     wndc.hInstance = this->Module;
-    wndc.hIcon = NULL;
     wndc.hCursor = LoadCursorA(NULL, IDC_ARROW);
     wndc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-    wndc.lpszMenuName = nullptr;
     wndc.lpszClassName = MainWindowClassName;
-    wndc.hIconSm = NULL;
 
     RegisterClassExA(&wndc);
 
@@ -747,21 +787,21 @@ bool ZSysInterface::CreateMainWindow() {
         (width / 2 + (GRAPGICS_RESOLUTION_640 / 2)) - x, (height / 2 + (GRAPGICS_RESOLUTION_480 / 2)) - y,
         NULL, NULL, this->Module, nullptr);
 
-    if (this->MainWindow == NULL) {
-        return false;
+    if (this->MainWindow != NULL) {
+        SetWindowLongA(this->MainWindow, 0, (LONG_PTR)this);
+        return true;
     }
 
-    SetWindowLongA(this->MainWindow, 0, (LONG_PTR)this);
-
-    return true;
+    return false;
 }
 
 // 0x0ffb0b50
 bool ZSysInterface::HandleWindowMessages(HWND hwnd) {
+    MSG msg;
+
     if (!this->ProcessingWindowMessages) {
         this->ProcessingWindowMessages = true;
 
-        MSG msg;
         while (PeekMessageA(&msg, hwnd, 0, 0, PM_NOREMOVE)) {
             if (!GetMessageA(&msg, hwnd, 0, 0)) {
                 return false;
@@ -877,7 +917,11 @@ void ZSysInterface::Method0x10C(const char* path, u32 line) {
 
     this->Method0xF0(ticks, path, line);
 
-    // TODO NOT IMPLEMENTED
+    this->Method0x108(&this->Unk0xAB1, 3840, 3, path, line);
+    this->Method0x108(&this->Unk0x19B1, 7680, 7, path, line);
+    this->Method0x108(&this->Unk0xA91, 4, 4, path, line);
+    this->Method0x108(&this->Unk0xA95, 12, 5, path, line);
+    this->Method0x108(&this->ProcessorCounter, 8, 6, path, line);
 }
 
 // 0x0ffb1230

@@ -66,7 +66,7 @@ public:
     ZSysInterfaceBase();
 
 public:
-    virtual bool Method0x0();                                                           // 0x0
+    virtual bool IsReplaying();                                                         // 0x0
     virtual ~ZSysInterfaceBase();                                                       // 0x4
     virtual void Initialize() = 0;                                                      // 0x8
     virtual bool HandleWindowMessages(HWND) = 0;                                        // 0xC
@@ -201,7 +201,7 @@ public:
     ZString Unk0x6E1;                                                                   // 0x6E1
     ZString Unk0x761;                                                                   // 0x761
     ZString Unk0x7E1;                                                                   // 0x7E1
-    ZString Unk0x861;                                                                   // 0x861
+    ZString ReplayFile;                                                                 // 0x861
     ZString RecordFile;                                                                 // 0x8E1
     ZString PlayFile;                                                                   // 0x961
     ZString PlayVideo;                                                                  // 0x9E1
@@ -266,7 +266,7 @@ public:
     char Unk0x3996[128 /* TODO */];                                                     // 0x3996
     void* Unk0x3A16;                                                                    // 0x3A16
     void* Unk0x3A1A;                                                                    // 0x3A1A
-    u32 Unk0x3A1E;                                                                      // 0x3A1E
+    u32 ReplayFileSize;                                                                 // 0x3A1E
     u32 Unk0x3A22;                                                                      // 0x3A22
     bool SaveRecordRuntime;                                                             // 0x3A26
     u32 Unk0x3A27;                                                                      // 0x3A27
@@ -356,6 +356,7 @@ protected:
     void SetCommandLine(const char* ini);
     void ExecuteEngine(u32 code); // TODO
     bool FUN_0ffae5b0(const char* command, const char* value); // TODO
+    bool IsInactiveCommand(const char* command);
 
 public:
     ZString LogPath;                                                            // 0x3A45
